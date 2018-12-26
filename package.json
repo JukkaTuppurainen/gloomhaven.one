@@ -1,0 +1,22 @@
+{
+  "name": "hex",
+  "version": "0.0.1",
+  "description": "",
+  "main": "c.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "npx webpack --config webpack.config.js",
+    "dev": "node_modules\\.bin\\webpack-dev-server.cmd --config webpack.config.dev.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "private": true,
+  "dependencies": {
+    "honeycomb-grid": "^1.4.1"
+  },
+  "devDependencies": {
+    "webpack": "^4.26.0",
+    "webpack-cli": "^3.1.2",
+    "webpack-dev-server": "^3.1.10"
+  }
+}

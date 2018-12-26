@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en-Us">
+<head>
+<title>Canvas testing</title>
+<style>
+body,
+html {
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+  padding: 0;
+  width: 100%;
+}
+
+body {
+  background: #000;
+  position: relative;
+}
+
+canvas {
+}
+
+#debug {
+  bottom: 0;
+  color: #fff;
+  display: block;
+  font-family: 'Source Code Pro', monospace;
+  position: absolute;
+  z-index: 9999;
+}
+</style>
+</head>
+<body>
+
+<canvas id="c"></canvas>
+<div id="debug"></div>
+
+<script src="src/index.js"></script>
+
+</body>
+</html>
