@@ -1,21 +1,19 @@
 import * as Honeycomb from 'honeycomb-grid'
 
 import {isInSight} from './lib/isInSight'
-import {isPointOnSegment} from './lib/pointonsegment'
 
 // https://stackoverflow.com/questions/31346862/test-if-a-point-is-approximately-on-a-line-segment-formed-by-two-other-points
 // https://stackoverflow.com/questions/6865832/detecting-if-a-point-is-of-a-line-segment
-
-
 // https://github.com/flauwekeul/honeycomb
+
+window.w = window.w || {}
 
 const canvas = document.getElementById('c')
 
-canvas.height = window.innerHeight
-canvas.width = window.innerWidth
-
 const ctx = canvas.getContext('2d')
 ctx.lineWidth = 1
+
+window.w.ctx = ctx
 
 const Grid = Honeycomb.defineGrid(Honeycomb.extendHex({
   size: 50,
@@ -23,11 +21,37 @@ const Grid = Honeycomb.defineGrid(Honeycomb.extendHex({
 }))
 const grid = Grid.rectangle({width: 11, height: 13})
 
+w.grid = grid
+
+let maxX = 0
+let maxY = 0
+
+let start = window.performance.now();
+
+grid.forEach(hex => {
+  const point = hex.toPoint()
+  const corners = hex.corners().map(corner => corner.add(point))
+  corners.forEach(c => {
+    if (c.x > maxX) {
+      maxX = c.x
+    }
+    if (c.y > maxY) {
+      maxY = c.y
+    }
+  })
+})
+let end = window.performance.now();
+console.log(`Resolved board size in ${end - start} ms`);
+
+canvas.height = maxY + 1
+canvas.width = maxX + 1
+
 const mouseHex = {}
 let playerHex
-let monsterHex
+// let monsterHex
 
 const wallHexes = [
+  {x: 4, y: 0},
   {x: 5, y: 0},
   {x: 5, y: 1},
   {x: 5, y: 2},
@@ -64,7 +88,6 @@ const noHexes = [
   {x: 1, y: 0},
   {x: 2, y: 0},
   {x: 3, y: 0},
-  {x: 4, y: 0},
   {x: 0, y: 8},
   {x: 0, y: 9},
   {x: 0, y: 10},
@@ -137,11 +160,8 @@ let needRender = true
 
 // const isWallCorner = (mapX, mapY) => wallCorners.find(({x, y}) => x === mapX && y === mapY)
 
-window.w = {
-  mouseHex,
-  walls
-}
-
+window.w.mouseHex = mouseHex
+window.w.walls = walls
 
 let losToHover
 
@@ -155,18 +175,16 @@ const render = () => {
     return
   }
 
-  // let start = window.performance.now()
-
   needRender = false
   ctx.clearRect(0, 0, canvas.width, canvas.height)
 
   losToHover = false
 
   let linesToHover = false
-  let debug = new Set()
 
-  hexes
-    .forEach(hex => {
+  w.linesToHover = linesToHover
+
+  hexes.forEach(hex => {
     ctx.strokeStyle = '#888'
     ctx.lineWidth = 1
 
@@ -193,33 +211,33 @@ const render = () => {
       ctx.lineTo(firstCorner.x, firstCorner.y)
       ctx.stroke()
 
-      // let isMouseHex = hex.x === mouseHex.x && hex.y === mouseHex.y
-      // let responseToisInSight = playerHex && isInSight(playerHex, hex, walls, isMouseHex, debug)
-      //
-      // if (isMouseHex && responseToisInSight instanceof Array) {
-      //   linesToHover = responseToisInSight
-      // }
-
       let isMouseHex = hex.x === mouseHex.x && hex.y === mouseHex.y
-      let responseToisInSight = playerHex && isInSight(playerHex, hex, walls, isMouseHex, debug)
+      let responseToisInSight = playerHex && isInSight(playerHex, hex, walls, isMouseHex)
 
       if (isMouseHex && responseToisInSight instanceof Array) {
         linesToHover = responseToisInSight
       }
 
-      // Line of sight
-      // if (responseToisInSight !== false) {
-      //   ctx.fillStyle = '#333'
-      //   ctx.fill()
+      // let isMonsterHex = monsterHex && hex.x === monsterHex.x && hex.y === monsterHex.y
+      // let responseToisInSight = playerHex && isInSight(playerHex, hex, walls, isMonsterHex)
       //
-      //   // Hover
-      //   if (
-      //     hex.x === mouseHex.x &&
-      //     hex.y === mouseHex.y
-      //   ) {
-      //     losToHover = true
-      //   }
+      // if (isMonsterHex && responseToisInSight instanceof Array) {
+      //   linesToHover = responseToisInSight
       // }
+
+      // Line of sight
+      if (responseToisInSight !== false) {
+        ctx.fillStyle = '#333'
+        ctx.fill()
+
+        // Hover
+        if (
+          hex.x === mouseHex.x &&
+          hex.y === mouseHex.y
+        ) {
+          losToHover = true
+        }
+      }
 
       // Hover
       if (hex.x === mouseHex.x && hex.y === mouseHex.y) {
@@ -234,10 +252,10 @@ const render = () => {
       }
 
       // Monster
-      if (monsterHex && hex.x === monsterHex.x && hex.y === monsterHex.y) {
-        ctx.fillStyle = '#c00'
-        ctx.fill()
-      }
+      // if (monsterHex && hex.x === monsterHex.x && hex.y === monsterHex.y) {
+      //   ctx.fillStyle = '#c00'
+      //   ctx.fill()
+      // }
 
     }
   })
@@ -252,26 +270,20 @@ const render = () => {
   })
 
   if (linesToHover) {
-    linesToHover.forEach(line => {
-      debug.forEach(debugPoint => {
-        let [x, y] = debugPoint.split('-')
-        x = parseFloat(x)
-        y = parseFloat(y)
-        ctx.beginPath()
-        ctx.moveTo(x - 5, y - 5)
-        ctx.lineTo(x + 5, y - 5)
-        ctx.lineTo(x + 5, y + 5)
-        ctx.lineTo(x - 5, y + 5)
-        ctx.fillStyle = 'rgba(255, 0, 0, 1)'
-        ctx.fill()
-      })
-      ctx.beginPath()
-      ctx.moveTo(line.a, line.b)
-      ctx.lineTo(line.x, line.y)
-      ctx.lineWidth = 1
-      ctx.strokeStyle = 'rgba(255, 0, 255, .5)'
-      ctx.stroke()
-    })
+    let shortestLine = linesToHover.reduce((acc, line) => {
+      line.len = Math.sqrt(((line.x - line.a) ** 2) + ((line.y - line.b) ** 2))
+      if (!acc || line.len < acc.len) {
+        acc = line
+      }
+      return acc
+    }, false)
+
+    ctx.beginPath()
+    ctx.moveTo(shortestLine.a, shortestLine.b)
+    ctx.lineTo(shortestLine.x, shortestLine.y)
+    ctx.lineWidth = 1
+    ctx.strokeStyle = 'rgba(255, 0, 255, .9)'
+    ctx.stroke()
   }
 
   requestAnimationFrame(render)
@@ -279,27 +291,32 @@ const render = () => {
 
 render()
 
-// addEventListener('mousemove', ({clientX, clientY}) => {
-//   // @debug
-//   w.x = clientX
-//   w.y = clientY
-//
-//   let newMouseHex = Grid.pointToHex(clientX, clientY)
-//
-//   if (
-//     newMouseHex.x !== mouseHex.x ||
-//     newMouseHex.y !== mouseHex.y
-//   ) {
-//     Object.assign(mouseHex, newMouseHex)
-//     needRender = true
-//   }
-// })
+addEventListener('mousemove', ({layerX, layerY}) => {
+  // @debug
+  // w.x = clientX
+  // w.y = clientY
 
-let clickFlip = false
+  let newMouseHex = Grid.pointToHex(layerX, layerY)
 
-document.addEventListener('click', ({x, y}) => {
-  const clickHex = grid.get(Grid.pointToHex(x, y))
-  console.log(clickHex, clickHex && clickHex.corners())
+  if (
+    newMouseHex.x !== mouseHex.x ||
+    newMouseHex.y !== mouseHex.y
+  ) {
+    Object.assign(mouseHex, newMouseHex)
+    needRender = true
+  }
+})
+
+// let clickFlip = false
+
+document.addEventListener('click', ({layerX, layerY}) => {
+
+  const clickHex = grid.get(Grid.pointToHex(layerX, layerY))
+
+  const point = clickHex.toPoint()
+  const corners = clickHex.corners().map(corner => corner.add(point))
+
+  console.log('clickHex:', clickHex, clickHex && corners)
 
   if (
     !clickHex ||
@@ -311,34 +328,34 @@ document.addEventListener('click', ({x, y}) => {
 
   needRender = true
 
-  if (clickFlip) {
+  // if (clickFlip) {
     playerHex = clickHex
-  } else {
-    monsterHex = clickHex
-  }
-  clickFlip = !clickFlip
+  // } else {
+  //   monsterHex = clickHex
+  // }
+  // clickFlip = !clickFlip
 })
 
-const fullLOSTest = () => {
-  let inSight = 0
-  let outSight = 0
+// const fullLOSTest = () => {
+//   let inSight = 0
+//   let outSight = 0
+//
+//   let start = window.performance.now();
+//
+//   hexes.forEach(hex => {
+//     hexes.forEach(hex2 => {
+//       if (hex.x !== hex2.x || hex.y !== hex2.y) {
+//         if (isInSight(hex, hex2, walls)) {
+//           ++inSight
+//         } else {
+//           ++outSight
+//         }
+//       }
+//     })
+//   })
+//   let end = window.performance.now();
+//
+//   console.log(`Full LOS test: In sight ${inSight} / Out of sight ${outSight}. Test took ${(end - start | 0)}ms.`)
+// }
 
-  let start = window.performance.now();
-
-  hexes.forEach(hex => {
-    hexes.forEach(hex2 => {
-      if (hex.x !== hex2.x || hex.y !== hex2.y) {
-        if (isInSight(hex, hex2, walls)) {
-          ++inSight
-        } else {
-          ++outSight
-        }
-      }
-    })
-  })
-  let end = window.performance.now();
-
-  console.log(`Full LOS test: In sight ${inSight} / Out of sight ${outSight}. Test took ${(end - start | 0)}ms.`)
-}
-
-setTimeout(fullLOSTest, 200)
+// setTimeout(fullLOSTest, 200)

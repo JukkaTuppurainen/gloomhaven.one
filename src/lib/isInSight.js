@@ -3,7 +3,7 @@ import {isPointOnSegment} from './pointonsegment'
 
 let cache = {}
 
-export const isInSight = (hex1, hex2, walls, returnLines, debug) => {
+export const isInSight = (hex1, hex2, walls, returnLines) => {
   let corners1
 
   if (cache.x !== hex1.x || cache.y !== hex1.y) {
@@ -35,12 +35,12 @@ export const isInSight = (hex1, hex2, walls, returnLines, debug) => {
             )) {
               ok = false
             }
-            if (returnLines && ok && debug) {
-              if (isPointOnSegment(c1, {x: wall.x1, y: wall.y1}, c2)) {
-                debug.add(`${wall.x1}-${wall.y1}`)
-              }
-              if (isPointOnSegment(c1, {x: wall.x2, y: wall.y2}, c2)) {
-                debug.add(`${wall.x2}-${wall.y2}`)
+            if (ok) {
+              if (
+                isPointOnSegment(c1, {x: wall.x1, y: wall.y1}, c2) ||
+                isPointOnSegment(c1, {x: wall.x2, y: wall.y2}, c2)
+              ) {
+                ok = false
               }
             }
           })
