@@ -16,8 +16,8 @@ export const isPointOnSegment = (startPoint, checkPoint, endPoint) => {
   }
 
   return (
-    ((endPoint.y - startPoint.y) * (checkPoint.x - startPoint.x)).toFixed(0) ===
-    ((checkPoint.y - startPoint.y) * (endPoint.x - startPoint.x)).toFixed(0)
+    (Math.abs((endPoint.y - startPoint.y) * (checkPoint.x - startPoint.x)) + .5 | 0) ===
+    (Math.abs((checkPoint.y - startPoint.y) * (endPoint.x - startPoint.x)) + .5 | 0)
     &&
     (
       (startPoint.x > checkPoint.x && checkPoint.x > endPoint.x) ||
