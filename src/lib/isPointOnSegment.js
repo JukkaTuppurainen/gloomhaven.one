@@ -31,5 +31,5 @@ export const isPointOnSegment = (startPoint, checkPoint, endPoint) => {
   )
 }
 
-window.w = window.w || {}
-window.w.isPointOnSegment = isPointOnSegment
+// window.w = window.w || {}
+// window.w.isPointOnSegment = isPointOnSegment

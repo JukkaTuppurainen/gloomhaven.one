@@ -1,4 +1,4 @@
-import * as Honeycomb from 'honeycomb-grid'
+import * as Honeycomb from 'honeycomb-grid/src/honeycomb'
 
 import {isInSight} from './lib/isInSight'
 import {getCornerOffset} from './lib/getCornerOffset'
@@ -15,7 +15,7 @@ const canvas = document.getElementById('c')
 const ctx = canvas.getContext('2d')
 ctx.lineWidth = 1
 
-window.ctx = ctx
+// window.ctx = ctx
 
 const board = {
   mouseHex: {
@@ -25,7 +25,7 @@ const board = {
   orientation: 'flat' // 'pointy'
 }
 
-window.board = board
+// window.board = board
 
 const Grid = Honeycomb.defineGrid(Honeycomb.extendHex({
   size: 60,
@@ -206,30 +206,29 @@ const render = () => {
 
   let linesToHover = false
 
-  const mouseHex = board.grid.get({x: board.mouseHex.x, y: board.mouseHex.y})
-
-  if (mouseHex) {
-    const mouseHexPoint = mouseHex.toPoint()
-    const mouseHexCorners = mouseHex.corners().map(corner => corner.add(mouseHexPoint))
-    for (let i = 0; i < 6; ++i) {
-      let nextCorner = i === 5 ? 0 : i + 1
-      if (
-        board.isThinWallCorner(mouseHexCorners[i].x, mouseHexCorners[i].y) &&
-        board.isThinWallCorner(mouseHexCorners[nextCorner].x, mouseHexCorners[nextCorner].y)
-      ) {
-        const offsets1 = getCornerOffset(board.mouseHex.x, board.mouseHex.y, i, board)
-        const offsets2 = getCornerOffset(board.mouseHex.x, board.mouseHex.y, nextCorner, board)
-
-        setTimeout(() => {
-          ctx.strokeStyle = '#fff'
-          ctx.beginPath()
-          ctx.moveTo(offsets1.x, offsets1.y)
-          ctx.lineTo(offsets2.x, offsets2.y)
-          ctx.stroke()
-        })
-      }
-    }
-  }
+  // const mouseHex = board.grid.get({x: board.mouseHex.x, y: board.mouseHex.y})
+  // if (mouseHex) {
+  //   const mouseHexPoint = mouseHex.toPoint()
+  //   const mouseHexCorners = mouseHex.corners().map(corner => corner.add(mouseHexPoint))
+  //   for (let i = 0; i < 6; ++i) {
+  //     let nextCorner = i === 5 ? 0 : i + 1
+  //     if (
+  //       board.isThinWallCorner(mouseHexCorners[i].x, mouseHexCorners[i].y) &&
+  //       board.isThinWallCorner(mouseHexCorners[nextCorner].x, mouseHexCorners[nextCorner].y)
+  //     ) {
+  //       const offsets1 = getCornerOffset(board.mouseHex.x, board.mouseHex.y, i, board)
+  //       const offsets2 = getCornerOffset(board.mouseHex.x, board.mouseHex.y, nextCorner, board)
+  //
+  //       setTimeout(() => {
+  //         ctx.strokeStyle = '#fff'
+  //         ctx.beginPath()
+  //         ctx.moveTo(offsets1.x, offsets1.y)
+  //         ctx.lineTo(offsets2.x, offsets2.y)
+  //         ctx.stroke()
+  //       })
+  //     }
+  //   }
+  // }
 
   board.hexes.forEach(hex => {
     ctx.strokeStyle = '#888'
@@ -265,13 +264,6 @@ const render = () => {
         linesToHover = responseToisInSight
       }
 
-      // let isMonsterHex = monsterHex && hex.x === monsterHex.x && hex.y === monsterHex.y
-      // let responseToisInSight = playerHex && isInSight(playerHex, hex, walls, isMonsterHex)
-      //
-      // if (isMonsterHex && responseToisInSight instanceof Array) {
-      //   linesToHover = responseToisInSight
-      // }
-
       // Line of sight
       if (responseToisInSight !== false) {
         ctx.fillStyle = '#333'
@@ -292,13 +284,6 @@ const render = () => {
         ctx.fillStyle = '#00f'
         ctx.fill()
       }
-
-      // Monster
-      // if (monsterHex && hex.x === monsterHex.x && hex.y === monsterHex.y) {
-      //   ctx.fillStyle = '#c00'
-      //   ctx.fill()
-      // }
-
     }
   })
 
@@ -347,15 +332,12 @@ addEventListener('mousemove', ({layerX, layerY}) => {
   }
 })
 
-// let clickFlip = false
-
 document.addEventListener('click', ({layerX, layerY}) => {
   const clickHex = board.grid.get(Grid.pointToHex(layerX, layerY))
   if (clickHex) {
     const point = clickHex.toPoint()
     const corners = clickHex.corners().map(corner => corner.add(point))
-
-    console.log('clickHex:', clickHex, clickHex && corners)
+    // console.log('clickHex:', clickHex, clickHex && corners)
   }
 
   if (
@@ -368,40 +350,35 @@ document.addEventListener('click', ({layerX, layerY}) => {
 
   needRender = true
 
-  // if (clickFlip) {
   board.playerHex = clickHex
-  // } else {
-  //   monsterHex = clickHex
-  // }
-  // clickFlip = !clickFlip
 })
 
-const fullLOSTest = () => {
-  let inSight = 0
-  let outSight = 0
-
-  let start = window.performance.now()
-
-  const hexesToTest = board.hexes.filter(h => (
-    !board.wallHexes.find(wh => (
-      h.x === wh.x && h.y === wh.y
-    ))
-  ))
-
-  hexesToTest.forEach(hex => {
-    hexesToTest.forEach(hex2 => {
-      if (hex.x !== hex2.x || hex.y !== hex2.y) {
-        if (isInSight(hex, hex2, board)) {
-          ++inSight
-        } else {
-          ++outSight
-        }
-      }
-    })
-  })
-  let end = window.performance.now()
-
-  console.log(`Full LOS test: In sight ${inSight} / Out of sight ${outSight}. Test took ${(end - start | 0)}ms.`)
-}
-
-setTimeout(fullLOSTest, 200)
+// const fullLOSTest = () => {
+//   let inSight = 0
+//   let outSight = 0
+//
+//   let start = window.performance.now()
+//
+//   const hexesToTest = board.hexes.filter(h => (
+//     !board.wallHexes.find(wh => (
+//       h.x === wh.x && h.y === wh.y
+//     ))
+//   ))
+//
+//   hexesToTest.forEach(hex => {
+//     hexesToTest.forEach(hex2 => {
+//       if (hex.x !== hex2.x || hex.y !== hex2.y) {
+//         if (isInSight(hex, hex2, board)) {
+//           ++inSight
+//         } else {
+//           ++outSight
+//         }
+//       }
+//     })
+//   })
+//   let end = window.performance.now()
+//
+//   console.log(`Full LOS test: In sight ${inSight} / Out of sight ${outSight}. Test took ${(end - start | 0)}ms.`)
+// }
+//
+// setTimeout(fullLOSTest, 200)

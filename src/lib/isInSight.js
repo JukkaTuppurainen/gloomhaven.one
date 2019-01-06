@@ -4,7 +4,19 @@ import {getCornerOffset} from './getCornerOffset'
 
 let cache = {}
 
-// Current correct value 3891 / 3249
+// Current correct value 3884 / 3256
+
+const getOffsets = (hex, corner1, corner2, cornerIndex1, cornerIndex2, board) => {
+  if (
+    board.isThinWallCorner(corner1.x, corner1.y) &&
+    board.isThinWallCorner(corner2.x, corner2.y)
+  ) {
+    return [
+      getCornerOffset(hex.x, hex.y, cornerIndex1, board),
+      getCornerOffset(hex.x, hex.y, cornerIndex2, board)
+    ]
+  }
+}
 
 export const isInSight = (hex1, hex2, board, returnLines) => {
   let corners1
@@ -25,7 +37,9 @@ export const isInSight = (hex1, hex2, board, returnLines) => {
   let los = false
   let lines = []
 
+  let c1index = 0
   let c2index
+
   corners1.forEach(c1 => {
     if (returnLines || !los) {
       c2index = 0
@@ -50,30 +64,31 @@ export const isInSight = (hex1, hex2, board, returnLines) => {
           })
 
           if (ok) {
+            let nextc1 = c1index === 5 ? 0 : c1index + 1
+            let prevc1 = c1index === 0 ? 5 : c1index - 1
             let nextc2 = c2index === 5 ? 0 : c2index + 1
             let prevc2 = c2index === 0 ? 5 : c2index - 1
-            let offset1 = null
-            let offset2 = null
+            let offsets
 
-            if (
-              board.isThinWallCorner(c2.x, c2.y) &&
-              board.isThinWallCorner(corners2[nextc2].x, corners2[nextc2].y)
-            ) {
-              offset1 = getCornerOffset(hex2.x, hex2.y, c2index, board)
-              offset2 = getCornerOffset(hex2.x, hex2.y, nextc2, board)
+            if (!offsets) {
+              offsets = getOffsets(hex1, c1, corners1[nextc1], c1index, nextc1, board)
             }
 
-            if (
-              board.isThinWallCorner(c2.x, c2.y) &&
-              board.isThinWallCorner(corners2[prevc2].x, corners2[prevc2].y)
-            ) {
-              offset1 = getCornerOffset(hex2.x, hex2.y, c2index, board)
-              offset2 = getCornerOffset(hex2.x, hex2.y, prevc2, board)
+            if (!offsets) {
+              offsets = getOffsets(hex1, c1, corners1[prevc1], c1index, prevc1, board)
             }
 
-            if (offset1 && offset2 && intersects(
+            if (!offsets) {
+              offsets = getOffsets(hex2, c2, corners2[nextc2], c2index, nextc2, board)
+            }
+
+            if (!offsets) {
+              offsets = getOffsets(hex2, c2, corners2[prevc2], c2index, prevc2, board)
+            }
+
+            if (offsets && intersects(
               c1.x, c1.y, c2.x, c2.y,
-              offset1.x, offset1.y, offset2.x, offset2.y
+              offsets[0].x, offsets[0].y, offsets[1].x, offsets[1].y
             )) {
               ok = false
             }
@@ -94,6 +109,7 @@ export const isInSight = (hex1, hex2, board, returnLines) => {
         ++c2index
       })
     }
+    ++c1index
   })
 
   return los && returnLines
