@@ -9,6 +9,18 @@ module.exports = {
   },
   entry: './src/index.js',
   mode: 'development',
+  module: {
+    rules: [
+      {
+        test: /\.jpg$/,
+        use: [
+          {
+            loader: 'file-loader'
+          }
+        ]
+      }
+    ]
+  },
   output: {
     filename: 'main.js',
     path: path.resolve(__dirname, '..')

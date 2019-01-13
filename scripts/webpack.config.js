@@ -6,6 +6,18 @@ module.exports = {
     path.join(__dirname, '..', 'src', 'index.js')
   ],
   mode: 'production',
+  module: {
+    rules: [
+      {
+        test: /\.jpg$/,
+        use: [
+          {
+            loader: 'file-loader'
+          }
+        ]
+      }
+    ]
+  },
   output: {
     filename: 'main.[chunkhash:8].js',
     path: path.resolve(__dirname, '..', 'dist')

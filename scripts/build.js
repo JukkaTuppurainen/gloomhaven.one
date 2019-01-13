@@ -5,7 +5,7 @@ const config = require('./webpack.config')
 
 console.log(__dirname)
 
-console.log('Removing dist...')
+console.log('Emptying dist...')
 fs.emptyDirSync(__dirname + '/../dist')
 
 console.log('Running Webpack')

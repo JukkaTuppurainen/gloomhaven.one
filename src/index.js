@@ -1,16 +1,11 @@
 import * as Honeycomb from 'honeycomb-grid/src/honeycomb'
 
 import {isInSight} from './lib/isInSight'
-import {getCornerOffset} from './lib/getCornerOffset'
+import bitmap from './img/BlackBarrow.jpg'
 
-// https://stackoverflow.com/questions/31346862/test-if-a-point-is-approximately-on-a-line-segment-formed-by-two-other-points
-// https://stackoverflow.com/questions/6865832/detecting-if-a-point-is-of-a-line-segment
-// https://github.com/flauwekeul/honeycomb
-
-// @todo: implement this (or maybe not?)
-// https://github.com/davidfig/intersects
 
 const canvas = document.getElementById('c')
+const canvasBackground = document.getElementById('b')
 
 const ctx = canvas.getContext('2d')
 ctx.lineWidth = 1
@@ -18,6 +13,7 @@ ctx.lineWidth = 1
 // window.ctx = ctx
 
 const board = {
+  hexSize: 60,
   mouseHex: {
     x: null,
     y: null
@@ -28,7 +24,7 @@ const board = {
 // window.board = board
 
 const Grid = Honeycomb.defineGrid(Honeycomb.extendHex({
-  size: 60,
+  size: board.hexSize,
   orientation: board.orientation
 }))
 board.grid = Grid.rectangle({width: 11, height: 13})
@@ -51,6 +47,9 @@ board.grid.forEach(hex => {
 
 canvas.height = maxY + 1
 canvas.width = maxX + 1
+
+canvasBackground.height = maxY + 100
+canvasBackground.width= maxX + 100
 
 // let monsterHex
 
@@ -195,6 +194,15 @@ board.hexes = board.grid.filter(
   hex => !board.noHexes.find(nH => nH.x === hex.x && nH.y === hex.y)
 )
 
+const imgScale = .928
+const img = document.createElement('img')
+img.src = bitmap
+
+img.onload = () => {
+  const ctx2 = canvasBackground.getContext('2d')
+  ctx2.drawImage(img, 0, 0, img.width * imgScale, img.height * imgScale)
+}
+
 const render = () => {
   if (!needRender) {
     requestAnimationFrame(render)
@@ -206,33 +214,9 @@ const render = () => {
 
   let linesToHover = false
 
-  // const mouseHex = board.grid.get({x: board.mouseHex.x, y: board.mouseHex.y})
-  // if (mouseHex) {
-  //   const mouseHexPoint = mouseHex.toPoint()
-  //   const mouseHexCorners = mouseHex.corners().map(corner => corner.add(mouseHexPoint))
-  //   for (let i = 0; i < 6; ++i) {
-  //     let nextCorner = i === 5 ? 0 : i + 1
-  //     if (
-  //       board.isThinWallCorner(mouseHexCorners[i].x, mouseHexCorners[i].y) &&
-  //       board.isThinWallCorner(mouseHexCorners[nextCorner].x, mouseHexCorners[nextCorner].y)
-  //     ) {
-  //       const offsets1 = getCornerOffset(board.mouseHex.x, board.mouseHex.y, i, board)
-  //       const offsets2 = getCornerOffset(board.mouseHex.x, board.mouseHex.y, nextCorner, board)
-  //
-  //       setTimeout(() => {
-  //         ctx.strokeStyle = '#fff'
-  //         ctx.beginPath()
-  //         ctx.moveTo(offsets1.x, offsets1.y)
-  //         ctx.lineTo(offsets2.x, offsets2.y)
-  //         ctx.stroke()
-  //       })
-  //     }
-  //   }
-  // }
-
   board.hexes.forEach(hex => {
-    ctx.strokeStyle = '#888'
-    ctx.lineWidth = 1
+    // ctx.strokeStyle = 'rgba(255, 255, 255, .5)'
+    // ctx.lineWidth = 3
 
     const point = hex.toPoint()
     const corners = hex.corners().map(corner => corner.add(point))
@@ -243,19 +227,22 @@ const render = () => {
         wallHex.x === hex.x && wallHex.y === hex.y
       )
     ) {
-      ctx.beginPath()
-      ctx.moveTo(firstCorner.x, firstCorner.y)
-      otherCorners.forEach(({x, y}) => ctx.lineTo(x, y))
-      ctx.lineTo(firstCorner.x, firstCorner.y)
-      ctx.fillStyle = '#222'
-      ctx.fill()
-      ctx.closePath()
+      // Paint wall hexes
+      if (board.playerHex) {
+        ctx.beginPath()
+        ctx.moveTo(firstCorner.x, firstCorner.y)
+        otherCorners.forEach(({x, y}) => ctx.lineTo(x, y))
+        ctx.lineTo(firstCorner.x, firstCorner.y)
+        ctx.fillStyle = 'rgba(0, 0, 0, .6)'
+        ctx.fill()
+      }
     } else {
       ctx.beginPath()
       ctx.moveTo(firstCorner.x, firstCorner.y)
       otherCorners.forEach(({x, y}) => ctx.lineTo(x, y))
       ctx.lineTo(firstCorner.x, firstCorner.y)
-      ctx.stroke()
+      // ctx.stroke()
+      ctx.closePath()
 
       let isMouseHex = hex.x === board.mouseHex.x && hex.y === board.mouseHex.y
       let responseToisInSight = board.playerHex && isInSight(board.playerHex, hex, board, isMouseHex)
@@ -265,8 +252,8 @@ const render = () => {
       }
 
       // Line of sight
-      if (responseToisInSight !== false) {
-        ctx.fillStyle = '#333'
+      if (responseToisInSight === false) {
+        ctx.fillStyle = 'rgba(0, 0, 0, .6)'
         ctx.fill()
       }
 
@@ -281,20 +268,21 @@ const render = () => {
 
       // Player
       if (board.playerHex && hex.x === board.playerHex.x && hex.y === board.playerHex.y) {
-        ctx.fillStyle = '#00f'
+        ctx.fillStyle = 'rgba(0, 0, 255, .5)'
         ctx.fill()
       }
     }
   })
 
-  ctx.strokeStyle = '#fff'
-  ctx.lineWidth = 1
-  board.walls.forEach(wall => {
-    ctx.beginPath()
-    ctx.moveTo(wall.x1, wall.y1)
-    ctx.lineTo(wall.x2, wall.y2)
-    ctx.stroke()
-  })
+  // Draw walls
+  // ctx.strokeStyle = '#fff'
+  // ctx.lineWidth = 1
+  // board.walls.forEach(wall => {
+  //   ctx.beginPath()
+  //   ctx.moveTo(wall.x1, wall.y1)
+  //   ctx.lineTo(wall.x2, wall.y2)
+  //   ctx.stroke()
+  // })
 
   if (linesToHover) {
     let shortestLine = linesToHover.reduce((acc, line) => {
@@ -309,7 +297,7 @@ const render = () => {
     ctx.beginPath()
     ctx.moveTo(shortestLine.a, shortestLine.b)
     ctx.lineTo(shortestLine.x, shortestLine.y)
-    ctx.lineWidth = 1
+    ctx.lineWidth = 3
     ctx.strokeStyle = 'rgba(255, 0, 255, .9)'
     ctx.stroke()
     // })
@@ -334,11 +322,11 @@ addEventListener('mousemove', ({layerX, layerY}) => {
 
 document.addEventListener('click', ({layerX, layerY}) => {
   const clickHex = board.grid.get(Grid.pointToHex(layerX, layerY))
-  if (clickHex) {
-    const point = clickHex.toPoint()
-    const corners = clickHex.corners().map(corner => corner.add(point))
-    // console.log('clickHex:', clickHex, clickHex && corners)
-  }
+  // if (clickHex) {
+  //   const point = clickHex.toPoint()
+  //   const corners = clickHex.corners().map(corner => corner.add(point))
+  //   console.log('clickHex:', clickHex, clickHex && corners)
+  // }
 
   if (
     !clickHex ||
@@ -350,7 +338,13 @@ document.addEventListener('click', ({layerX, layerY}) => {
 
   needRender = true
 
-  board.playerHex = clickHex
+  board.playerHex = (
+    board.playerHex &&
+    clickHex.x === board.playerHex.x &&
+    clickHex.y === board.playerHex.y
+  )
+    ? null
+    : clickHex
 })
 
 // const fullLOSTest = () => {

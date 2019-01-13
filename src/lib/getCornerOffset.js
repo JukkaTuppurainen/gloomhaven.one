@@ -14,7 +14,7 @@ export const getCornerOffset = (x, y, c, board) => {
   centerx /= 6
   centery /= 6
 
-  const extraWallDistance = 2
+  const extraWallDistance = board.hexSize / 30
 
   // https://www.calculator.net/triangle-calculator.html?vc=&vx=&vy=115&va=90&vz=&vb=60&angleunits=d&x=123&y=18
 
