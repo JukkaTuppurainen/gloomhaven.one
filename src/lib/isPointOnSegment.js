@@ -1,5 +1,3 @@
-// https://stackoverflow.com/questions/6865832/detecting-if-a-point-is-of-a-line-segment
-
 export const isPointOnSegment = (startPoint, checkPoint, endPoint) => {
   if ((
     startPoint.x === checkPoint.x && checkPoint.x === endPoint.x &&
@@ -32,6 +30,3 @@ export const isPointOnSegment = (startPoint, checkPoint, endPoint) => {
     )
   )
 }
-
-// window.w = window.w || {}
-// window.w.isPointOnSegment = isPointOnSegment

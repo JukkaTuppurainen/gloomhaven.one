@@ -1,24 +1,27 @@
+import {board} from './Board'
+import {getCornerOffset} from './getCornerOffset'
 import {intersects} from './intersects'
 import {isPointOnSegment} from './isPointOnSegment'
-import {getCornerOffset} from './getCornerOffset'
+import {isThinWallCorner} from './isThinWallCorner'
+
 
 let cache = {}
 
 // Current correct value 3884 / 3256
 
-const getOffsets = (hex, corner1, corner2, cornerIndex1, cornerIndex2, board) => {
+const getOffsets = (hex, corner1, corner2, cornerIndex1, cornerIndex2) => {
   if (
-    board.isThinWallCorner(corner1.x, corner1.y) &&
-    board.isThinWallCorner(corner2.x, corner2.y)
+    isThinWallCorner(corner1.x, corner1.y) &&
+    isThinWallCorner(corner2.x, corner2.y)
   ) {
     return [
-      getCornerOffset(hex.x, hex.y, cornerIndex1, board),
-      getCornerOffset(hex.x, hex.y, cornerIndex2, board)
+      getCornerOffset(hex.x, hex.y, cornerIndex1),
+      getCornerOffset(hex.x, hex.y, cornerIndex2)
     ]
   }
 }
 
-export const isInSight = (hex1, hex2, board, returnLines) => {
+export const isInSight = (hex1, hex2, returnLines) => {
   let corners1
   if (cache.x !== hex1.x || cache.y !== hex1.y) {
     const point1 = hex1.toPoint()
@@ -46,7 +49,7 @@ export const isInSight = (hex1, hex2, board, returnLines) => {
       corners2.forEach(c2 => {
         if (returnLines || !los) {
           let ok = true
-          board.walls.forEach(wall => {
+          board.scenario.walls.forEach(wall => {
             if (ok && intersects(
               c1.x, c1.y, c2.x, c2.y,
               wall.x1, wall.y1, wall.x2, wall.y2
@@ -71,19 +74,19 @@ export const isInSight = (hex1, hex2, board, returnLines) => {
             let offsets
 
             if (!offsets) {
-              offsets = getOffsets(hex1, c1, corners1[nextc1], c1index, nextc1, board)
+              offsets = getOffsets(hex1, c1, corners1[nextc1], c1index, nextc1)
             }
 
             if (!offsets) {
-              offsets = getOffsets(hex1, c1, corners1[prevc1], c1index, prevc1, board)
+              offsets = getOffsets(hex1, c1, corners1[prevc1], c1index, prevc1)
             }
 
             if (!offsets) {
-              offsets = getOffsets(hex2, c2, corners2[nextc2], c2index, nextc2, board)
+              offsets = getOffsets(hex2, c2, corners2[nextc2], c2index, nextc2)
             }
 
             if (!offsets) {
-              offsets = getOffsets(hex2, c2, corners2[prevc2], c2index, prevc2, board)
+              offsets = getOffsets(hex2, c2, corners2[prevc2], c2index, prevc2)
             }
 
             if (offsets && intersects(

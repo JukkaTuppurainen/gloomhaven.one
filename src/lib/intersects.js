@@ -1,5 +1,3 @@
-// https://stackoverflow.com/questions/9043805/test-if-two-lines-intersect-javascript-function
-
 // returns true if the line from (a,b)->(c,d) intersects with (p,q)->(r,s)
 export const intersects = (a, b, c, d, p, q, r, s) => {
   let det, gamma, lambda

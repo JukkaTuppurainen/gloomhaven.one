@@ -1,220 +1,27 @@
-import * as Honeycomb from 'honeycomb-grid/src/honeycomb'
-
+import {
+  board,
+  Grid
+} from './lib/Board'
 import {isInSight} from './lib/isInSight'
-import bitmap from './img/BlackBarrow.jpg'
 
+
+const renderDebug = true
 
 const canvas = document.getElementById('c')
-const canvasBackground = document.getElementById('b')
 
 const ctx = canvas.getContext('2d')
 ctx.lineWidth = 1
 
-// window.ctx = ctx
-
-const board = {
-  hexSize: 60,
-  mouseHex: {
-    x: null,
-    y: null
-  },
-  orientation: 'flat' // 'pointy'
-}
-
-// window.board = board
-
-const Grid = Honeycomb.defineGrid(Honeycomb.extendHex({
-  size: board.hexSize,
-  orientation: board.orientation
-}))
-board.grid = Grid.rectangle({width: 11, height: 13})
-
-let maxX = 0
-let maxY = 0
-
-board.grid.forEach(hex => {
-  const point = hex.toPoint()
-  const corners = hex.corners().map(corner => corner.add(point))
-  corners.forEach(c => {
-    if (c.x > maxX) {
-      maxX = c.x
-    }
-    if (c.y > maxY) {
-      maxY = c.y
-    }
-  })
-})
-
-canvas.height = maxY + 1
-canvas.width = maxX + 1
-
-canvasBackground.height = maxY + 100
-canvasBackground.width= maxX + 100
-
-// let monsterHex
-
-board.wallHexes = [
-  {x: 4, y: 0},
-  {x: 5, y: 0},
-  {x: 5, y: 1},
-  {x: 5, y: 2},
-  {x: 5, y: 4},
-  {x: 5, y: 5},
-  {x: 5, y: 6},
-  {x: 0, y: 7},
-  {x: 1, y: 6},
-  {x: 2, y: 7},
-  {x: 3, y: 6},
-  {x: 4, y: 7},
-  {x: 5, y: 7},
-
-  {x: 9, y: 0},
-  {x: 9, y: 1},
-  {x: 9, y: 2},
-  {x: 9, y: 3},
-  {x: 9, y: 4},
-  {x: 9, y: 5},
-  {x: 9, y: 6},
-  {x: 9, y: 7},
-  {x: 10, y: 7},
-
-  {x: 3, y: 7},
-  {x: 3, y: 8},
-  {x: 3, y: 9},
-  {x: 3, y: 10},
-  {x: 3, y: 11},
-  {x: 3, y: 12}
-]
-
-board.thinWalls = []
-
-board.noHexes = [
-  {x: 0, y: 0},
-  {x: 1, y: 0},
-  {x: 2, y: 0},
-  {x: 3, y: 0},
-  {x: 0, y: 8},
-  {x: 0, y: 9},
-  {x: 0, y: 10},
-  {x: 0, y: 11},
-  {x: 0, y: 12},
-  {x: 1, y: 7},
-  {x: 1, y: 8},
-  {x: 1, y: 9},
-  {x: 1, y: 10},
-  {x: 1, y: 11},
-  {x: 1, y: 12},
-  {x: 2, y: 8},
-  {x: 2, y: 9},
-  {x: 2, y: 10},
-  {x: 2, y: 11},
-  {x: 2, y: 12},
-  {x: 5, y: 12},
-  {x: 7, y: 12},
-  {x: 9, y: 12},
-  {x: 10, y: 0},
-  {x: 10, y: 1},
-  {x: 10, y: 2},
-  {x: 10, y: 3},
-  {x: 10, y: 4},
-  {x: 10, y: 5},
-  {x: 10, y: 6}
-]
-
-board.wallCorners = []
-
-const makeWall = (hex1coords, corner1, hex2coords, corner2, thin) => {
-  let hex1 = board.grid.get(hex1coords)
-  let hex2 = board.grid.get(hex2coords)
-
-  let point1 = hex1.toPoint()
-  let point2 = hex2.toPoint()
-
-  let corners1 = hex1.corners().map(c => c.add(point1))
-  let corners2 = hex2.corners().map(c => c.add(point2))
-
-  board.wallCorners.push(corners1[corner1])
-  board.wallCorners.push(corners2[corner2])
-
-  const wall = {
-    x1: corners1[corner1].x,
-    y1: corners1[corner1].y,
-    x2: corners2[corner2].x,
-    y2: corners2[corner2].y
-  }
-
-  if (thin) {
-    board.thinWalls.push(wall)
-  }
-
-  return wall
-}
-
-board.walls = [
-  makeWall({x: 6, y: 8}, 4, {x: 6, y: 8}, 5, true, {x1: -10}),
-  makeWall({x: 8, y: 8}, 4, {x: 8, y: 8}, 5, true, {x2: 10})
-]
-
-board.wallHexes.forEach(({x, y}) => {
-  const wallHex = board.grid.get({x, y})
-  const wallHexPoint = wallHex.toPoint()
-  const corners = wallHex.corners().map(c => c.add(wallHexPoint))
-  board.wallCorners.push(...corners)
-
-  for (let i = 0; i < 6; ++i) {
-    board.walls.push(makeWall({x, y}, i, {x, y}, (i < 5 ? i + 1: 0)))
-  }
-
-  board.walls.push(
-    {
-      x1: corners[0].x,
-      y1: corners[0].y,
-      x2: corners[3].x,
-      y2: corners[3].y
-    },
-    {
-      x1: (corners[4].x + corners[5].x) / 2,
-      y1: corners[4].y,
-      x2: (corners[1].x + corners[2].x) / 2,
-      y2: corners[1].y
-    }
-  )
-})
-
-let needRender = true
-
-board.isThinWallCorner = (mapX, mapY) => (
-  board.thinWalls.find(thinWall => (
-    (thinWall.x1 === mapX && thinWall.y1 === mapY) ||
-    (thinWall.x2 === mapX && thinWall.y2 === mapY)
-  ))
-)
-
-board.hexes = board.grid.filter(
-  hex => !board.noHexes.find(nH => nH.x === hex.x && nH.y === hex.y)
-)
-
-const imgScale = .928
-const img = document.createElement('img')
-img.src = bitmap
-
-img.onload = () => {
-  const ctx2 = canvasBackground.getContext('2d')
-  ctx2.drawImage(img, 0, 0, img.width * imgScale, img.height * imgScale)
-}
-
 const render = () => {
-  if (!needRender) {
-    requestAnimationFrame(render)
+  if (!board.scenario) {
     return
   }
 
-  needRender = false
   ctx.clearRect(0, 0, canvas.width, canvas.height)
 
   let linesToHover = false
 
-  board.hexes.forEach(hex => {
+  board.scenario.hexes.forEach(hex => {
     // ctx.strokeStyle = 'rgba(255, 255, 255, .5)'
     // ctx.lineWidth = 3
 
@@ -223,7 +30,7 @@ const render = () => {
     const [firstCorner, ...otherCorners] = corners
 
     if (
-      board.wallHexes.find(wallHex =>
+      board.scenario.wallHexes.find(wallHex =>
         wallHex.x === hex.x && wallHex.y === hex.y
       )
     ) {
@@ -245,7 +52,7 @@ const render = () => {
       ctx.closePath()
 
       let isMouseHex = hex.x === board.mouseHex.x && hex.y === board.mouseHex.y
-      let responseToisInSight = board.playerHex && isInSight(board.playerHex, hex, board, isMouseHex)
+      let responseToisInSight = board.playerHex && isInSight(board.playerHex, hex, isMouseHex)
 
       if (isMouseHex && responseToisInSight instanceof Array) {
         linesToHover = responseToisInSight
@@ -275,14 +82,16 @@ const render = () => {
   })
 
   // Draw walls
-  // ctx.strokeStyle = '#fff'
-  // ctx.lineWidth = 1
-  // board.walls.forEach(wall => {
-  //   ctx.beginPath()
-  //   ctx.moveTo(wall.x1, wall.y1)
-  //   ctx.lineTo(wall.x2, wall.y2)
-  //   ctx.stroke()
-  // })
+  if (renderDebug) {
+    ctx.strokeStyle = '#fff'
+    ctx.lineWidth = 1
+    board.scenario.walls.forEach(wall => {
+      ctx.beginPath()
+      ctx.moveTo(wall.x1, wall.y1)
+      ctx.lineTo(wall.x2, wall.y2)
+      ctx.stroke()
+    })
+  }
 
   if (linesToHover) {
     let shortestLine = linesToHover.reduce((acc, line) => {
@@ -302,8 +111,6 @@ const render = () => {
     ctx.stroke()
     // })
   }
-
-  requestAnimationFrame(render)
 }
 
 render()
@@ -316,7 +123,7 @@ addEventListener('mousemove', ({layerX, layerY}) => {
     newMouseHex.y !== board.mouseHex.y
   ) {
     Object.assign(board.mouseHex, newMouseHex)
-    needRender = true
+    requestAnimationFrame(render)
   }
 })
 
@@ -330,13 +137,11 @@ document.addEventListener('click', ({layerX, layerY}) => {
 
   if (
     !clickHex ||
-    board.wallHexes.find(wHex => wHex.x === clickHex.x && wHex.y === clickHex.y) ||
-    board.noHexes.find(wHex => wHex.x === clickHex.x && wHex.y === clickHex.y)
+    board.scenario.wallHexes.find(wHex => wHex.x === clickHex.x && wHex.y === clickHex.y) ||
+    board.scenario.noHexes.find(wHex => wHex.x === clickHex.x && wHex.y === clickHex.y)
   ) {
     return
   }
-
-  needRender = true
 
   board.playerHex = (
     board.playerHex &&
@@ -345,6 +150,8 @@ document.addEventListener('click', ({layerX, layerY}) => {
   )
     ? null
     : clickHex
+
+  requestAnimationFrame(render)
 })
 
 // const fullLOSTest = () => {
@@ -353,8 +160,8 @@ document.addEventListener('click', ({layerX, layerY}) => {
 //
 //   let start = window.performance.now()
 //
-//   const hexesToTest = board.hexes.filter(h => (
-//     !board.wallHexes.find(wh => (
+//   const hexesToTest = board.scenario.hexes.filter(h => (
+//     !board.scenario.wallHexes.find(wh => (
 //       h.x === wh.x && h.y === wh.y
 //     ))
 //   ))
@@ -362,7 +169,7 @@ document.addEventListener('click', ({layerX, layerY}) => {
 //   hexesToTest.forEach(hex => {
 //     hexesToTest.forEach(hex2 => {
 //       if (hex.x !== hex2.x || hex.y !== hex2.y) {
-//         if (isInSight(hex, hex2, board)) {
+//         if (isInSight(hex, hex2)) {
 //           ++inSight
 //         } else {
 //           ++outSight
