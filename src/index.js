@@ -4,8 +4,7 @@ import {
 } from './lib/Board'
 import {isInSight} from './lib/isInSight'
 
-
-const renderDebug = true
+const renderDebug = false
 
 const canvas = document.getElementById('c')
 
@@ -152,6 +151,11 @@ document.addEventListener('click', ({layerX, layerY}) => {
     : clickHex
 
   requestAnimationFrame(render)
+})
+
+document.getElementById('los-mode').addEventListener('change', event => {
+  board.losMode = event.target.value === '1'
+  render()
 })
 
 // const fullLOSTest = () => {

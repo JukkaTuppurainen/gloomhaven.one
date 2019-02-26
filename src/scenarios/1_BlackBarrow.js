@@ -9,10 +9,6 @@ export default {
     width: 11
   },
   noHexes: [
-    {x: 0, y: 0},
-    {x: 1, y: 0},
-    {x: 2, y: 0},
-    {x: 3, y: 0},
     {x: 0, y: 8},
     {x: 0, y: 9},
     {x: 0, y: 10},
@@ -41,6 +37,10 @@ export default {
     {x: 10, y: 6}
   ],
   wallHexes: [
+    {x: 0, y: 0},
+    {x: 1, y: 0},
+    {x: 2, y: 0},
+    {x: 3, y: 0},
     {x: 4, y: 0},
     {x: 5, y: 0},
     {x: 5, y: 1},

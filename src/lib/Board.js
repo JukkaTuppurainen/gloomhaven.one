@@ -101,6 +101,7 @@ const board = {
       }
     })
   },
+  losMode: false,
   mouseHex: {
     x: null,
     y: null

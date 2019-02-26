@@ -21,6 +21,10 @@ const getOffsets = (hex, corner1, corner2, cornerIndex1, cornerIndex2) => {
   }
 }
 
+const isWallCorner = corner => board.scenario.wallCorners.find(wallCorner => (
+  wallCorner.x === corner.x && wallCorner.y === corner.y
+))
+
 export const isInSight = (hex1, hex2, returnLines) => {
   let corners1
   if (cache.x !== hex1.x || cache.y !== hex1.y) {
@@ -44,10 +48,18 @@ export const isInSight = (hex1, hex2, returnLines) => {
   let c2index
 
   corners1.forEach(c1 => {
-    if (returnLines || !los) {
+    if ((
+      returnLines || !los
+    ) && (
+      board.losMode || !isWallCorner(c1)
+    )) {
       c2index = 0
       corners2.forEach(c2 => {
-        if (returnLines || !los) {
+        if ((
+          returnLines || !los
+        ) && (
+          board.losMode || !isWallCorner(c2)
+        )) {
           let ok = true
           board.scenario.walls.forEach(wall => {
             if (ok && intersects(

@@ -29,12 +29,24 @@ p {
   position: absolute;
   top: 23px;
 }
+
+select {
+  background: #000;
+  color: #fff;
+}
 </style>
 </head>
 <body>
 
 <canvas id="b"></canvas>
 <canvas id="c"></canvas>
+<p>Line of sight
+  <select id="los-mode">
+    <option value="0">may not</option>
+    <option value="1">may</option>
+  </select>
+  start from or end to corner of hex which is also a wall.
+</p>
 <p><em>Important!</em> This is an aplha version with some known bugs.</p>
 
 </body>
