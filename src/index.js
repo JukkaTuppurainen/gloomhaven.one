@@ -3,15 +3,13 @@ import {
   Grid
 } from './lib/Board'
 import {isInSight} from './lib/isInSight'
+import {scenarioList} from './scenarios'
 
-const renderDebug = false
 
 const canvas = document.getElementById('c')
-
 const ctx = canvas.getContext('2d')
-ctx.lineWidth = 1
 
-const render = () => {
+export const render = () => {
   if (!board.scenario) {
     return
   }
@@ -19,11 +17,9 @@ const render = () => {
   ctx.clearRect(0, 0, canvas.width, canvas.height)
 
   let linesToHover = false
+  const style = board.scenario.style
 
   board.scenario.hexes.forEach(hex => {
-    // ctx.strokeStyle = 'rgba(255, 255, 255, .5)'
-    // ctx.lineWidth = 3
-
     const point = hex.toPoint()
     const corners = hex.corners().map(corner => corner.add(point))
     const [firstCorner, ...otherCorners] = corners
@@ -33,7 +29,22 @@ const render = () => {
         wallHex.x === hex.x && wallHex.y === hex.y
       )
     ) {
-      // Paint wall hexes
+      if (style && style.walls) {
+        ctx.beginPath()
+        ctx.moveTo(firstCorner.x, firstCorner.y)
+        otherCorners.forEach(({x, y}) => ctx.lineTo(x, y))
+        ctx.lineTo(firstCorner.x, firstCorner.y)
+        if (style.walls.line) {
+          ctx.strokeStyle = style.walls.line
+          ctx.stroke()
+        }
+        if (style.walls.fill) {
+          ctx.fillStyle = style.walls.fill
+          ctx.fill()
+        }
+      }
+
+      // Shade wall hexes always when player is on the board
       if (board.playerHex) {
         ctx.beginPath()
         ctx.moveTo(firstCorner.x, firstCorner.y)
@@ -47,7 +58,19 @@ const render = () => {
       ctx.moveTo(firstCorner.x, firstCorner.y)
       otherCorners.forEach(({x, y}) => ctx.lineTo(x, y))
       ctx.lineTo(firstCorner.x, firstCorner.y)
-      // ctx.stroke()
+
+      if (style && style.hexes) {
+        if (style.hexes.line) {
+          ctx.strokeStyle = style.hexes.line
+          ctx.stroke()
+        }
+
+        if (style.hexes.fill) {
+          ctx.fillStyle = style.hexes.fill
+          ctx.fill()
+        }
+      }
+
       ctx.closePath()
 
       let isMouseHex = hex.x === board.mouseHex.x && hex.y === board.mouseHex.y
@@ -80,17 +103,40 @@ const render = () => {
     }
   })
 
-  // Draw walls
-  if (renderDebug) {
-    ctx.strokeStyle = '#fff'
-    ctx.lineWidth = 1
-    board.scenario.walls.forEach(wall => {
+  if (style && style.noHexes) {
+    board.scenario.noHexes.forEach(noHexCoords => {
+      const noHex = board.grid.get(noHexCoords)
+      const point = noHex.toPoint()
+      const corners = noHex.corners().map(corner => corner.add(point))
+      const [firstCorner, ...otherCorners] = corners
+
       ctx.beginPath()
-      ctx.moveTo(wall.x1, wall.y1)
-      ctx.lineTo(wall.x2, wall.y2)
-      ctx.stroke()
+      ctx.moveTo(firstCorner.x, firstCorner.y)
+      otherCorners.forEach(({x, y}) => ctx.lineTo(x, y))
+      ctx.lineTo(firstCorner.x, firstCorner.y)
+
+      if (style.noHexes.line) {
+        ctx.strokeStyle = style.noHexes.line
+        ctx.stroke()
+      }
+      if (style.noHexes.fill) {
+        ctx.fillStyle = style.noHexes.fill
+        ctx.fill()
+      }
     })
   }
+
+  // Draw walls
+  // if (renderDebug) {
+  //   ctx.strokeStyle = '#fff'
+  //   ctx.lineWidth = 1
+  //   board.scenario.walls.forEach(wall => {
+  //     ctx.beginPath()
+  //     ctx.moveTo(wall.x1, wall.y1)
+  //     ctx.lineTo(wall.x2, wall.y2)
+  //     ctx.stroke()
+  //   })
+  // }
 
   if (linesToHover) {
     let shortestLine = linesToHover.reduce((acc, line) => {
@@ -108,13 +154,29 @@ const render = () => {
     ctx.lineWidth = 3
     ctx.strokeStyle = 'rgba(255, 0, 255, .9)'
     ctx.stroke()
+    ctx.lineWidth = 1
     // })
   }
 }
 
 render()
 
-addEventListener('mousemove', ({layerX, layerY}) => {
+const scenarioSelect = document.getElementById('scenario')
+for (let [id, scenario] of Object.entries(scenarioList)) {
+  const option = document.createElement('option')
+  option.value = id
+  option.innerText = scenario.name
+  scenarioSelect.appendChild(option)
+}
+
+scenarioSelect.addEventListener('change', event => {
+  board.loadScenario(event.target.value)
+})
+
+scenarioSelect.value = 1
+board.loadScenario(1)
+
+canvas.addEventListener('mousemove', ({layerX, layerY}) => {
   let newMouseHex = Grid.pointToHex(layerX, layerY)
 
   if (
@@ -126,7 +188,7 @@ addEventListener('mousemove', ({layerX, layerY}) => {
   }
 })
 
-document.addEventListener('click', ({layerX, layerY}) => {
+canvas.addEventListener('click', ({layerX, layerY}) => {
   const clickHex = board.grid.get(Grid.pointToHex(layerX, layerY))
   // if (clickHex) {
   //   const point = clickHex.toPoint()

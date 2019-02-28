@@ -15,6 +15,14 @@ module.exports = {
             loader: 'file-loader'
           }
         ]
+      },
+      {
+        test: /\.html$/,
+        use: {
+          loader: 'html-loader'
+        }
+        // @todo: check minify options
+        // https://github.com/webpack-contrib/html-loader
       }
     ]
   },

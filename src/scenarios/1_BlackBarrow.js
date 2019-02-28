@@ -1,7 +1,7 @@
 import bitmap from './1_BlackBarrow.jpg'
 
 
-export default {
+export const scenario = {
   bitmap,
   bitmapScale: .928,
   grid: {

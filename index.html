@@ -3,6 +3,11 @@
 <head>
 <title>Gloomhaven Line of Sight Tool</title>
 <style>
+html {
+  height: 100%;
+  position: relative;
+}
+
 body,
 html {
   margin: 0;
@@ -13,14 +18,21 @@ html {
 
 body {
   background: #000;
-  position: relative;
-}
-
-p {
   color: #fff;
   font-family: 'Source Code Pro', monospace;
   font-size: 12px;
   line-height: 12px;
+  position: relative;
+}
+
+footer {
+  background: #0008;
+  bottom: 0;
+  position: fixed;
+  width: 100%;
+}
+
+p {
   margin-left: 10px;
 }
 
@@ -30,8 +42,11 @@ p {
   top: 23px;
 }
 
+input,
 select {
   background: #000;
+  border: 1px solid #fff;
+  box-shadow: none;
   color: #fff;
 }
 </style>
@@ -40,14 +55,18 @@ select {
 
 <canvas id="b"></canvas>
 <canvas id="c"></canvas>
-<p>Line of sight
-  <select id="los-mode">
-    <option value="0">may not</option>
-    <option value="1">may</option>
-  </select>
-  start from or end to corner of hex which is also a wall.
-</p>
-<p><em>Important!</em> This is an aplha version with some known bugs.</p>
+<footer>
+  <p>Scenario
+    <select id="scenario"></select>.
+  Line of sight
+    <select id="los-mode">
+      <option value="0">may not</option>
+      <option value="1">may</option>
+    </select>
+    start from or end to corner of hex which is also a wall.
+  </p>
+  <p><em>Important!</em> This is an aplha version with some known bugs.</p>
+</footer>
 
 </body>
 </html>
