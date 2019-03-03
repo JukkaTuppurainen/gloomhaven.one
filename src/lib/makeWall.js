@@ -1,4 +1,4 @@
-import {board} from './Board'
+import {board} from './board/board'
 
 
 export const makeWall = (hex1coords, corner1, hex2coords, corner2, thin) => {

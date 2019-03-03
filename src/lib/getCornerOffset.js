@@ -1,4 +1,4 @@
-import {board} from './Board'
+import {board} from './board/board'
 
 
 export const getCornerOffset = (x, y, c) => {

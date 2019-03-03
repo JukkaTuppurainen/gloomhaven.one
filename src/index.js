@@ -1,9 +1,7 @@
-import {
-  board,
-  Grid
-} from './lib/Board'
-import {isInSight} from './lib/isInSight'
+import {board}        from './lib/board/board'
+import {isInSight}    from './lib/isInSight'
 import {scenarioList} from './scenarios'
+import './style.css'
 
 
 const canvas = document.getElementById('c')
@@ -17,97 +15,128 @@ export const render = () => {
   ctx.clearRect(0, 0, canvas.width, canvas.height)
 
   let linesToHover = false
+  let hoverHex = false
   const style = board.scenario.style
+
+  if (style.noHexes) {
+    ctx.strokeStyle = style.noHexes.line
+    ctx.fillStyle = style.noHexes.fill
+
+    board.grid
+      .filter(gridHex => !board.scenario.hexes.find(hex => hex.x === gridHex.x && hex.y === gridHex.y))
+      .filter(gridHex => !board.scenario.wallHexes.find(hex => hex.x === gridHex.x && hex.y === gridHex.y))
+      .forEach(gridHex => {
+        const point = gridHex.toPoint()
+        const corners = gridHex.corners().map(corner => corner.add(point))
+        const [firstCorner, ...otherCorners] = corners
+
+        ctx.beginPath()
+        ctx.moveTo(firstCorner.x, firstCorner.y)
+        otherCorners.forEach(({x, y}) => ctx.lineTo(x, y))
+        ctx.lineTo(firstCorner.x, firstCorner.y)
+        if (style.noHexes.line) {
+          ctx.stroke()
+        }
+        if (style.noHexes.fill) {
+          ctx.fill()
+        }
+      })
+  }
+
+  board.scenario.wallHexes.forEach(wallHex => {
+    const point = wallHex.toPoint()
+    const corners = wallHex.corners().map(corner => corner.add(point))
+    const [firstCorner, ...otherCorners] = corners
+
+    if (style.wallHexes) {
+      ctx.beginPath()
+      ctx.moveTo(firstCorner.x, firstCorner.y)
+      otherCorners.forEach(({x, y}) => ctx.lineTo(x, y))
+      ctx.lineTo(firstCorner.x, firstCorner.y)
+      if (style.wallHexes.line) {
+        ctx.strokeStyle = style.wallHexes.line
+        ctx.stroke()
+      }
+      if (style.wallHexes.fill) {
+        ctx.fillStyle = style.wallHexes.fill
+        ctx.fill()
+      }
+    }
+
+    // Shade wall hexes always when player is on the board
+    if (board.playerHex) {
+      ctx.beginPath()
+      ctx.moveTo(firstCorner.x, firstCorner.y)
+      otherCorners.forEach(({x, y}) => ctx.lineTo(x, y))
+      ctx.lineTo(firstCorner.x, firstCorner.y)
+      ctx.fillStyle = '#000a'
+      ctx.fill()
+    }
+  })
 
   board.scenario.hexes.forEach(hex => {
     const point = hex.toPoint()
     const corners = hex.corners().map(corner => corner.add(point))
     const [firstCorner, ...otherCorners] = corners
 
-    if (
-      board.scenario.wallHexes.find(wallHex =>
-        wallHex.x === hex.x && wallHex.y === hex.y
-      )
-    ) {
-      if (style && style.walls) {
-        ctx.beginPath()
-        ctx.moveTo(firstCorner.x, firstCorner.y)
-        otherCorners.forEach(({x, y}) => ctx.lineTo(x, y))
-        ctx.lineTo(firstCorner.x, firstCorner.y)
-        if (style.walls.line) {
-          ctx.strokeStyle = style.walls.line
-          ctx.stroke()
-        }
-        if (style.walls.fill) {
-          ctx.fillStyle = style.walls.fill
-          ctx.fill()
-        }
+    ctx.beginPath()
+    ctx.moveTo(firstCorner.x, firstCorner.y)
+    otherCorners.forEach(({x, y}) => ctx.lineTo(x, y))
+    ctx.lineTo(firstCorner.x, firstCorner.y)
+
+    if (style.hexes) {
+      if (style.hexes.line) {
+        ctx.strokeStyle = style.hexes.line
+        ctx.stroke()
       }
 
-      // Shade wall hexes always when player is on the board
-      if (board.playerHex) {
-        ctx.beginPath()
-        ctx.moveTo(firstCorner.x, firstCorner.y)
-        otherCorners.forEach(({x, y}) => ctx.lineTo(x, y))
-        ctx.lineTo(firstCorner.x, firstCorner.y)
-        ctx.fillStyle = 'rgba(0, 0, 0, .6)'
-        ctx.fill()
-      }
-    } else {
-      ctx.beginPath()
-      ctx.moveTo(firstCorner.x, firstCorner.y)
-      otherCorners.forEach(({x, y}) => ctx.lineTo(x, y))
-      ctx.lineTo(firstCorner.x, firstCorner.y)
-
-      if (style && style.hexes) {
-        if (style.hexes.line) {
-          ctx.strokeStyle = style.hexes.line
-          ctx.stroke()
-        }
-
-        if (style.hexes.fill) {
-          ctx.fillStyle = style.hexes.fill
-          ctx.fill()
-        }
-      }
-
-      ctx.closePath()
-
-      let isMouseHex = hex.x === board.mouseHex.x && hex.y === board.mouseHex.y
-      let responseToisInSight = board.playerHex && isInSight(board.playerHex, hex, isMouseHex)
-
-      if (isMouseHex && responseToisInSight instanceof Array) {
-        linesToHover = responseToisInSight
-      }
-
-      // Line of sight
-      if (responseToisInSight === false) {
-        ctx.fillStyle = 'rgba(0, 0, 0, .6)'
-        ctx.fill()
-      }
-
-      // Hover
-      if (
-        hex.x === board.mouseHex.x &&
-        hex.y === board.mouseHex.y
-      ) {
-        ctx.fillStyle = 'rgba(50, 0, 80, .5)'
-        ctx.fill()
-      }
-
-      // Player
-      if (board.playerHex && hex.x === board.playerHex.x && hex.y === board.playerHex.y) {
-        ctx.fillStyle = 'rgba(0, 0, 255, .5)'
+      if (style.hexes.fill) {
+        ctx.fillStyle = style.hexes.fill
         ctx.fill()
       }
     }
+
+    ctx.closePath()
+
+    let isMouseHex = hex.x === board.mouseHex.x && hex.y === board.mouseHex.y
+    let responseToisInSight = board.playerHex && isInSight(board.playerHex, hex, isMouseHex)
+
+    if (isMouseHex && responseToisInSight instanceof Array) {
+      linesToHover = responseToisInSight
+    }
+
+    // Line of sight
+    if (responseToisInSight === false) {
+      ctx.fillStyle = '#000a'
+      ctx.fill()
+    }
+
+    // Hex hover
+    if (hex.x === board.mouseHex.x && hex.y === board.mouseHex.y) {
+      if (style.hexHover) {
+        ctx.fillStyle = style.hexHover
+        ctx.fill()
+      }
+      hoverHex = true
+    }
+
+    // Player
+    if (board.playerHex && hex.x === board.playerHex.x && hex.y === board.playerHex.y) {
+      ctx.fillStyle = '#00f8'
+      ctx.fill()
+    }
   })
 
-  if (style && style.noHexes) {
-    board.scenario.noHexes.forEach(noHexCoords => {
-      const noHex = board.grid.get(noHexCoords)
-      const point = noHex.toPoint()
-      const corners = noHex.corners().map(corner => corner.add(point))
+  // noHex hover
+  if (
+    !hoverHex &&
+    board.mouseHex &&
+    style.noHexHover
+  ) {
+    let hex = board.grid.get(board.mouseHex)
+    if (hex) {
+      const point = hex.toPoint()
+      const corners = hex.corners().map(corner => corner.add(point))
       const [firstCorner, ...otherCorners] = corners
 
       ctx.beginPath()
@@ -115,15 +144,21 @@ export const render = () => {
       otherCorners.forEach(({x, y}) => ctx.lineTo(x, y))
       ctx.lineTo(firstCorner.x, firstCorner.y)
 
-      if (style.noHexes.line) {
-        ctx.strokeStyle = style.noHexes.line
-        ctx.stroke()
-      }
-      if (style.noHexes.fill) {
-        ctx.fillStyle = style.noHexes.fill
-        ctx.fill()
-      }
+      ctx.fillStyle = style.noHexHover
+      ctx.fill()
+    }
+  }
+
+  if (style.thinWalls) {
+    ctx.lineWidth = style.thinWalls.width
+    ctx.strokeStyle = style.thinWalls.line
+    board.scenario.thinWalls.forEach(thinWall => {
+      ctx.beginPath()
+      ctx.moveTo(thinWall.x1, thinWall.y1)
+      ctx.lineTo(thinWall.x2, thinWall.y2)
+      ctx.stroke()
     })
+    ctx.lineWidth = 1
   }
 
   // Draw walls
@@ -152,7 +187,7 @@ export const render = () => {
     ctx.moveTo(shortestLine.a, shortestLine.b)
     ctx.lineTo(shortestLine.x, shortestLine.y)
     ctx.lineWidth = 3
-    ctx.strokeStyle = 'rgba(255, 0, 255, .9)'
+    ctx.strokeStyle = '#f0fe'
     ctx.stroke()
     ctx.lineWidth = 1
     // })
@@ -173,47 +208,13 @@ scenarioSelect.addEventListener('change', event => {
   board.loadScenario(event.target.value)
 })
 
-scenarioSelect.value = 1
-board.loadScenario(1)
+scenarioSelect.value = '1'
+board.loadScenario('1')
 
-canvas.addEventListener('mousemove', ({layerX, layerY}) => {
-  let newMouseHex = Grid.pointToHex(layerX, layerY)
-
-  if (
-    newMouseHex.x !== board.mouseHex.x ||
-    newMouseHex.y !== board.mouseHex.y
-  ) {
-    Object.assign(board.mouseHex, newMouseHex)
-    requestAnimationFrame(render)
-  }
-})
-
-canvas.addEventListener('click', ({layerX, layerY}) => {
-  const clickHex = board.grid.get(Grid.pointToHex(layerX, layerY))
-  // if (clickHex) {
-  //   const point = clickHex.toPoint()
-  //   const corners = clickHex.corners().map(corner => corner.add(point))
-  //   console.log('clickHex:', clickHex, clickHex && corners)
-  // }
-
-  if (
-    !clickHex ||
-    board.scenario.wallHexes.find(wHex => wHex.x === clickHex.x && wHex.y === clickHex.y) ||
-    board.scenario.noHexes.find(wHex => wHex.x === clickHex.x && wHex.y === clickHex.y)
-  ) {
-    return
-  }
-
-  board.playerHex = (
-    board.playerHex &&
-    clickHex.x === board.playerHex.x &&
-    clickHex.y === board.playerHex.y
-  )
-    ? null
-    : clickHex
-
-  requestAnimationFrame(render)
-})
+canvas.addEventListener('click', event => board.events('click', event))
+canvas.addEventListener('mousedown', event => board.events('mousedown', event))
+canvas.addEventListener('mousemove', event => board.events('mousemove', event))
+canvas.addEventListener('mouseup', event => board.events('mouseup', event))
 
 document.getElementById('los-mode').addEventListener('change', event => {
   board.losMode = event.target.value === '1'

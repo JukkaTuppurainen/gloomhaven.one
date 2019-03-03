@@ -1,7 +1,11 @@
 import * as Honeycomb from 'honeycomb-grid/src/honeycomb'
 
-import {scenarioLoad} from './Board.scenarioLoad'
-import {scenarioList} from '../scenarios'
+import {scenarioLoad} from './board.scenarioLoad'
+import {scenarioList} from '../../scenarios'
+import {
+  boardClick,
+  boardMousemove
+}                     from './board.events'
 
 
 const hexSize = 60
@@ -12,7 +16,25 @@ const Grid = Honeycomb.defineGrid(Honeycomb.extendHex({
   orientation
 }))
 
+const defaultEvents = {
+  click: boardClick,
+  mousemove: boardMousemove
+}
+
+const eventHandler = (eventName, event) => {
+  if (
+    board.scenario &&
+    board.scenario.events &&
+    board.scenario.events[eventName]
+  ) {
+    board.scenario.events[eventName](event)
+  } else if (defaultEvents[eventName]) {
+    defaultEvents[eventName](event)
+  }
+}
+
 const board = {
+  events: eventHandler,
   grid: null,
   loadScenario: async id => {
     if (board.scenario !== null) {
@@ -43,6 +65,7 @@ const board = {
       x: null,
       y: null
     }
+    delete board.playerHex
   },
   scenario: null,
   settings: {

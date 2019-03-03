@@ -1,6 +1,6 @@
-import {board} from './Board'
-import {getCornerOffset} from './getCornerOffset'
-import {intersects} from './intersects'
+import {board}            from './board/board'
+import {getCornerOffset}  from './getCornerOffset'
+import {intersects}       from './intersects'
 import {isPointOnSegment} from './isPointOnSegment'
 import {isThinWallCorner} from './isThinWallCorner'
 

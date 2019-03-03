@@ -1,9 +1,21 @@
 import {
   board,
   Grid
-} from './Board'
-import {makeWall} from './makeWall'
+}                 from './board'
+import {makeWall} from '../makeWall'
+import {render}   from '../../index'
 
+
+const parseBlueprintHex = input => {
+  if (typeof input === 'number') {
+    return [input, input]
+  }
+  let m = input.match(/(\d+)-(\d+)/)
+  return [
+    parseInt(m[1], 10),
+    parseInt(m[2], 10)
+  ]
+}
 
 export const scenarioLoad = scenario => {
   board.grid = Grid.rectangle(scenario.grid)
@@ -34,23 +46,39 @@ export const scenarioLoad = scenario => {
   canvasBackground.width = maxX + 100
 
   board.scenario = {
+    hexes: [],
     thinWalls: [],
     wallCorners: [],
+    wallHexes: [],
     walls: []
   }
 
   Object.assign(board.scenario, scenario)
 
-  if (board.scenario._tmp_walls) {
-    board.scenario._tmp_walls.forEach(w => {
-      board.scenario.walls.push(makeWall(...w))
+  if (scenario.blueprint.thinWalls) {
+    scenario.blueprint.thinWalls.forEach(w => {
+      board.scenario.walls.push(makeWall(...w, true))
     })
   }
 
-  // Create array of actual playable hexes
-  board.scenario.hexes = board.grid.filter(
-    hex => !board.scenario.noHexes.find(nH => nH.x === hex.x && nH.y === hex.y)
-  )
+  const pushHexesToBoard = (hexes, target) => {
+    hexes.forEach(hex => {
+      let loopX = parseBlueprintHex(hex.x)
+      let loopY = parseBlueprintHex(hex.y)
+      let x
+      let y
+
+      for (y = loopY[0]; y <= loopY[1]; ++y) {
+        for (x = loopX[0]; x <= loopX[1]; ++x) {
+          let hex = board.grid.get({x, y})
+          board.scenario[target].push(hex)
+        }
+      }
+    })
+  }
+
+  pushHexesToBoard(scenario.blueprint.hexes, 'hexes')
+  pushHexesToBoard(scenario.blueprint.wallHexes, 'wallHexes')
 
   // Generate LOS blocking walls
   board.scenario.wallHexes.forEach(({x, y}) => {
@@ -90,4 +118,6 @@ export const scenarioLoad = scenario => {
       ctx2.drawImage(img, 0, 0, img.width * scenario.bitmapScale, img.height * scenario.bitmapScale)
     }
   }
+
+  render()
 }

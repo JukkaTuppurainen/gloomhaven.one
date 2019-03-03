@@ -1,0 +1,61 @@
+<style>
+#editor-controls {
+  background: #000c;
+  border-left: 1px solid #fff;
+  height: 100%;
+  padding: 10px;
+  position: fixed;
+  right: 0;
+  top: 0;
+  width: 260px;
+}
+
+#editor-controls input {
+  margin-bottom: 5px;
+}
+
+.underline-first::first-letter {
+  text-decoration: underline;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 50% 50%;
+}
+</style>
+<div id="editor-controls">
+  <div class="grid">
+    <div>Grid height:</div>
+    <input id="grid-height" type="number">
+    <div>Grid width:</div>
+    <input id="grid-width" type="number">
+  </div>
+
+  <div>
+    Mode:
+    <div class="flex-row">
+      <button
+        data-editor-mode="tile"
+        class="underline-first"
+        type="button"
+      >
+        Tile
+      </button>
+      <button
+        data-editor-mode="wall"
+        class="underline-first"
+        type="button"
+      >
+        Wall
+      </button>
+      <button
+        data-editor-mode="remove"
+        class="underline-first"
+        type="button"
+      >
+        Remove
+      </button>
+    </div>
+  </div>
+  <p>Use Tile and Wall modes to add tiles and walls to map. Click again on active button to return to "play" mode.</p>
+</div>

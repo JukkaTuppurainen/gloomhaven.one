@@ -1,5 +1,6 @@
 const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+const WebpackShellPlugin = require('webpack-shell-plugin')
 
 module.exports = {
   entry: [
@@ -9,7 +10,7 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.jpg$/,
+        test: /\.(jpg|png)$/,
         use: [
           {
             loader: 'file-loader'
@@ -19,10 +20,16 @@ module.exports = {
       {
         test: /\.html$/,
         use: {
-          loader: 'html-loader'
+          loader: 'html-loader',
+          options: {
+            minimize: true,
+            conservativeCollapse: false
+          }
         }
-        // @todo: check minify options
-        // https://github.com/webpack-contrib/html-loader
+      },
+      {
+        test: /\.css$/,
+        use: ['style-loader', 'css-loader']
       }
     ]
   },
@@ -46,6 +53,9 @@ module.exports = {
         minifyCSS: true,
         minifyURLs: true
       }
+    }),
+    new WebpackShellPlugin({
+      onBuildStart: ['node scripts/build.js']
     })
   ]
 }

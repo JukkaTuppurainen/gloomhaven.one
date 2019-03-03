@@ -12,7 +12,7 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.jpg$/,
+        test: /\.(jpg|png)$/,
         use: [
           {
             loader: 'file-loader'
@@ -22,8 +22,16 @@ module.exports = {
       {
         test: /\.html$/,
         use: {
-          loader: 'html-loader'
+          loader: 'html-loader',
+          options: {
+            minimize: true,
+            conservativeCollapse: false
+          }
         }
+      },
+      {
+        test: /\.css$/,
+        use: ['style-loader', 'css-loader']
       }
     ]
   },
