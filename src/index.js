@@ -58,7 +58,11 @@ export const render = () => {
         ctx.stroke()
       }
       if (style.wallHexes.fill) {
-        ctx.fillStyle = style.wallHexes.fill
+        if (typeof style.wallHexes.fill === 'function') {
+          ctx.fillStyle = style.wallHexes.fill(wallHex)
+        } else {
+          ctx.fillStyle = style.wallHexes.fill
+        }
         ctx.fill()
       }
     }
@@ -215,6 +219,7 @@ canvas.addEventListener('click', event => board.events('click', event))
 canvas.addEventListener('mousedown', event => board.events('mousedown', event))
 canvas.addEventListener('mousemove', event => board.events('mousemove', event))
 canvas.addEventListener('mouseup', event => board.events('mouseup', event))
+canvas.addEventListener('mouseout', event => board.events('mouseup', event))
 
 document.getElementById('los-mode').addEventListener('change', event => {
   board.losMode = event.target.value === '1'

@@ -1,4 +1,7 @@
-import {scenario} from './editor'
+import {
+  boardChange,
+  scenario
+}                 from './editor'
 import {
   board,
   Grid
@@ -7,6 +10,7 @@ import {
   boardClick,
   boardMousemove
 }                 from '../board/board.events'
+import {render}   from '../../index'
 
 
 const editBoard = eventHex => {
@@ -23,10 +27,14 @@ const editBoard = eventHex => {
       break
   }
 
+  boardChange()
+
   scenario.blueprint = {
     hexes: board.scenario.hexes,
     wallHexes: board.scenario.wallHexes
   }
+
+  render()
 }
 
 export const editorClick = event => {

@@ -70,8 +70,14 @@ export const scenarioLoad = scenario => {
 
       for (y = loopY[0]; y <= loopY[1]; ++y) {
         for (x = loopX[0]; x <= loopX[1]; ++x) {
-          let hex = board.grid.get({x, y})
-          board.scenario[target].push(hex)
+          let gridHex = board.grid.get({x, y})
+          Object.keys(hex).forEach(p => {
+            if (typeof gridHex[p] === 'undefined') {
+              gridHex[p] = hex[p]
+            }
+          })
+
+          board.scenario[target].push(gridHex)
         }
       }
     })
