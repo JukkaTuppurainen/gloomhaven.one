@@ -48,7 +48,7 @@ export const scenarioLoad = scenario => {
   board.scenario = {
     hexes: [],
     thinWalls: [],
-    wallCorners: [],
+    wallCorners: new Set(),
     wallHexes: [],
     walls: []
   }
@@ -86,19 +86,18 @@ export const scenarioLoad = scenario => {
   pushHexesToBoard(scenario.blueprint.hexes, 'hexes')
   pushHexesToBoard(scenario.blueprint.wallHexes, 'wallHexes')
 
-  // Generate LOS blocking walls
+  // Generate LOS blocking walls...
   board.scenario.wallHexes.forEach(({x, y}) => {
     const wallHex = board.grid.get({x, y})
     const wallHexPoint = wallHex.toPoint()
     const corners = wallHex.corners().map(c => c.add(wallHexPoint))
-    board.scenario.wallCorners.push(...corners)
 
-    // Around the wall hex
+    // ... around the wall hex
     for (let i = 0; i < 6; ++i) {
       board.scenario.walls.push(makeWall({x, y}, i, {x, y}, (i < 5 ? i + 1 : 0)))
     }
 
-    // And two throuhg the hex
+    // ... and two throuhg the hex
     board.scenario.walls.push(
       {
         x1: corners[0].x,

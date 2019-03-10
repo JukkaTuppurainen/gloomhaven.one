@@ -7,7 +7,7 @@ import {isThinWallCorner} from './isThinWallCorner'
 
 let cache = {}
 
-// Current correct value 3884 / 3256
+// Current correct value 3808 / 3332
 
 const getOffsets = (hex, corner1, corner2, cornerIndex1, cornerIndex2) => {
   if (
@@ -20,10 +20,6 @@ const getOffsets = (hex, corner1, corner2, cornerIndex1, cornerIndex2) => {
     ]
   }
 }
-
-const isWallCorner = corner => board.scenario.wallCorners.find(wallCorner => (
-  wallCorner.x === corner.x && wallCorner.y === corner.y
-))
 
 export const isInSight = (hex1, hex2, returnLines) => {
   let corners1
@@ -51,14 +47,14 @@ export const isInSight = (hex1, hex2, returnLines) => {
     if ((
       returnLines || !los
     ) && (
-      board.losMode || !isWallCorner(c1)
+      board.losMode || !board.scenario.wallCorners.has(`${c1.x}-${c1.y}`)
     )) {
       c2index = 0
       corners2.forEach(c2 => {
         if ((
           returnLines || !los
         ) && (
-          board.losMode || !isWallCorner(c2)
+          board.losMode || !board.scenario.wallCorners.has(`${c2.x}-${c2.y}`)
         )) {
           let ok = true
           board.scenario.walls.forEach(wall => {
