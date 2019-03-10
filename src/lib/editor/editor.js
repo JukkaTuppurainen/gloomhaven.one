@@ -144,6 +144,14 @@ const gridSizeInputChange = () => {
   scenarioLoad(scenario)
 }
 
+const editorClear = () => {
+  scenario.blueprint.hexes = []
+  scenario.blueprint.wallHexes = []
+  scenario.blueprint.thinWalls = []
+
+  scenarioLoad(scenario)
+}
+
 const editorModeButtonClick = event => {
   const active = event.target.classList.contains('active')
   document.querySelectorAll('[data-editor-mode]').forEach(n => n.classList.remove('active'))
@@ -170,6 +178,12 @@ const editorKeyboardShortcutKeydown = event => {
       break
     case 'w':
       document.querySelector('[data-editor-mode="wall"]').click()
+      break
+    case 'h':
+      document.querySelector('[data-editor-mode="thin"]').click()
+      break
+    case 'e':
+      document.querySelector('[data-editor-mode="removethin"]').click()
       break
   }
 }
@@ -212,6 +226,8 @@ export const scenario = {
     document.querySelectorAll('[data-editor-mode]').forEach(n => {
       n.addEventListener('click', editorModeButtonClick)
     })
+
+    document.getElementById('editor-clear').addEventListener('click', editorClear)
 
     document.addEventListener('keydown', editorKeyboardShortcutKeydown)
     document.body.classList.add('editor-open')

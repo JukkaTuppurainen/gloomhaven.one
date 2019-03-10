@@ -1,28 +1,39 @@
 import {
   boardChange,
   scenario
-}                 from './editor'
+}                from './editor'
 import {
   board,
   Grid
-}                 from '../board/board'
+}                from '../board/board'
 import {
   boardClick,
   boardMousemove
-}                 from '../board/board.events'
-import {render}   from '../../index'
+}                from '../board/board.events'
+import {render}  from '../../index'
 
 
-const editBoard = eventHex => {
-  const hexFilter = hex => !(hex.x === eventHex.x && hex.y === eventHex.y)
+// @tmp
+window.board = board
+
+const removeHex = hexToRemove => {
+  const hexFilter = filterHex => !(filterHex.x === hexToRemove.x && filterHex.y === hexToRemove.y)
   board.scenario.hexes = board.scenario.hexes.filter(hexFilter)
   board.scenario.wallHexes = board.scenario.wallHexes.filter(hexFilter)
+}
+
+const editBoard = eventHex => {
 
   switch (board.editor.mode) {
+    case 'remove':
+      removeHex(eventHex)
+      break
     case 'tile':
+      removeHex(eventHex)
       board.scenario.hexes.push(eventHex)
       break
     case 'wall':
+      removeHex(eventHex)
       board.scenario.wallHexes.push(eventHex)
       break
   }

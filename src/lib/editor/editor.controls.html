@@ -14,6 +14,7 @@
   margin-bottom: 5px;
 }
 
+.underline,
 .underline-first::first-letter {
   text-decoration: underline;
 }
@@ -32,8 +33,8 @@
   </div>
 
   <div>
-    Mode:
-    <div class="flex-row">
+    Tile edit mode:
+    <div>
       <button
         data-editor-mode="tile"
         class="underline-first"
@@ -58,4 +59,33 @@
     </div>
   </div>
   <p>Use Tile and Wall modes to add tiles and walls to map. Click again on active button to return to "play" mode.</p>
+
+  <div>
+    Thin wall edit mode:
+    <div>
+      <button
+        data-editor-mode="thin"
+        type="button"
+      >
+        T<span class="underline">h</span>in wall
+      </button>
+      <button
+        data-editor-mode="removethin"
+        type="button"
+      >
+        R<span class="underline">e</span>move thin wall
+      </button>
+    </div>
+  </div>
+  <p>Use thin walls to block line of sight between board pieces when they are placed next to each other in a way that there is no actual wall hexes between them.</p>
+
+  <div>
+    <button
+      id="editor-clear"
+      type="button"
+    >
+      Clear
+    </button>
+    <p>Clears the entire board</p>
+  </div>
 </div>
