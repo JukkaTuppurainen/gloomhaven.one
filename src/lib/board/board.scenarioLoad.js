@@ -56,9 +56,15 @@ export const scenarioLoad = scenario => {
   Object.assign(board.scenario, scenario)
 
   if (scenario.blueprint.thinWalls) {
-    scenario.blueprint.thinWalls.forEach(w => {
-      board.scenario.walls.push(makeWall(...w, true))
-    })
+    const tw = scenario.blueprint.thinWalls
+    for (let i = 0; i < tw.length; i += 3) {
+      board.scenario.walls.push(makeWall(
+        {x: tw[i], y: tw[i + 1]},
+        tw[i + 2],
+        tw[i + 2] === 5 ? 0 : tw[i + 2] + 1,
+        true
+      ))
+    }
   }
 
   const pushHexesToBoard = (hexes, target) => {
@@ -94,7 +100,7 @@ export const scenarioLoad = scenario => {
 
     // ... around the wall hex
     for (let i = 0; i < 6; ++i) {
-      board.scenario.walls.push(makeWall({x, y}, i, {x, y}, (i < 5 ? i + 1 : 0)))
+      board.scenario.walls.push(makeWall({x, y}, i, (i < 5 ? i + 1 : 0)))
     }
 
     // ... and two throuhg the hex

@@ -33,8 +33,9 @@ export const scenario = {
       {x: 10, y: 7},
     ],
     thinWalls: [
-      [{x: 6, y: 8}, 4, {x: 6, y: 8}, 5],
-      [{x: 8, y: 8}, 4, {x: 8, y: 8}, 5]
+/*    x, y, side */
+      6, 7, 1,
+      8, 7, 1
     ]
   },
   grid: {

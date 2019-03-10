@@ -1,24 +1,19 @@
 import {board} from './board/board'
 
 
-export const makeWall = (hex1coords, corner1, hex2coords, corner2, thin) => {
-  let hex1 = board.grid.get(hex1coords)
-  let hex2 = board.grid.get(hex2coords)
+export const makeWall = (hexcoords, corner1, corner2, thin) => {
+  const hex = board.grid.get(hexcoords)
+  const point = hex.toPoint()
+  const corners = hex.corners().map(c => c.add(point))
 
-  let point1 = hex1.toPoint()
-  let point2 = hex2.toPoint()
-
-  let corners1 = hex1.corners().map(c => c.add(point1))
-  let corners2 = hex2.corners().map(c => c.add(point2))
-
-  board.scenario.wallCorners.add(`${corners1[corner1].x}-${corners1[corner1].y}` )
-  board.scenario.wallCorners.add(`${corners2[corner2].x}-${corners2[corner2].y}` )
+  board.scenario.wallCorners.add(`${corners[corner1].x}-${corners[corner1].y}` )
+  board.scenario.wallCorners.add(`${corners[corner2].x}-${corners[corner2].y}` )
 
   const wall = {
-    x1: corners1[corner1].x,
-    y1: corners1[corner1].y,
-    x2: corners2[corner2].x,
-    y2: corners2[corner2].y
+    x1: corners[corner1].x,
+    y1: corners[corner1].y,
+    x2: corners[corner2].x,
+    y2: corners[corner2].y
   }
 
   if (thin) {
