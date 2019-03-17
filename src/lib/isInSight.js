@@ -64,13 +64,11 @@ export const isInSight = (hex1, hex2, returnLines) => {
             )) {
               ok = false
             }
-            if (ok) {
-              if (
-                isPointOnSegment(c1, {x: wall.x1, y: wall.y1}, c2) ||
-                isPointOnSegment(c1, {x: wall.x2, y: wall.y2}, c2)
-              ) {
-                ok = false
-              }
+            if (ok && (
+              isPointOnSegment(c1, {x: wall.x1, y: wall.y1}, c2) ||
+              isPointOnSegment(c1, {x: wall.x2, y: wall.y2}, c2)
+            )) {
+              ok = false
             }
           })
 

@@ -76,14 +76,16 @@ export const scenarioLoad = scenario => {
 
       for (y = loopY[0]; y <= loopY[1]; ++y) {
         for (x = loopX[0]; x <= loopX[1]; ++x) {
-          let gridHex = board.grid.get({x, y})
-          Object.keys(hex).forEach(p => {
-            if (typeof gridHex[p] === 'undefined') {
-              gridHex[p] = hex[p]
-            }
-          })
+          const gridHex = board.grid.get({x, y})
+          if (gridHex) {
+            Object.keys(hex).forEach(p => {
+              if (typeof gridHex[p] === 'undefined') {
+                gridHex[p] = hex[p]
+              }
+            })
 
-          board.scenario[target].push(gridHex)
+            board.scenario[target].push(gridHex)
+          }
         }
       }
     })
@@ -103,25 +105,31 @@ export const scenarioLoad = scenario => {
       board.scenario.walls.push(makeWall({x, y}, i, (i < 5 ? i + 1 : 0)))
     }
 
-    // ... and two throuhg the hex
+    // ... and three throuhg the hex
     board.scenario.walls.push(
-      {
-        x1: corners[0].x,
-        y1: corners[0].y,
-        x2: corners[3].x,
-        y2: corners[3].y
-      },
       {
         x1: (corners[4].x + corners[5].x) / 2,
         y1: corners[4].y,
         x2: (corners[1].x + corners[2].x) / 2,
         y2: corners[1].y
+      },
+      {
+        x1: (corners[3].x + corners[4].x) / 2,
+        y1: (corners[3].y + corners[4].y) / 2,
+        x2: (corners[0].x + corners[1].x) / 2,
+        y2: (corners[0].y + corners[1].y) / 2,
+      },
+      {
+        x1: (corners[2].x + corners[3].x) / 2,
+        y1: (corners[2].y + corners[3].y) / 2,
+        x2: (corners[5].x + corners[0].x) / 2,
+        y2: (corners[5].y + corners[0].y) / 2,
       }
     )
   })
 
   if (scenario.bitmap) {
-    const img = document.createElement('img')
+    const img = new Image()
     img.src = scenario.bitmap
 
     img.onload = () => {

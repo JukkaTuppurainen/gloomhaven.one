@@ -13,7 +13,7 @@ export const boardMousemove = event => {
     newMouseHex.y !== board.mouseHex.y
   ) {
     Object.assign(board.mouseHex, newMouseHex)
-    requestAnimationFrame(render)
+    render()
   }
 }
 
@@ -40,5 +40,5 @@ export const boardClick = event => {
     ? null
     : clickHex
 
-  requestAnimationFrame(render)
+  render()
 }

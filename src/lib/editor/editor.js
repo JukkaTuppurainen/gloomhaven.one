@@ -10,119 +10,6 @@ import {scenarioLoad} from '../board/board.scenarioLoad'
 import tileBitmap     from '../../scenarios/editor.jpg'
 
 
-const img = new Image()
-img.onload = () => {
-  /*
-    Patterns:
-    0 - Floor
-    1 - Wall corner
-    2 - N-S wall
-    3 - SW-NE wall
-    4 - NW-SE wall
-    5 - N-S wall (east)
-    6 - N-S wall (west)
-    7 - SW-NE wall (north)
-    8 - SW-NE wall (south)
-    9 - NW-SE wall (north)
-    10 - NW-SE wall (south)
-   */
-
-  const patterns = []
-  const oCanvas = new OffscreenCanvas(180, 104)
-  const oCtx = oCanvas.getContext('2d')
-
-  for (let i = 0; i <= 10; ++i) {
-    oCtx.drawImage(
-      img,
-      (i % 4) * 182,
-      (i / 4 | 0) * 106,
-      180,
-      104,
-      0,
-      0,
-      180,
-      104
-    )
-    patterns.push(oCtx.createPattern(oCanvas, 'repeat'))
-  }
-
-  scenario.style.hexes.fill = patterns[0]
-  scenario.style.wallHexes.fill = hex => hex.direction ? patterns[hex.direction] : patterns[1]
-}
-img.src = tileBitmap
-
-const setWallPattern = (wallHex, left, right, patternLeft, patternRight, patternBoth) => {
-  const onLeftSide = board.grid.neighborsOf(wallHex, left).filter(
-    hex => board.scenario.hexes.find(tileHex => hex.x === tileHex.x && hex.y === tileHex.y)
-  )
-  const onRightSide = board.grid.neighborsOf(wallHex, right).filter(
-    hex => board.scenario.hexes.find(tileHex => hex.x === tileHex.x && hex.y === tileHex.y)
-  )
-
-  if (onLeftSide.length && !onRightSide.length) {
-    wallHex.direction = patternLeft
-  } else if (!onLeftSide.length && onRightSide.length) {
-    wallHex.direction = patternRight
-  } else {
-    wallHex.direction = patternBoth
-  }
-}
-
-export const boardChange = () => {
-  scenario.blueprint.wallHexes.forEach(wallHex => {
-    let adjacentInDirection
-    let adjacentWalls = []
-    for (let i = 0; i < 6; ++i) {
-      adjacentInDirection = board.grid.neighborsOf(wallHex, i)
-      if (adjacentInDirection.length) {
-        let wallHex = board.scenario.wallHexes.find(
-          hex => hex.x === adjacentInDirection[0].x && hex.y === adjacentInDirection[0].y
-        )
-        if (wallHex) {
-          adjacentWalls.push(i)
-        }
-      }
-    }
-
-    if ((
-      adjacentWalls.length === 1 &&
-      (adjacentWalls[0] === 1 || adjacentWalls[0] === 4)
-    ) || (
-      adjacentWalls.length === 2 &&
-      adjacentWalls.includes(1) &&
-      adjacentWalls.includes(4)
-    )) {
-      setWallPattern(wallHex, [2, 3], [0, 5], 5, 6, 2)
-    }
-
-    else if ((
-      adjacentWalls.length === 1 &&
-      (adjacentWalls[0] === 2 || adjacentWalls[0] === 5)
-    ) || (
-      adjacentWalls.length === 2 &&
-      adjacentWalls.includes(2) &&
-      adjacentWalls.includes(5)
-    )) {
-      setWallPattern(wallHex, [0, 1], [3, 4], 7, 8, 3)
-    }
-
-    else if ((
-      adjacentWalls.length === 1 &&
-      (adjacentWalls[0] === 0 || adjacentWalls[0] === 3)
-    ) || (
-      adjacentWalls.length === 2 &&
-      adjacentWalls.includes(0) &&
-      adjacentWalls.includes(3)
-    )) {
-      setWallPattern(wallHex, [1, 2], [4, 5], 9, 10, 4)
-    }
-
-    else {
-      wallHex.direction = 1
-    }
-  })
-}
-
 const gridSizeInputChange = () => {
   let newHeight = parseInt(document.getElementById('grid-height').value, 10)
   let newWidth = parseInt(document.getElementById('grid-width').value, 10)
@@ -155,6 +42,7 @@ const editorClear = () => {
 const editorModeButtonClick = event => {
   const active = event.target.classList.contains('active')
   document.querySelectorAll('[data-editor-mode]').forEach(n => n.classList.remove('active'))
+  delete board.editor.hover
 
   if (!active) {
     event.target.classList.add('active')
@@ -231,6 +119,32 @@ export const scenario = {
 
     document.addEventListener('keydown', editorKeyboardShortcutKeydown)
     document.body.classList.add('editor-open')
+
+    const img = new Image()
+    img.onload = () => {
+      const patterns = []
+      const oCanvas = new OffscreenCanvas(180, 104)
+      const oCtx = oCanvas.getContext('2d')
+
+      for (let i = 0; i <= 10; ++i) {
+        oCtx.drawImage(
+          img,
+          (i % 4) * 182,
+          (i / 4 | 0) * 106,
+          180,
+          104,
+          0,
+          0,
+          180,
+          104
+        )
+        patterns.push(oCtx.createPattern(oCanvas, 'repeat'))
+      }
+
+      scenario.style.hexes.fill = patterns[0]
+      scenario.style.wallHexes.fill = hex => hex.direction ? patterns[hex.direction] : patterns[1]
+    }
+    img.src = tileBitmap
   },
   unload: () => {
     document.body.removeChild(document.getElementById('editor'))
@@ -253,6 +167,10 @@ export const scenario = {
       fill: '#000'
     },
     hexHover: '#32005080',
-    noHexHover: '#50003280'
+    noHexHover: '#50003280',
+    thinWalls: {
+      line: '#000',
+      width: 8
+    }
   }
 }

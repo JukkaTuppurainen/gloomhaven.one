@@ -7,7 +7,7 @@ import './style.css'
 const canvas = document.getElementById('c')
 const ctx = canvas.getContext('2d')
 
-export const render = () => {
+const renderer = () => {
   if (!board.scenario) {
     return
   }
@@ -196,7 +196,21 @@ export const render = () => {
     ctx.lineWidth = 1
     // })
   }
+
+  if (board.editor && board.editor.hover) {
+    const sideWallCorners = board.editor.hover.sideWallCorners
+
+    ctx.beginPath()
+    ctx.moveTo(sideWallCorners.x1, sideWallCorners.y1)
+    ctx.lineTo(sideWallCorners.x2, sideWallCorners.y2)
+    ctx.lineWidth = 6
+    ctx.strokeStyle = '#f00a'
+    ctx.stroke()
+    ctx.lineWidth = 1
+  }
 }
+
+export const render = () => requestAnimationFrame(renderer)
 
 render()
 

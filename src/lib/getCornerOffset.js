@@ -19,8 +19,6 @@ export const getCornerOffset = (x, y, c) => {
 
   const extraWallDistance = board.settings.hexSize / 30
 
-  // https://www.calculator.net/triangle-calculator.html?vc=&vx=&vy=115&va=90&vz=&vb=60&angleunits=d&x=123&y=18
-
   let dx = centerx - corners[c].x
   let dy = centery - corners[c].y
   let hypotenuseExtended = Math.sqrt(dx ** 2 + dy ** 2) + extraWallDistance

@@ -17,7 +17,17 @@ export const makeWall = (hexcoords, corner1, corner2, thin) => {
   }
 
   if (thin) {
-    board.scenario.thinWalls.push(wall)
+    board.scenario.thinWalls.push(Object.assign(
+      {},
+      wall,
+      {
+        meta: {
+          x: hex.x,
+          y: hex.y,
+          s: corner1
+        }
+      }
+    ))
   }
 
   return wall
