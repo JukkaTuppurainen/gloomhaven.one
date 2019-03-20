@@ -1,8 +1,5 @@
 import {scenario} from './editor'
 import {
-  updateWallHexDirections
-}                 from './updateWallHexDirection'
-import {
   board,
   Grid
 }                 from '../board/board'
@@ -10,8 +7,8 @@ import {
   boardClick,
   boardMousemove
 }                 from '../board/board.events'
-import {render}   from '../../index'
 import {makeWall} from '../makeWall'
+import {render}   from '../../index'
 
 
 const removeHex = hexToRemove => {
@@ -74,10 +71,6 @@ const editBoard = eventHex => {
       removeHex(eventHex)
       board.scenario.hexes.push(eventHex)
       break
-    case 'wall':
-      removeHex(eventHex)
-      board.scenario.wallHexes.push(eventHex)
-      break
     case 'thin':
       if (editorHover) {
         removeThinwall(editorHover.sideWallCorners)
@@ -97,11 +90,8 @@ const editBoard = eventHex => {
       break
   }
 
-  updateWallHexDirections()
-
   scenario.blueprint = {
     hexes: board.scenario.hexes,
-    wallHexes: board.scenario.wallHexes,
     thinWalls: blueprintThinWalls()
   }
 

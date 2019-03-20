@@ -5,8 +5,16 @@ import {
   editorMousemove,
   editorMouseup
 }                     from './editor.events'
+import {
+  updateWallHexDirections
+}                     from './updateWallHexDirection'
+import {
+  addAction,
+  removeAction
+}                     from '../actions'
 import {board}        from '../board/board'
 import {scenarioLoad} from '../board/board.scenarioLoad'
+import {render}       from '../../index'
 import tileBitmap     from '../../scenarios/editor.jpg'
 
 
@@ -24,16 +32,15 @@ const gridSizeInputChange = () => {
     width: newWidth
   }
 
-  const sizeFilter = hex => !(hex.x >= newWidth || hex.y >= newHeight)
-  scenario.blueprint.hexes = scenario.blueprint.hexes.filter(sizeFilter)
-  scenario.blueprint.wallHexes = scenario.blueprint.wallHexes.filter(sizeFilter)
+  scenario.blueprint.hexes = scenario.blueprint.hexes.filter(
+    hex => !(hex.x >= newWidth || hex.y >= newHeight)
+  )
 
   scenarioLoad(scenario)
 }
 
 const editorClear = () => {
   scenario.blueprint.hexes = []
-  scenario.blueprint.wallHexes = []
   scenario.blueprint.thinWalls = []
 
   scenarioLoad(scenario)
@@ -48,12 +55,15 @@ const editorModeButtonClick = event => {
     event.target.classList.add('active')
     board.editor.mode = event.target.dataset['editorMode']
     delete board.playerHex
+    board.scenario.wallHexes = []
   } else {
     delete board.editor.mode
     delete board.editor.mousedown
     board.editor.previousEditHex = {x: null, y: null}
     scenarioLoad(scenario)
   }
+
+  render()
 }
 
 const editorKeyboardShortcutKeydown = event => {
@@ -63,9 +73,6 @@ const editorKeyboardShortcutKeydown = event => {
       break
     case 'r':
       document.querySelector('[data-editor-mode="remove"]').click()
-      break
-    case 'w':
-      document.querySelector('[data-editor-mode="wall"]').click()
       break
     case 'h':
       document.querySelector('[data-editor-mode="thin"]').click()
@@ -145,12 +152,15 @@ export const scenario = {
       scenario.style.wallHexes.fill = hex => hex.direction ? patterns[hex.direction] : patterns[1]
     }
     img.src = tileBitmap
+
+    addAction('scenarioLoad', updateWallHexDirections)
   },
   unload: () => {
     document.body.removeChild(document.getElementById('editor'))
     document.body.classList.remove('editor-open')
     document.removeEventListener('keydown', editorKeyboardShortcutKeydown)
     delete board.editor
+    removeAction('scenarioLoad', updateWallHexDirections)
   },
   grid: {
     height: defaultHeight,

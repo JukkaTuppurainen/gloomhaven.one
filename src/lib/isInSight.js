@@ -7,7 +7,7 @@ import {isThinWallCorner} from './isThinWallCorner'
 
 let cache = {}
 
-// Current correct value 3808 / 3332
+// Current correct value 3796 / 3344
 
 const getOffsets = (hex, corner1, corner2, cornerIndex1, cornerIndex2) => {
   if (

@@ -1,4 +1,3 @@
-import {scenario} from './editor'
 import {board}    from '../board/board'
 
 
@@ -20,7 +19,7 @@ const setWallPattern = (wallHex, left, right, patternLeft, patternRight, pattern
 }
 
 export const updateWallHexDirections = () => {
-  scenario.blueprint.wallHexes.forEach(wallHex => {
+  board.scenario.wallHexes.forEach(wallHex => {
     let adjacentInDirection
     let adjacentWalls = []
     for (let i = 0; i < 6; ++i) {

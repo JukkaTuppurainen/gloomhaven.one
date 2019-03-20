@@ -2,6 +2,7 @@ import {
   board,
   Grid
 }                 from './board'
+import {doAction} from '../actions'
 import {makeWall} from '../makeWall'
 import {render}   from '../../index'
 
@@ -67,32 +68,39 @@ export const scenarioLoad = scenario => {
     }
   }
 
-  const pushHexesToBoard = (hexes, target) => {
-    hexes.forEach(hex => {
-      let loopX = parseBlueprintHex(hex.x)
-      let loopY = parseBlueprintHex(hex.y)
-      let x
-      let y
+  scenario.blueprint.hexes.forEach(hex => {
+    let loopX = parseBlueprintHex(hex.x)
+    let loopY = parseBlueprintHex(hex.y)
+    let x
+    let y
 
-      for (y = loopY[0]; y <= loopY[1]; ++y) {
-        for (x = loopX[0]; x <= loopX[1]; ++x) {
-          const gridHex = board.grid.get({x, y})
-          if (gridHex) {
-            Object.keys(hex).forEach(p => {
-              if (typeof gridHex[p] === 'undefined') {
-                gridHex[p] = hex[p]
-              }
-            })
+    for (y = loopY[0]; y <= loopY[1]; ++y) {
+      for (x = loopX[0]; x <= loopX[1]; ++x) {
+        const gridHex = board.grid.get({x, y})
+        if (gridHex) {
+          Object.keys(hex).forEach(p => {
+            if (typeof gridHex[p] === 'undefined') {
+              gridHex[p] = hex[p]
+            }
+          })
 
-            board.scenario[target].push(gridHex)
-          }
+          board.scenario.hexes.push(gridHex)
         }
       }
-    })
-  }
+    }
+  })
 
-  pushHexesToBoard(scenario.blueprint.hexes, 'hexes')
-  pushHexesToBoard(scenario.blueprint.wallHexes, 'wallHexes')
+  // Generate wall hexes around tiles
+  board.scenario.hexes.forEach(hex => {
+    board.grid.neighborsOf(hex).forEach(adjHex => {
+      if (
+        !board.scenario.hexes.find(h => h.x === adjHex.x && h.y === adjHex.y) &&
+        !board.scenario.wallHexes.find(h => h.x === adjHex.x && h.y === adjHex.y)
+      ) {
+        board.scenario.wallHexes.push(adjHex)
+      }
+    })
+  })
 
   // Generate LOS blocking walls...
   board.scenario.wallHexes.forEach(({x, y}) => {
@@ -137,6 +145,8 @@ export const scenarioLoad = scenario => {
       ctx2.drawImage(img, 0, 0, img.width * scenario.bitmapScale, img.height * scenario.bitmapScale)
     }
   }
+
+  doAction('scenarioLoad')
 
   render()
 }
