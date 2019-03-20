@@ -44,6 +44,15 @@ const blueprintThinWalls = () => {
   return blueprintThinWalls
 }
 
+const blueprintHexes = () => {
+  const blueprintTiles = []
+  board.scenario.hexes.forEach(hex => {
+    blueprintTiles.push(hex.x, hex.y)
+  })
+
+  return blueprintTiles
+}
+
 const removeThinwall = thinwallToRemove =>
   board.scenario.thinWalls = board.scenario.thinWalls.filter(tw => !(
     (
@@ -91,7 +100,7 @@ const editBoard = eventHex => {
   }
 
   scenario.blueprint = {
-    hexes: board.scenario.hexes,
+    hexes: blueprintHexes(),
     thinWalls: blueprintThinWalls()
   }
 

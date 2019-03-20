@@ -32,9 +32,23 @@ const gridSizeInputChange = () => {
     width: newWidth
   }
 
-  scenario.blueprint.hexes = scenario.blueprint.hexes.filter(
-    hex => !(hex.x >= newWidth || hex.y >= newHeight)
-  )
+  const blueprintHexes = scenario.blueprint.hexes
+  const newBlueprintHexes = []
+  for (let i = 0; i < blueprintHexes.length; i += 2) {
+    if (
+      blueprintHexes[i] < newWidth &&
+      blueprintHexes[i + 1] < newHeight
+    ) {
+      newBlueprintHexes.push(
+        blueprintHexes[i],
+        blueprintHexes[i + 1]
+      )
+    }
+  }
+
+  if (newBlueprintHexes.length < blueprintHexes.length) {
+    scenario.blueprint.hexes = newBlueprintHexes
+  }
 
   scenarioLoad(scenario)
 }

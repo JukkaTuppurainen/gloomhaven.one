@@ -68,9 +68,10 @@ export const scenarioLoad = scenario => {
     }
   }
 
-  scenario.blueprint.hexes.forEach(hex => {
-    let loopX = parseBlueprintHex(hex.x)
-    let loopY = parseBlueprintHex(hex.y)
+  const hexes = scenario.blueprint.hexes
+  for (let i = 0; i < hexes.length; i += 2) {
+    let loopX = parseBlueprintHex(hexes[i])
+    let loopY = parseBlueprintHex(hexes[i + 1])
     let x
     let y
 
@@ -78,17 +79,11 @@ export const scenarioLoad = scenario => {
       for (x = loopX[0]; x <= loopX[1]; ++x) {
         const gridHex = board.grid.get({x, y})
         if (gridHex) {
-          Object.keys(hex).forEach(p => {
-            if (typeof gridHex[p] === 'undefined') {
-              gridHex[p] = hex[p]
-            }
-          })
-
           board.scenario.hexes.push(gridHex)
         }
       }
     }
-  })
+  }
 
   // Generate wall hexes around tiles
   board.scenario.hexes.forEach(hex => {
