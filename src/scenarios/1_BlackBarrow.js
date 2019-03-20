@@ -1,7 +1,7 @@
 import bitmap from './1_BlackBarrow.jpg'
 
 
-export const scenario = {
+export default {
   bitmap,
   bitmapScale: .928,
   blueprint: {

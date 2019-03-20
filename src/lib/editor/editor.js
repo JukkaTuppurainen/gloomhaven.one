@@ -27,12 +27,12 @@ const gridSizeInputChange = () => {
   if (newWidth > 100) {
     newWidth = 100
   }
-  scenario.grid = {
+  editor.grid = {
     height: newHeight,
     width: newWidth
   }
 
-  const blueprintHexes = scenario.blueprint.hexes
+  const blueprintHexes = editor.blueprint.hexes
   const newBlueprintHexes = []
   for (let i = 0; i < blueprintHexes.length; i += 2) {
     if (
@@ -47,17 +47,17 @@ const gridSizeInputChange = () => {
   }
 
   if (newBlueprintHexes.length < blueprintHexes.length) {
-    scenario.blueprint.hexes = newBlueprintHexes
+    editor.blueprint.hexes = newBlueprintHexes
   }
 
-  scenarioLoad(scenario)
+  scenarioLoad(editor)
 }
 
 const editorClear = () => {
-  scenario.blueprint.hexes = []
-  scenario.blueprint.thinWalls = []
+  editor.blueprint.hexes = []
+  editor.blueprint.thinWalls = []
 
-  scenarioLoad(scenario)
+  scenarioLoad(editor)
 }
 
 const editorModeButtonClick = event => {
@@ -74,7 +74,7 @@ const editorModeButtonClick = event => {
     delete board.editor.mode
     delete board.editor.mousedown
     board.editor.previousEditHex = {x: null, y: null}
-    scenarioLoad(scenario)
+    scenarioLoad(editor)
   }
 
   render()
@@ -100,7 +100,7 @@ const editorKeyboardShortcutKeydown = event => {
 let defaultHeight = 8
 let defaultWidth = 12
 
-export const scenario = {
+export const editor = {
   blueprint: {
     hexes: [],
     wallHexes: [],
@@ -125,11 +125,11 @@ export const scenario = {
     document.body.appendChild(controls)
 
     const gh = document.getElementById('grid-height')
-    gh.value = scenario.grid.height
+    gh.value = editor.grid.height
     gh.addEventListener('change', gridSizeInputChange)
 
     const gw = document.getElementById('grid-width')
-    gw.value = scenario.grid.width
+    gw.value = editor.grid.width
     gw.addEventListener('change', gridSizeInputChange)
 
     document.querySelectorAll('[data-editor-mode]').forEach(n => {
@@ -162,8 +162,8 @@ export const scenario = {
         patterns.push(oCtx.createPattern(oCanvas, 'repeat'))
       }
 
-      scenario.style.hexes.fill = patterns[0]
-      scenario.style.wallHexes.fill = hex => hex.direction ? patterns[hex.direction] : patterns[1]
+      editor.style.hexes.fill = patterns[0]
+      editor.style.wallHexes.fill = hex => hex.direction ? patterns[hex.direction] : patterns[1]
     }
     img.src = tileBitmap
 

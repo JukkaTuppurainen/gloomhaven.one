@@ -1,4 +1,4 @@
-import {scenario} from './editor'
+import {editor}   from './editor'
 import {
   board,
   Grid
@@ -99,7 +99,7 @@ const editBoard = eventHex => {
       break
   }
 
-  scenario.blueprint = {
+  editor.blueprint = {
     hexes: blueprintHexes(),
     thinWalls: blueprintThinWalls()
   }

@@ -36,12 +36,12 @@ const eventHandler = (eventName, event) => {
 const board = {
   events: eventHandler,
   grid: null,
-  loadScenario: async id => {
+  loadScenario: id => {
     if (board.scenario !== null) {
       board.unload()
     }
 
-    const scenario = (await scenarioList[id].file).scenario
+    const scenario = scenarioList[id].scenario
 
     if (scenario.load) {
       scenario.load()
