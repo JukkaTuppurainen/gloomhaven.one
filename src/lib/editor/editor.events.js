@@ -77,8 +77,14 @@ const editBoard = eventHex => {
       removeHex(eventHex)
       break
     case 'tile':
-      removeHex(eventHex)
-      board.scenario.hexes.push(eventHex)
+      if (
+        eventHex.x > 0 &&
+        eventHex.y > 0 &&
+        eventHex.x < board.scenario.grid.width - 1 &&
+        eventHex.y < board.scenario.grid.height - 1
+      ) {
+        board.scenario.hexes.push(eventHex)
+      }
       break
     case 'thin':
       if (editorHover) {

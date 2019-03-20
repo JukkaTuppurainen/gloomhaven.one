@@ -36,8 +36,8 @@ const gridSizeInputChange = () => {
   const newBlueprintHexes = []
   for (let i = 0; i < blueprintHexes.length; i += 2) {
     if (
-      blueprintHexes[i] < newWidth &&
-      blueprintHexes[i + 1] < newHeight
+      blueprintHexes[i] < newWidth - 1 &&
+      blueprintHexes[i + 1] < newHeight - 1
     ) {
       newBlueprintHexes.push(
         blueprintHexes[i],
