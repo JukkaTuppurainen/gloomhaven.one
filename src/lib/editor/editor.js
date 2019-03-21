@@ -18,15 +18,26 @@ import {render}       from '../../index'
 import tileBitmap     from '../../scenarios/editor.jpg'
 
 
+const getInputValue = (inputId, prevValue) => {
+  let inputElement = document.getElementById(inputId)
+  let value = inputElement.value
+
+  value = parseInt(value, 10)
+
+  if (value > 100) {
+    value = 100
+  } else if (!value) {
+    value = prevValue
+    inputElement.value = prevValue
+  }
+
+  return value
+}
+
 const gridSizeInputChange = () => {
-  let newHeight = parseInt(document.getElementById('grid-height').value, 10)
-  let newWidth = parseInt(document.getElementById('grid-width').value, 10)
-  if (newHeight > 100) {
-    newHeight = 100
-  }
-  if (newWidth > 100) {
-    newWidth = 100
-  }
+  let newHeight = getInputValue('grid-height', editor.grid.height)
+  let newWidth = getInputValue('grid-width', editor.grid.width)
+
   editor.grid = {
     height: newHeight,
     width: newWidth
