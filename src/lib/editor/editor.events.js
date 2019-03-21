@@ -1,117 +1,18 @@
-import {editor}   from './editor'
+import {editBoard} from './editor.functions'
 import {
   board,
   Grid
-}                 from '../board/board'
+}                  from '../board/board'
 import {
   boardClick,
   boardMousemove
-}                 from '../board/board.events'
-import {makeWall} from '../makeWall'
-import {render}   from '../../index'
+}                  from '../board/board.events'
+import {render}    from '../../index'
 
 
-const removeHex = hexToRemove => {
-  const hexFilter = filterHex => !(filterHex.x === hexToRemove.x && filterHex.y === hexToRemove.y)
-  board.scenario.hexes = board.scenario.hexes.filter(hexFilter)
-  board.scenario.wallHexes = board.scenario.wallHexes.filter(hexFilter)
-
-  const point = hexToRemove.toPoint()
-  const corners = hexToRemove.corners().map(corner => corner.add(point))
-
-  for (let i = 0; i < 6; ++i) {
-    removeThinwall({
-      x1: corners[i].x,
-      y1: corners[i].y,
-      x2: corners[i < 5 ? i + 1 : 0].x,
-      y2: corners[i < 5 ? i + 1 : 0].y,
-    })
-  }
-}
-
-const blueprintThinWalls = () => {
-  const blueprintThinWalls = []
-  board.scenario.thinWalls.forEach(thinWall => {
-    if (thinWall.meta) {
-      blueprintThinWalls.push(
-        thinWall.meta.x,
-        thinWall.meta.y,
-        thinWall.meta.s
-      )
-    }
-  })
-
-  return blueprintThinWalls
-}
-
-const blueprintHexes = () => {
-  const blueprintTiles = []
-  board.scenario.hexes.forEach(hex => {
-    blueprintTiles.push(hex.x, hex.y)
-  })
-
-  return blueprintTiles
-}
-
-const removeThinwall = thinwallToRemove =>
-  board.scenario.thinWalls = board.scenario.thinWalls.filter(tw => !(
-    (
-      thinwallToRemove.x1 === tw.x1 &&
-      thinwallToRemove.y1 === tw.y1 &&
-      thinwallToRemove.x2 === tw.x2 &&
-      thinwallToRemove.y2 === tw.y2
-    ) || (
-      thinwallToRemove.x1 === tw.x2 &&
-      thinwallToRemove.y1 === tw.y2 &&
-      thinwallToRemove.x2 === tw.x1 &&
-      thinwallToRemove.y2 === tw.y1
-    )
-  ))
-
-
-const editBoard = eventHex => {
-  const editorHover = board.editor.hover
-
-  switch (board.editor.mode) {
-    case 'remove':
-      removeHex(eventHex)
-      break
-    case 'tile':
-      if (
-        eventHex.x > 0 &&
-        eventHex.y > 0 &&
-        eventHex.x < board.scenario.grid.width - 1 &&
-        eventHex.y < board.scenario.grid.height - 1
-      ) {
-        board.scenario.hexes.push(eventHex)
-      }
-      break
-    case 'thin':
-      if (editorHover) {
-        removeThinwall(editorHover.sideWallCorners)
-        const side = editorHover.side
-        makeWall(
-          editorHover.hex,
-          side,
-          side < 5 ? side + 1 : 0,
-          true
-        )
-      }
-      break
-    case 'removethin':
-      if (editorHover) {
-        removeThinwall(editorHover.sideWallCorners)
-      }
-      break
-  }
-
-  editor.blueprint = {
-    hexes: blueprintHexes(),
-    thinWalls: blueprintThinWalls()
-  }
-
-  render()
-}
+/*
+  This file is for editor's canvas keyboard and mouse events
+ */
 
 export const editorClick = event => {
   if (typeof board.editor.mode === 'undefined') {
@@ -121,6 +22,23 @@ export const editorClick = event => {
     if (clickHex) {
       editBoard(clickHex)
     }
+  }
+}
+
+export const editorKeyboardShortcutKeydown = event => {
+  switch (event.key) {
+    case 't':
+      document.querySelector('[data-editor-mode="tile"]').click()
+      break
+    case 'r':
+      document.querySelector('[data-editor-mode="remove"]').click()
+      break
+    case 'h':
+      document.querySelector('[data-editor-mode="thin"]').click()
+      break
+    case 'e':
+      document.querySelector('[data-editor-mode="removethin"]').click()
+      break
   }
 }
 
