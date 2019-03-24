@@ -24,7 +24,7 @@ import tileBitmap     from '../../scenarios/editor.jpg'
 
 
 let defaultHeight = 8
-let defaultWidth = 8
+let defaultWidth = 10
 
 export const editor = {
   blueprint: {
@@ -69,11 +69,11 @@ export const editor = {
 
     const img = new Image()
     img.onload = () => {
-      const patterns = []
+      const patterns = ['#000']
       const oCanvas = new OffscreenCanvas(180, 104)
       const oCtx = oCanvas.getContext('2d')
 
-      for (let i = 0; i <= 10; ++i) {
+      for (let i = 0; i < 13; ++i) {
         oCtx.drawImage(
           img,
           (i % 4) * 182,
@@ -88,8 +88,8 @@ export const editor = {
         patterns.push(oCtx.createPattern(oCanvas, 'repeat'))
       }
 
-      editor.style.hexes.fill = patterns[0]
-      editor.style.wallHexes.fill = hex => hex.direction ? patterns[hex.direction] : patterns[1]
+      editor.style.hexes.fill = patterns[1]
+      editor.style.wallHexes.fill = hex => patterns[hex.direction] || 2
     }
     img.src = tileBitmap
 

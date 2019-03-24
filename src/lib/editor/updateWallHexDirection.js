@@ -25,10 +25,10 @@ export const updateWallHexDirections = () => {
     for (let i = 0; i < 6; ++i) {
       adjacentInDirection = board.grid.neighborsOf(wallHex, i)
       if (adjacentInDirection.length) {
-        let wallHex = board.scenario.wallHexes.find(
+        let adjacentWallHex = board.scenario.wallHexes.find(
           hex => hex.x === adjacentInDirection[0].x && hex.y === adjacentInDirection[0].y
         )
-        if (wallHex) {
+        if (adjacentWallHex) {
           adjacentWalls.push(i)
         }
       }
@@ -42,7 +42,7 @@ export const updateWallHexDirections = () => {
       adjacentWalls.includes(1) &&
       adjacentWalls.includes(4)
     )) {
-      setWallPattern(wallHex, [2, 3], [0, 5], 5, 6, 2)
+      setWallPattern(wallHex, [2, 3], [0, 5], 6, 7, 3)
     }
 
     else if ((
@@ -53,7 +53,7 @@ export const updateWallHexDirections = () => {
       adjacentWalls.includes(2) &&
       adjacentWalls.includes(5)
     )) {
-      setWallPattern(wallHex, [0, 1], [3, 4], 7, 8, 3)
+      setWallPattern(wallHex, [0, 1], [3, 4], 8, 9, 4)
     }
 
     else if ((
@@ -64,11 +64,27 @@ export const updateWallHexDirections = () => {
       adjacentWalls.includes(0) &&
       adjacentWalls.includes(3)
     )) {
-      setWallPattern(wallHex, [1, 2], [4, 5], 9, 10, 4)
+      setWallPattern(wallHex, [1, 2], [4, 5], 10, 11, 5)
+    }
+
+    else if (
+      adjacentWalls.length === 2 &&
+      adjacentWalls.includes(3) &&
+      adjacentWalls.includes(5)
+    ) {
+      setWallPattern(wallHex, 4, 2, 0, 13)
+    }
+
+    else if (
+      adjacentWalls.length === 2 &&
+      adjacentWalls.includes(2) &&
+      adjacentWalls.includes(0)
+    ) {
+      setWallPattern(wallHex, 1, 5, 0, 12)
     }
 
     else {
-      wallHex.direction = 1
+      wallHex.direction = 2
     }
   })
 }
