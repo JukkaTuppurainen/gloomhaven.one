@@ -72,7 +72,7 @@ export const updateWallHexDirections = () => {
       adjacentWalls.includes(3) &&
       adjacentWalls.includes(5)
     ) {
-      setWallPattern(wallHex, 4, 2, 0, 13)
+      setWallPattern(wallHex, 4, 2, 1000, 13)
     }
 
     else if (
@@ -80,11 +80,59 @@ export const updateWallHexDirections = () => {
       adjacentWalls.includes(2) &&
       adjacentWalls.includes(0)
     ) {
-      setWallPattern(wallHex, 1, 5, 0, 12)
+      setWallPattern(wallHex, 1, 5, 1000, 12)
     }
 
     else {
-      wallHex.direction = 2
+      wallHex.direction = 1002
+    }
+  })
+
+  board.scenario.wallHexes.forEach(wallHex => {
+    if (wallHex.direction > 999) {
+      let wallsInAdjacentDirections = {}
+      let adjacentInDirection
+      let adjacentWallHex
+      for (let i = 0; i < 6; ++i) {
+        adjacentInDirection = board.grid.neighborsOf(wallHex, i)
+
+        if (adjacentInDirection.length) {
+          adjacentWallHex = board.scenario.wallHexes.find(
+            hex => hex.x === adjacentInDirection[0].x && hex.y === adjacentInDirection[0].y
+          )
+          if (adjacentWallHex) {
+            wallsInAdjacentDirections[i] = adjacentWallHex.direction
+          }
+        }
+      }
+
+       /*┌────────────────── First hex side
+         │   ┌────────────── Wall direction on 1st side
+         │   │   ┌────────── Second hex side
+         │   │   │   ┌────── Wall direction on 2nd side3
+         │   │   │   │   ┌── New direction to assign     */
+      [/*│   │   │   │   │                               */
+        [1,  7,  5,  0, 16],
+        [4,  7,  0,  0, 17],
+        [1,  6,  3,  0, 14],
+        [4,  6,  2,  0, 15]
+      ] .forEach(row => {
+        if (
+          (
+            wallsInAdjacentDirections[row[0]] === row[1] ||
+            wallsInAdjacentDirections[row[0]] - 1000 === row[1]
+          ) && (
+            wallsInAdjacentDirections[row[2]] === row[3] ||
+            wallsInAdjacentDirections[row[2]] - 1000 === row[3]
+          )
+        ) {
+          wallHex.direction = row[4]
+        }
+      })
+
+      if (wallHex.direction > 999) {
+        wallHex.direction -= 1000
+      }
     }
   })
 }

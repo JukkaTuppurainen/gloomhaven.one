@@ -20,7 +20,7 @@ import {
 }                     from '../actions'
 import {board}        from '../board/board'
 import {scenarioLoad} from '../board/board.scenarioLoad'
-import tileBitmap     from '../../scenarios/editor.jpg'
+import tileBitmap     from './editor.jpg'
 
 
 let defaultHeight = 8
@@ -73,7 +73,7 @@ export const editor = {
       const oCanvas = new OffscreenCanvas(180, 104)
       const oCtx = oCanvas.getContext('2d')
 
-      for (let i = 0; i < 13; ++i) {
+      for (let i = 0; i < 18; ++i) {
         oCtx.drawImage(
           img,
           (i % 4) * 182,
@@ -89,7 +89,7 @@ export const editor = {
       }
 
       editor.style.hexes.fill = patterns[1]
-      editor.style.wallHexes.fill = hex => patterns[hex.direction] || 2
+      editor.style.wallHexes.fill = hex => patterns[hex.direction]
     }
     img.src = tileBitmap
 
