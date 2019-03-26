@@ -18,6 +18,12 @@ const setWallPattern = (wallHex, left, right, patternLeft, patternRight, pattern
   }
 }
 
+const checkHex = (a, b) => (
+  b instanceof Array
+    ? b.includes(a) || b.includes(a - 1000)
+    : a === b || a - 1000 === b
+)
+
 export const updateWallHexDirections = () => {
   board.scenario.wallHexes.forEach(wallHex => {
     let adjacentInDirection
@@ -93,6 +99,7 @@ export const updateWallHexDirections = () => {
       let wallsInAdjacentDirections = {}
       let adjacentInDirection
       let adjacentWallHex
+      let adjacentFloorHex
       for (let i = 0; i < 6; ++i) {
         adjacentInDirection = board.grid.neighborsOf(wallHex, i)
 
@@ -102,31 +109,33 @@ export const updateWallHexDirections = () => {
           )
           if (adjacentWallHex) {
             wallsInAdjacentDirections[i] = adjacentWallHex.direction
+          } else {
+            adjacentFloorHex = board.scenario.hexes.find(
+              hex => hex.x === adjacentInDirection[0].x && hex.y === adjacentInDirection[0].y
+            )
+            if (adjacentFloorHex) {
+              wallsInAdjacentDirections[i] = 1
+            }
           }
         }
       }
 
-       /*┌────────────────── First hex side
-         │   ┌────────────── Wall direction on 1st side
-         │   │   ┌────────── Second hex side
-         │   │   │   ┌────── Wall direction on 2nd side3
-         │   │   │   │   ┌── New direction to assign     */
-      [/*│   │   │   │   │                               */
-        [1,  7,  5,  0, 16],
-        [4,  7,  0,  0, 17],
-        [1,  6,  3,  0, 14],
-        [4,  6,  2,  0, 15]
-      ] .forEach(row => {
-        if (
-          (
-            wallsInAdjacentDirections[row[0]] === row[1] ||
-            wallsInAdjacentDirections[row[0]] - 1000 === row[1]
-          ) && (
-            wallsInAdjacentDirections[row[2]] === row[3] ||
-            wallsInAdjacentDirections[row[2]] - 1000 === row[3]
-          )
-        ) {
-          wallHex.direction = row[4]
+      [
+        {rules: [[1, [2, 7]], [5, 0]], result: 16},
+        {rules: [[4, [2, 7]], [0, 0]], result: 17},
+        {rules: [[1, [2, 6]], [3, 0]], result: 14},
+        {rules: [[4, [2, 6]], [2, 0]], result: 15},
+        {rules: [[3, [2, 11]], [5, [2, 9]], [4, 1]], result: 18},
+        {rules: [[2, [2, 8]], [0, [2, 10]], [1, 1]], result: 19}
+      ].forEach(row => {
+        let isOk = true
+        row.rules.forEach(rule => {
+          if (!checkHex(wallsInAdjacentDirections[rule[0]], rule[1])) {
+            isOk = false
+          }
+        })
+        if (isOk) {
+          wallHex.direction = row.result
         }
       })
 

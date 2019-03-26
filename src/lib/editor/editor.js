@@ -73,7 +73,7 @@ export const editor = {
       const oCanvas = new OffscreenCanvas(180, 104)
       const oCtx = oCanvas.getContext('2d')
 
-      for (let i = 0; i < 18; ++i) {
+      for (let i = 0; i < 19; ++i) {
         oCtx.drawImage(
           img,
           (i % 4) * 182,
