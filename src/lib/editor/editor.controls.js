@@ -29,10 +29,12 @@ export const editorModeButtonClick = event => {
     board.editor.mode = event.target.dataset['editorMode']
     delete board.playerHex
     board.scenario.wallHexes = []
+    document.querySelectorAll('input').forEach(n => n.setAttribute('disabled', true))
   } else {
     delete board.editor.mode
     delete board.editor.mousedown
     board.editor.previousEditHex = {x: null, y: null}
+    document.querySelectorAll('input').forEach(n => n.removeAttribute('disabled'))
     scenarioLoad(editor)
   }
 
@@ -90,6 +92,8 @@ export const gridSizeInputChange = () => {
   if (newBlueprintHexes.length < blueprintHexes.length) {
     editor.blueprint.hexes = newBlueprintHexes
   }
+
+  delete board.playerHex
 
   scenarioLoad(editor)
 }

@@ -23,8 +23,8 @@ import {scenarioLoad} from '../board/board.scenarioLoad'
 import tileBitmap     from './editor.jpg'
 
 
-let defaultHeight = 8
-let defaultWidth = 10
+const defaultHeight = 12
+const defaultWidth = 20
 
 export const editor = {
   blueprint: {

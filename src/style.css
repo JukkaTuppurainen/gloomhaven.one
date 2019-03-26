@@ -56,6 +56,12 @@ button {
   margin-right: 5px;
 }
 
+input[disabled] {
+  background: #333;
+  color: #ccc;
+  cursor: default;
+}
+
 button.active {
   background: #33ff;
 }
