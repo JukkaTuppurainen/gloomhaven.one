@@ -16,8 +16,7 @@ import {render}       from '../../index'
 const maxBoardSize = 54
 
 export const editorClear = () => {
-  editor.blueprint.hexes = []
-  editor.blueprint.thinWalls = []
+  editor.blueprint = ''
 
   scenarioLoad(editor)
 }

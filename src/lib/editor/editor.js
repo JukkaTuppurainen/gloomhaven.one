@@ -1,3 +1,4 @@
+import tileBitmap     from './editor.jpg'
 import {
   editorClear,
   editorModeButtonClick,
@@ -20,18 +21,14 @@ import {
 }                     from '../actions'
 import {board}        from '../board/board'
 import {scenarioLoad} from '../board/board.scenarioLoad'
-import tileBitmap     from './editor.jpg'
+import {render}       from '../../index'
 
 
 const editorGridDefaultHeight = 20
 const editorGridDefaultWidth = 20
 
 export const editor = {
-  blueprint: {
-    hexes: [],
-    wallHexes: [],
-    thinWalls: []
-  },
+  blueprint: '',
   events: {
     click: editorClick,
     mousedown: editorMousedown,
@@ -92,6 +89,7 @@ export const editor = {
 
       editor.style.hexes.fill = patterns[1]
       editor.style.wallHexes.fill = hex => patterns[hex.direction]
+      render()
     }
     img.src = tileBitmap
 
@@ -99,7 +97,7 @@ export const editor = {
       window.location.hash &&
       window.location.hash.substr(0, 2) === '#:'
     ) {
-      editor.blueprint.hexes = window.location.hash.substr(2)
+      editor.blueprint = window.location.hash.substr(2)
     }
 
     addAction('scenarioLoad', updateWallHexDirections)

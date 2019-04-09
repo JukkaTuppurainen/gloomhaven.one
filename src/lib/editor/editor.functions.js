@@ -44,21 +44,6 @@ export const editBoard = eventHex => {
   render()
 }
 
-const formatBlueprintThinWalls = () => {
-  const blueprintThinWalls = []
-  board.scenario.thinWalls.forEach(thinWall => {
-    if (thinWall.meta) {
-      blueprintThinWalls.push(
-        thinWall.meta.x,
-        thinWall.meta.y,
-        thinWall.meta.s
-      )
-    }
-  })
-
-  return blueprintThinWalls
-}
-
 export const removeHex = hexToRemove => {
   const hexFilter = filterHex => !(filterHex.x === hexToRemove.x && filterHex.y === hexToRemove.y)
   board.scenario.hexes = board.scenario.hexes.filter(hexFilter)
@@ -93,9 +78,9 @@ export const removeThinwall = thinwallToRemove =>
 
 const toChar = n => String.fromCharCode(n + (n < 27 ? 96 : 38))
 
-const formatBlueprintHexes = () => {
+const generateBlueprintString = () => {
   const hexExport = {}
-  let stringResult = ''
+  let blueprintString = ''
 
   board.scenario.hexes.forEach(hex => {
     if (!hexExport[hex.x]) {
@@ -116,7 +101,7 @@ const formatBlueprintHexes = () => {
       yArray[0] > previousLastY ||
       x > previousX + 1
     ) {
-      stringResult += x
+      blueprintString += x
     }
 
     previousX = x
@@ -133,23 +118,28 @@ const formatBlueprintHexes = () => {
         (yArray[i + 1] > yArray[i] + 1) ||
         i === yArray.length - 1
       ) {
-        stringResult += toChar(start) + toChar(yArray[i])
+        blueprintString += toChar(start) + toChar(yArray[i])
         start = 0
       }
       ++i
     }
   })
 
-  return stringResult
+  if (board.scenario.thinWalls.length) {
+    blueprintString += '.'
+    board.scenario.thinWalls.forEach(thinWall => {
+      blueprintString += thinWall.meta.x + toChar(thinWall.meta.y)
+      if (thinWall.meta.s !== 1) {
+        blueprintString += toChar(thinWall.meta.s + 1)
+      }
+    })
+  }
+
+  return blueprintString
 }
 
 export const updateBlueprint = () => {
-  const hexesString = formatBlueprintHexes()
-
-  board.scenario.blueprint = editor.blueprint = {
-    hexes: hexesString,
-    thinWalls: formatBlueprintThinWalls()
-  }
-
+  const hexesString = generateBlueprintString()
+  board.scenario.blueprint = editor.blueprint = hexesString
   window.location.hash = ':' + hexesString
 }

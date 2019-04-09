@@ -23,13 +23,14 @@ export const scenarioLoad = scenario => {
 
   Object.assign(board.scenario, scenario)
 
-  const hexString = scenario.blueprint.hexes
+  const hexString = scenario.blueprint.split('.')[0]
+  const thinWallString = scenario.blueprint.split('.')[1]
   const hexCoordinates = []
   let end
   let i = 0
+  let previousLastY = 0
   let start
   let x = 1
-  let previousLastY = 0
 
   let gridSize = {
     height: board.scenario.grid ? board.scenario.grid.height : 0,
@@ -118,17 +119,36 @@ export const scenarioLoad = scenario => {
   }
 
   // Parse thinWalls
-  // @TODO thinWalls move to blueprint's hexString
 
-  if (scenario.blueprint.thinWalls) {
-    const tw = scenario.blueprint.thinWalls
-    for (let i = 0; i < tw.length; i += 3) {
-      board.scenario.walls.push(makeWall(
-        {x: tw[i], y: tw[i + 1]},
-        tw[i + 2],
-        tw[i + 2] === 5 ? 0 : tw[i + 2] + 1,
-        true
-      ))
+  if (thinWallString) {
+    let s
+    let x
+    let y
+    i = 0
+
+    while (i < thinWallString.length) {
+      let m = thinWallString.substr(i).match(/^\d+/)
+      if (m) {
+        x = parseInt(m[0], 10)
+        i += m[0].length
+      } else {
+        y = fromChar(thinWallString.substr(i, 1))
+        ++i
+
+        if (i === thinWallString.length || thinWallString.substr(i, 1).match(/\d/)) {
+          s = 1
+        } else {
+          s = fromChar(thinWallString[i]) - 1
+          ++i
+        }
+
+        board.scenario.walls.push(makeWall(
+          {x, y},
+          s,
+          s === 5 ? 0 : s + 1,
+          true
+        ))
+      }
     }
   }
 
