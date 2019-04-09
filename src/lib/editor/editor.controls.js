@@ -12,6 +12,9 @@ import {render}       from '../../index'
   This file is for editor control panel related stuff
  */
 
+// Current limit from blueprint string format
+const maxBoardSize = 54
+
 export const editorClear = () => {
   editor.blueprint.hexes = []
   editor.blueprint.thinWalls = []
@@ -47,8 +50,9 @@ const getInputValue = (inputId, prevValue) => {
 
   value = parseInt(value, 10)
 
-  if (value > 100) {
-    value = 100
+  if (value > maxBoardSize) {
+    value = maxBoardSize
+    inputElement.value = maxBoardSize
   } else if (!value) {
     value = prevValue
     inputElement.value = prevValue
@@ -66,32 +70,13 @@ export const gridSizeInputChange = () => {
     width: newWidth
   }
 
-  const blueprintHexes = editor.blueprint.hexes
-  const newBlueprintHexes = []
-  let removesHappened = false
-
-  for (let i = 0; i < blueprintHexes.length; i += 2) {
-    if (
-      blueprintHexes[i] < newWidth - 1 &&
-      blueprintHexes[i + 1] < newHeight - 1
-    ) {
-      newBlueprintHexes.push(
-        blueprintHexes[i],
-        blueprintHexes[i + 1]
-      )
-    } else {
-      removeHex(board.grid.get({x: blueprintHexes[i], y: blueprintHexes[i + 1]}))
-      removesHappened = true
+  board.scenario.hexes.forEach(hex => {
+    if (hex.x > newWidth - 2 || hex.y > newHeight - 2) {
+      removeHex(hex)
     }
-  }
+  })
 
-  if (removesHappened) {
-    updateBlueprint()
-  }
-
-  if (newBlueprintHexes.length < blueprintHexes.length) {
-    editor.blueprint.hexes = newBlueprintHexes
-  }
+  updateBlueprint()
 
   delete board.playerHex
 

@@ -23,8 +23,8 @@ import {scenarioLoad} from '../board/board.scenarioLoad'
 import tileBitmap     from './editor.jpg'
 
 
-const defaultHeight = 12
-const defaultWidth = 20
+const editorGridDefaultHeight = 20
+const editorGridDefaultWidth = 20
 
 export const editor = {
   blueprint: {
@@ -70,7 +70,9 @@ export const editor = {
     const img = new Image()
     img.onload = () => {
       const patterns = ['#000']
-      const oCanvas = new OffscreenCanvas(180, 104)
+      const oCanvas = document.createElement('canvas')
+      oCanvas.width = 180
+      oCanvas.height = 104
       const oCtx = oCanvas.getContext('2d')
 
       for (let i = 0; i < 19; ++i) {
@@ -93,6 +95,13 @@ export const editor = {
     }
     img.src = tileBitmap
 
+    if (
+      window.location.hash &&
+      window.location.hash.substr(0, 2) === '#:'
+    ) {
+      editor.blueprint.hexes = window.location.hash.substr(2)
+    }
+
     addAction('scenarioLoad', updateWallHexDirections)
   },
   unload: () => {
@@ -103,15 +112,21 @@ export const editor = {
     removeAction('scenarioLoad', updateWallHexDirections)
   },
   grid: {
-    height: defaultHeight,
-    width: defaultWidth
+    height: editorGridDefaultHeight,
+    width: editorGridDefaultWidth
   },
   style: {
     hexes: {
       fill: '#000'
     },
     noHexes: {
-      line: '#222'
+      line: hex => (
+        hex.x === 0 ||
+        hex.y === 0 ||
+        hex.x === board.gridSize.width - 1 ||
+        hex.y === board.gridSize.height - 1
+      ) ? '#0000' : '#222'
+
     },
     wallHexes: {
       fill: '#000'

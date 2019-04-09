@@ -59,19 +59,9 @@ const formatBlueprintThinWalls = () => {
   return blueprintThinWalls
 }
 
-const formatBlueprintHexes = () => {
-  const blueprintTiles = []
-  board.scenario.hexes.forEach(hex => {
-    blueprintTiles.push(hex.x, hex.y)
-  })
-
-  return blueprintTiles
-}
-
 export const removeHex = hexToRemove => {
   const hexFilter = filterHex => !(filterHex.x === hexToRemove.x && filterHex.y === hexToRemove.y)
   board.scenario.hexes = board.scenario.hexes.filter(hexFilter)
-  board.scenario.wallHexes = board.scenario.wallHexes.filter(hexFilter)
 
   const point = hexToRemove.toPoint()
   const corners = hexToRemove.corners().map(corner => corner.add(point))
@@ -101,9 +91,65 @@ export const removeThinwall = thinwallToRemove =>
     )
   ))
 
+const toChar = n => String.fromCharCode(n + (n < 27 ? 96 : 38))
+
+const formatBlueprintHexes = () => {
+  const hexExport = {}
+  let stringResult = ''
+
+  board.scenario.hexes.forEach(hex => {
+    if (!hexExport[hex.x]) {
+      hexExport[hex.x] = new Set()
+    }
+
+    hexExport[hex.x].add(hex.y)
+  })
+
+  let previousX = 0
+  let previousLastY = 99
+
+  Object.keys(hexExport).forEach(x => {
+    x = parseInt(x, 10)
+    const yArray = [...hexExport[x]].sort((a, b) => a > b ? 1 : -1)
+
+    if (
+      yArray[0] > previousLastY ||
+      x > previousX + 1
+    ) {
+      stringResult += x
+    }
+
+    previousX = x
+    previousLastY = yArray[yArray.length - 1]
+
+    let i = 0
+    let start = 0
+
+    while (i < yArray.length) {
+      if (!start) {
+        start = yArray[i]
+      }
+      if (
+        (yArray[i + 1] > yArray[i] + 1) ||
+        i === yArray.length - 1
+      ) {
+        stringResult += toChar(start) + toChar(yArray[i])
+        start = 0
+      }
+      ++i
+    }
+  })
+
+  return stringResult
+}
+
 export const updateBlueprint = () => {
+  const hexesString = formatBlueprintHexes()
+
   board.scenario.blueprint = editor.blueprint = {
-    hexes: formatBlueprintHexes(),
+    hexes: hexesString,
     thinWalls: formatBlueprintThinWalls()
   }
+
+  window.location.hash = ':' + hexesString
 }

@@ -6,6 +6,7 @@ import './style.css'
 
 const canvas = document.getElementById('c')
 const ctx = canvas.getContext('2d')
+const applyStyle = (style, hex) => typeof style === 'function' ? style(hex) : style
 
 const renderer = () => {
   if (!board.scenario) {
@@ -19,9 +20,6 @@ const renderer = () => {
   const style = board.scenario.style
 
   if (style.noHexes) {
-    ctx.strokeStyle = style.noHexes.line
-    ctx.fillStyle = style.noHexes.fill
-
     board.grid
       .filter(gridHex => !board.scenario.hexes.find(hex => hex.x === gridHex.x && hex.y === gridHex.y))
       .filter(gridHex => !board.scenario.wallHexes.find(hex => hex.x === gridHex.x && hex.y === gridHex.y))
@@ -35,10 +33,8 @@ const renderer = () => {
         otherCorners.forEach(({x, y}) => ctx.lineTo(x, y))
         ctx.lineTo(firstCorner.x, firstCorner.y)
         if (style.noHexes.line) {
+          ctx.strokeStyle = applyStyle(style.noHexes.line, gridHex)
           ctx.stroke()
-        }
-        if (style.noHexes.fill) {
-          ctx.fill()
         }
       })
   }
@@ -58,11 +54,7 @@ const renderer = () => {
         ctx.stroke()
       }
       if (style.wallHexes.fill) {
-        if (typeof style.wallHexes.fill === 'function') {
-          ctx.fillStyle = style.wallHexes.fill(wallHex)
-        } else {
-          ctx.fillStyle = style.wallHexes.fill
-        }
+        ctx.fillStyle = applyStyle(style.wallHexes.fill, wallHex)
         ctx.fill()
       }
     }
@@ -223,11 +215,24 @@ for (let [id, scenario] of Object.entries(scenarioList)) {
 }
 
 scenarioSelect.addEventListener('change', event => {
-  board.loadScenario(event.target.value)
+  const value = event.target.value
+  board.loadScenario(value)
+
+  window.location.hash = value === 'editor' ? ':' : value
 })
 
-scenarioSelect.value = '1'
-board.loadScenario('1')
+let loadScenario = '1'
+
+if (window.location.hash) {
+  if (window.location.hash.match(/^#\d+/)) {
+    loadScenario = window.location.hash.substr(1)
+  } else if (window.location.hash.substr(0, 2) === '#:') {
+    loadScenario = 'editor'
+  }
+}
+
+scenarioSelect.value = loadScenario
+board.loadScenario(loadScenario)
 
 canvas.addEventListener('click', event => board.events('click', event))
 canvas.addEventListener('mousedown', event => board.events('mousedown', event))

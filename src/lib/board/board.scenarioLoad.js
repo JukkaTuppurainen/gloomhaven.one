@@ -7,19 +7,78 @@ import {makeWall} from '../makeWall'
 import {render}   from '../../index'
 
 
-const parseBlueprintHex = input => {
-  if (typeof input === 'number') {
-    return [input, input]
-  }
-  let m = input.match(/(\d+)-(\d+)/)
-  return [
-    parseInt(m[1], 10),
-    parseInt(m[2], 10)
-  ]
+const fromChar = c => {
+  let n = c.charCodeAt(0)
+  return n > 96 ? n - 96 : n - 38
 }
 
 export const scenarioLoad = scenario => {
-  board.grid = Grid.rectangle(scenario.grid)
+  board.scenario = {
+    hexes: [],
+    thinWalls: [],
+    wallCorners: new Set(),
+    wallHexes: [],
+    walls: []
+  }
+
+  Object.assign(board.scenario, scenario)
+
+  const hexString = scenario.blueprint.hexes
+  const hexCoordinates = []
+  let end
+  let i = 0
+  let start
+  let x = 1
+  let previousLastY = 0
+
+  let gridSize = {
+    height: board.scenario.grid ? board.scenario.grid.height : 0,
+    width: board.scenario.grid ? board.scenario.grid.width : 0
+  }
+
+  // Parse hexString, resolve needed board size and push all hexes coordinates to temp array
+
+  while (i < hexString.length) {
+    let m = hexString.substr(i).match(/^\d+/)
+    if (m) {
+      x = parseInt(m[0], 10)
+      i += m[0].length
+      previousLastY = 0
+    } else {
+      start = fromChar(hexString.substr(i, 1))
+      end = fromChar(hexString.substr(i + 1, 1))
+
+      if (start <= previousLastY) {
+        ++x
+      }
+
+      previousLastY = end
+
+      if (end + 2 > gridSize.height) {
+        gridSize.height = end + 2
+      }
+
+      if (x + 2 > gridSize.width) {
+        gridSize.width = x + 2
+      }
+
+      for (let y = start; y <= end; ++y) {
+        hexCoordinates.push(x, y)
+      }
+
+      i += 2
+    }
+  }
+
+  // Initialize grid and set canvas dimensions in pixels
+
+  if (board.editor) {
+    document.getElementById('grid-height').value = gridSize.height
+    document.getElementById('grid-width').value = gridSize.width
+  }
+
+  board.gridSize = gridSize
+  board.grid = Grid.rectangle(gridSize)
 
   let maxX = 0
   let maxY = 0
@@ -46,15 +105,20 @@ export const scenarioLoad = scenario => {
   canvasBackground.height = maxY + 100
   canvasBackground.width = maxX + 100
 
-  board.scenario = {
-    hexes: [],
-    thinWalls: [],
-    wallCorners: new Set(),
-    wallHexes: [],
-    walls: []
+  // Get actual Hex objects from coordinates
+
+  for (i = 0; i < hexCoordinates.length; i += 2) {
+    const gridHex = board.grid.get({
+      x: hexCoordinates[i],
+      y: hexCoordinates[i + 1]
+    })
+    if (gridHex) {
+      board.scenario.hexes.push(gridHex)
+    }
   }
 
-  Object.assign(board.scenario, scenario)
+  // Parse thinWalls
+  // @TODO thinWalls move to blueprint's hexString
 
   if (scenario.blueprint.thinWalls) {
     const tw = scenario.blueprint.thinWalls
@@ -65,23 +129,6 @@ export const scenarioLoad = scenario => {
         tw[i + 2] === 5 ? 0 : tw[i + 2] + 1,
         true
       ))
-    }
-  }
-
-  const hexes = scenario.blueprint.hexes
-  for (let i = 0; i < hexes.length; i += 2) {
-    let loopX = parseBlueprintHex(hexes[i])
-    let loopY = parseBlueprintHex(hexes[i + 1])
-    let x
-    let y
-
-    for (y = loopY[0]; y <= loopY[1]; ++y) {
-      for (x = loopX[0]; x <= loopX[1]; ++x) {
-        const gridHex = board.grid.get({x, y})
-        if (gridHex) {
-          board.scenario.hexes.push(gridHex)
-        }
-      }
     }
   }
 
@@ -137,7 +184,7 @@ export const scenarioLoad = scenario => {
 
     img.onload = () => {
       const ctx2 = canvasBackground.getContext('2d')
-      ctx2.drawImage(img, 0, 0, img.width * scenario.bitmapScale, img.height * scenario.bitmapScale)
+      ctx2.drawImage(img, 90, 158, img.width * scenario.bitmapScale, img.height * scenario.bitmapScale)
     }
   }
 
