@@ -1,6 +1,7 @@
 import {editBoard} from './editor.functions'
 import {
   board,
+  cornersCoordinates,
   Grid
 }                  from '../board/board'
 import {
@@ -76,7 +77,7 @@ export const editorMousemove = event => {
     if (hoverHex) {
       const point = hoverHex.toPoint()
       const adjust = board.settings.hexSize
-      const corners = hoverHex.corners().map(corner => corner.add(point))
+      const corners = cornersCoordinates.map(corner => corner.add(point))
 
       point.x += adjust
       point.y += adjust / 2 * Math.sqrt(3)

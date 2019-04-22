@@ -1,5 +1,6 @@
 import {
   board,
+  cornersCoordinates,
   Grid
 }                 from './board'
 import {doAction} from '../actions'
@@ -86,7 +87,7 @@ export const scenarioLoad = scenario => {
 
   board.grid.forEach(hex => {
     const point = hex.toPoint()
-    const corners = hex.corners().map(corner => corner.add(point))
+    const corners = cornersCoordinates.map(corner => corner.add(point))
     corners.forEach(c => {
       if (c.x > maxX) {
         maxX = c.x
@@ -168,7 +169,7 @@ export const scenarioLoad = scenario => {
   board.scenario.wallHexes.forEach(({x, y}) => {
     const wallHex = board.grid.get({x, y})
     const wallHexPoint = wallHex.toPoint()
-    const corners = wallHex.corners().map(c => c.add(wallHexPoint))
+    const corners = cornersCoordinates.map(c => c.add(wallHexPoint))
 
     // ... around the wall hex
     for (let i = 0; i < 6; ++i) {

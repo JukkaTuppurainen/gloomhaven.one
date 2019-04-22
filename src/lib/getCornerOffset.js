@@ -1,10 +1,13 @@
-import {board} from './board/board'
+import {
+  board,
+  cornersCoordinates
+} from './board/board'
 
 
 export const getCornerOffset = (x, y, c) => {
   let hex = board.grid.get({x, y})
   let point = hex.toPoint()
-  let corners = hex.corners().map(c => c.add(point))
+  let corners = cornersCoordinates.map(c => c.add(point))
 
   let centerx = 0
   let centery = 0

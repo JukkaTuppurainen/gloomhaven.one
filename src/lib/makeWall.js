@@ -1,10 +1,13 @@
-import {board} from './board/board'
+import {
+  board,
+  cornersCoordinates
+} from './board/board'
 
 
 export const makeWall = (hexcoords, corner1, corner2, thin) => {
   const hex = board.grid.get(hexcoords)
   const point = hex.toPoint()
-  const corners = hex.corners().map(c => c.add(point))
+  const corners = cornersCoordinates.map(c => c.add(point))
 
   board.scenario.wallCorners.add(`${corners[corner1].x}-${corners[corner1].y}` )
   board.scenario.wallCorners.add(`${corners[corner2].x}-${corners[corner2].y}` )

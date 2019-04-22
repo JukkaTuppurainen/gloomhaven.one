@@ -1,4 +1,7 @@
-import {board}        from './lib/board/board'
+import {
+  board,
+  cornersCoordinates
+}                     from './lib/board/board'
 import {isInSight}    from './lib/isInSight'
 import {scenarioList} from './scenarios'
 import './style.css'
@@ -25,7 +28,7 @@ const renderer = () => {
       .filter(gridHex => !board.scenario.wallHexes.find(hex => hex.x === gridHex.x && hex.y === gridHex.y))
       .forEach(gridHex => {
         const point = gridHex.toPoint()
-        const corners = gridHex.corners().map(corner => corner.add(point))
+        const corners = cornersCoordinates.map(corner => corner.add(point))
         const [firstCorner, ...otherCorners] = corners
 
         ctx.beginPath()
@@ -41,7 +44,7 @@ const renderer = () => {
 
   board.scenario.wallHexes.forEach(wallHex => {
     const point = wallHex.toPoint()
-    const corners = wallHex.corners().map(corner => corner.add(point))
+    const corners = cornersCoordinates.map(corner => corner.add(point))
     const [firstCorner, ...otherCorners] = corners
 
     if (style.wallHexes) {
@@ -72,7 +75,7 @@ const renderer = () => {
 
   board.scenario.hexes.forEach(hex => {
     const point = hex.toPoint()
-    const corners = hex.corners().map(corner => corner.add(point))
+    const corners = cornersCoordinates.map(corner => corner.add(point))
     const [firstCorner, ...otherCorners] = corners
 
     ctx.beginPath()
@@ -132,7 +135,7 @@ const renderer = () => {
     let hex = board.grid.get(board.mouseHex)
     if (hex) {
       const point = hex.toPoint()
-      const corners = hex.corners().map(corner => corner.add(point))
+      const corners = cornersCoordinates.map(corner => corner.add(point))
       const [firstCorner, ...otherCorners] = corners
 
       ctx.beginPath()

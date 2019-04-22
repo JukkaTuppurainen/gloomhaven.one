@@ -1,5 +1,8 @@
 import {editor}   from './editor'
-import {board}    from '../board/board'
+import {
+  board,
+  cornersCoordinates
+}                 from '../board/board'
 import {makeWall} from '../makeWall'
 import {render}   from '../../index'
 
@@ -49,7 +52,7 @@ export const removeHex = hexToRemove => {
   board.scenario.hexes = board.scenario.hexes.filter(hexFilter)
 
   const point = hexToRemove.toPoint()
-  const corners = hexToRemove.corners().map(corner => corner.add(point))
+  const corners = cornersCoordinates.map(corner => corner.add(point))
 
   for (let i = 0; i < 6; ++i) {
     removeThinwall({

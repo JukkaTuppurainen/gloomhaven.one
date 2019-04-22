@@ -16,6 +16,11 @@ const Grid = Honeycomb.defineGrid(Honeycomb.extendHex({
   orientation
 }))
 
+export const cornersCoordinates = Grid.rectangle({
+  height: 1,
+  width: 1
+})[0].corners()
+
 const defaultEvents = {
   click: boardClick,
   mousemove: boardMousemove

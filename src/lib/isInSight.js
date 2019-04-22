@@ -1,4 +1,7 @@
-import {board}            from './board/board'
+import {
+  board,
+  cornersCoordinates
+}                         from './board/board'
 import {getCornerOffset}  from './getCornerOffset'
 import {intersects}       from './intersects'
 import {isPointOnSegment} from './isPointOnSegment'
@@ -25,7 +28,7 @@ export const isInSight = (hex1, hex2, returnLines) => {
   let corners1
   if (cache.x !== hex1.x || cache.y !== hex1.y) {
     const point1 = hex1.toPoint()
-    corners1 = hex1.corners().map(c => c.add(point1))
+    corners1 = cornersCoordinates.map(c => c.add(point1))
     cache = {
       x: hex1.x,
       y: hex1.y,
@@ -36,7 +39,7 @@ export const isInSight = (hex1, hex2, returnLines) => {
   }
 
   const point2 = hex2.toPoint()
-  const corners2 = hex2.corners().map(c => c.add(point2))
+  const corners2 = cornersCoordinates.map(c => c.add(point2))
   let los = false
   let lines = []
 
