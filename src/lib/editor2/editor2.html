@@ -1,0 +1,31 @@
+<style>
+#editor2 {
+  position: absolute;
+  top: 0;
+  z-index: 5;
+}
+.map-tile {
+  /*border: 1px solid #fff8;*/
+  cursor: pointer;
+  height: 200px;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 300px;
+  z-index: 1;
+}
+.map-tile canvas {
+  left: 0;
+  position: relative;
+  top: -2px;
+  z-index: 3;
+}
+.map-tile img {
+  left: -60px;
+  pointer-events: none;
+  position: absolute;
+  top: -32px;
+  z-index: 2;
+}
+</style>
+<div id="draggable-pieces"></div>

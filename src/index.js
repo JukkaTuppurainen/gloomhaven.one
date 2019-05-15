@@ -113,7 +113,7 @@ const renderer = () => {
     // Hex hover
     if (hex.x === board.mouseHex.x && hex.y === board.mouseHex.y) {
       if (style.hexHover) {
-        ctx.fillStyle = style.hexHover
+        ctx.fillStyle = applyStyle(style.hexHover)
         ctx.fill()
       }
       hoverHex = true
@@ -143,7 +143,7 @@ const renderer = () => {
       otherCorners.forEach(({x, y}) => ctx.lineTo(x, y))
       ctx.lineTo(firstCorner.x, firstCorner.y)
 
-      ctx.fillStyle = style.noHexHover
+      ctx.fillStyle = applyStyle(style.noHexHover)
       ctx.fill()
     }
   }

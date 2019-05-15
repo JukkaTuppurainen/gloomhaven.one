@@ -81,7 +81,7 @@ export const removeThinwall = thinwallToRemove =>
 
 const toChar = n => String.fromCharCode(n + (n < 27 ? 96 : 38))
 
-const generateBlueprintString = () => {
+export const generateBlueprintString = () => {
   const hexExport = {}
   let blueprintString = ''
 

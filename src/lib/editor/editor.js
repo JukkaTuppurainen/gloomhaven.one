@@ -20,7 +20,6 @@ import {
   removeAction
 }                     from '../actions'
 import {board}        from '../board/board'
-import {scenarioLoad} from '../board/board.scenarioLoad'
 import {render}       from '../../index'
 
 

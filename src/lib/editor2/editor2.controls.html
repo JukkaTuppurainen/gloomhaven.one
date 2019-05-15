@@ -1,0 +1,41 @@
+<style>
+#editor-controls {
+  background: #000c;
+  border-left: 1px solid #fff;
+  height: 100%;
+  padding: 10px;
+  position: fixed;
+  right: 0;
+  top: 0;
+  width: 260px;
+  z-index: 99;
+}
+#tile-btns {
+  margin: 10px 0;
+}
+#tile-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+#tile-list li {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  margin: 5px 0;
+  width: 100%;
+}
+section {
+  margin: 20px 0;
+}
+</style>
+<div id="editor-controls">
+  <section>
+    Add tile:
+    <div id="tile-btns"></div>
+  </section>
+  <section>
+    Tile list:
+    <ol id="tile-list"></ol>
+  </section>
+</div>

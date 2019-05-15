@@ -3,14 +3,40 @@ import {
   cornersCoordinates,
   Grid
 }                 from './board'
+import {
+  hexCoordinatesToHexes,
+  parseHexString,
+  parseThinwallString
+}                 from './board.functions'
 import {doAction} from '../actions'
 import {makeWall} from '../makeWall'
 import {render}   from '../../index'
 
 
-const fromChar = c => {
-  let n = c.charCodeAt(0)
-  return n > 96 ? n - 96 : n - 38
+export const getGridPxSize = grid => {
+  let maxX = 0
+  let maxY = 0
+
+  const hexSize = {
+    x: grid[0].width(),
+    y: grid[0].height()
+  }
+
+  grid.forEach(hex => {
+    const pointWithAddedSize = hex.toPoint().add(hexSize)
+
+    if (pointWithAddedSize.x > maxX) {
+      maxX = pointWithAddedSize.x
+    }
+    if (pointWithAddedSize.y > maxY) {
+      maxY = pointWithAddedSize.y
+    }
+  })
+
+  return {
+    pxSizeX: maxX + 1,
+    pxSizeY: maxY + 1
+  }
 }
 
 export const scenarioLoad = scenario => {
@@ -26,53 +52,17 @@ export const scenarioLoad = scenario => {
 
   const hexString = scenario.blueprint.split('.')[0]
   const thinWallString = scenario.blueprint.split('.')[1]
-  const hexCoordinates = []
-  let end
-  let i = 0
-  let previousLastY = 0
-  let start
-  let x = 1
 
   let gridSize = {
     height: board.scenario.grid ? board.scenario.grid.height : 0,
     width: board.scenario.grid ? board.scenario.grid.width : 0
   }
 
-  // Parse hexString, resolve needed board size and push all hexes coordinates to temp array
+  // Parse hexString, resolve needed board size and push all hexes' coordinates to temp array
 
-  while (i < hexString.length) {
-    let m = hexString.substr(i).match(/^\d+/)
-    if (m) {
-      x = parseInt(m[0], 10)
-      i += m[0].length
-      previousLastY = 0
-    } else {
-      start = fromChar(hexString.substr(i, 1))
-      end = fromChar(hexString.substr(i + 1, 1))
+  const hexCoordinates = parseHexString(hexString, gridSize, 2)
 
-      if (start <= previousLastY) {
-        ++x
-      }
-
-      previousLastY = end
-
-      if (end + 2 > gridSize.height) {
-        gridSize.height = end + 2
-      }
-
-      if (x + 2 > gridSize.width) {
-        gridSize.width = x + 2
-      }
-
-      for (let y = start; y <= end; ++y) {
-        hexCoordinates.push(x, y)
-      }
-
-      i += 2
-    }
-  }
-
-  // Initialize grid and set canvas dimensions in pixels
+  // Initialize grid with correct size and set canvas dimensions in pixels
 
   if (board.editor) {
     document.getElementById('grid-height').value = gridSize.height
@@ -82,75 +72,35 @@ export const scenarioLoad = scenario => {
   board.gridSize = gridSize
   board.grid = Grid.rectangle(gridSize)
 
-  let maxX = 0
-  let maxY = 0
-
-  board.grid.forEach(hex => {
-    const point = hex.toPoint()
-    const corners = cornersCoordinates.map(corner => corner.add(point))
-    corners.forEach(c => {
-      if (c.x > maxX) {
-        maxX = c.x
-      }
-      if (c.y > maxY) {
-        maxY = c.y
-      }
-    })
-  })
-
+  const {pxSizeX, pxSizeY} = getGridPxSize(board.grid)
   const canvas = document.getElementById('c')
   const canvasBackground = document.getElementById('b')
 
-  canvas.height = maxY + 1
-  canvas.width = maxX + 1
+  canvas.height = pxSizeY
+  canvas.width = pxSizeX
 
-  canvasBackground.height = maxY + 100
-  canvasBackground.width = maxX + 100
+  canvasBackground.height = pxSizeY + 99
+  canvasBackground.width = pxSizeX + 99
 
   // Get actual Hex objects from coordinates
 
-  for (i = 0; i < hexCoordinates.length; i += 2) {
-    const gridHex = board.grid.get({
-      x: hexCoordinates[i],
-      y: hexCoordinates[i + 1]
-    })
-    if (gridHex) {
-      board.scenario.hexes.push(gridHex)
-    }
-  }
+  board.scenario.hexes = hexCoordinatesToHexes(hexCoordinates, board.grid)
 
-  // Parse thinWalls
+  // Parse and make thinWalls
 
   if (thinWallString) {
-    let s
-    let x
-    let y
-    i = 0
-
-    while (i < thinWallString.length) {
-      let m = thinWallString.substr(i).match(/^\d+/)
-      if (m) {
-        x = parseInt(m[0], 10)
-        i += m[0].length
-      } else {
-        y = fromChar(thinWallString.substr(i, 1))
-        ++i
-
-        if (i === thinWallString.length || thinWallString.substr(i, 1).match(/\d/)) {
-          s = 1
-        } else {
-          s = fromChar(thinWallString[i]) - 1
-          ++i
-        }
-
-        board.scenario.walls.push(makeWall(
-          {x, y},
-          s,
-          s === 5 ? 0 : s + 1,
-          true
-        ))
-      }
-    }
+    const a = parseThinwallString(thinWallString)
+    a.forEach(b => {
+      board.scenario.walls.push(makeWall(
+        {
+          x: b[0],
+          y: b[1],
+        },
+        b[2],
+        b[2] === 5 ? 0 : b[2] + 1,
+        true
+      ))
+    })
   }
 
   // Generate wall hexes around tiles

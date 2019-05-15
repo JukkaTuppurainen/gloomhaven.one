@@ -9,8 +9,8 @@ export const makeWall = (hexcoords, corner1, corner2, thin) => {
   const point = hex.toPoint()
   const corners = cornersCoordinates.map(c => c.add(point))
 
-  board.scenario.wallCorners.add(`${corners[corner1].x}-${corners[corner1].y}` )
-  board.scenario.wallCorners.add(`${corners[corner2].x}-${corners[corner2].y}` )
+  board.scenario.wallCorners.add(`${corners[corner1].x}-${corners[corner1].y}`)
+  board.scenario.wallCorners.add(`${corners[corner2].x}-${corners[corner2].y}`)
 
   const wall = {
     x1: corners[corner1].x,
