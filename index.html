@@ -2,10 +2,11 @@
 <html lang="en-Us">
 <head>
 <title>Gloomhaven Line of Sight Tool</title>
-<style>body{background:#000}select{display:none}</style>
+<style>body{background:#000;color:#fff}footer{display:none}</style>
 </head>
 <body>
-
+<p id="j">This app requires a browser with support for JavaScript with ES2017 features.</p>
+<script>{const a=()=>typeof Object.entries==='function'?document.getElementById('j'):null;document.body.removeChild(a())}</script>
 <canvas id="b"></canvas>
 <canvas id="c"></canvas>
 <footer>
@@ -14,6 +15,5 @@
   </p>
   <p><em>Important!</em> This is an aplha version with some known bugs.</p>
 </footer>
-
 </body>
 </html>

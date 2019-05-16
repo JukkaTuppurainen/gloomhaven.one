@@ -3,6 +3,7 @@ import {
   cornersCoordinates
 }                     from './lib/board/board'
 import {isInSight}    from './lib/isInSight'
+import                     './lib/testWebp'
 import {scenarioList} from './scenarios'
 import './style.css'
 
