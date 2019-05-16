@@ -17,7 +17,7 @@ import {
 import {getGridPxSize} from '../board/board.scenarioLoad'
 
 
-const createPiece = (x, y, pieceKey, angle) => {
+const createPiece = (x, y, pieceKey, angle = 0) => {
   const gridSize = {
     height: 0,
     width: 0
@@ -35,7 +35,7 @@ const createPiece = (x, y, pieceKey, angle) => {
   }
 
   if (!pieceFromList.blueprints[useAngle]) {
-    throw Error(`Piece ${pieceKey} does not support angle ${angle}.`)
+    throw Error(`Piece ${pieceKey} does not support angle of ${angle}deg.`)
   }
 
   stringSplit = pieceFromList.blueprints[useAngle].split('.')
@@ -97,8 +97,8 @@ const createPiece = (x, y, pieceKey, angle) => {
   }
 
   // -- Temporary render start
-  // // ---- grid for piece and highlight hexes based on blueprint
-  // pieceCtx.fillStyle = '#f004'
+  // ---- grid for piece and highlight hexes based on blueprint
+  // pieceCtx.font = '18px Arial'
   // pieceGrid.forEach(hex => {
   //   const point = hex.toPoint()
   //   const corners = cornersCoordinates.map(corner => corner.add(point))
@@ -109,6 +109,14 @@ const createPiece = (x, y, pieceKey, angle) => {
   //   otherCorners.forEach(({x, y}) => pieceCtx.lineTo(x, y))
   //   pieceCtx.lineTo(firstCorner.x, firstCorner.y)
   //   pieceCtx.stroke()
+  //
+  //   pieceCtx.fillStyle = '#fff'
+  //   pieceCtx.fillText(
+  //     String.fromCharCode(hex.y + 97),
+  //     firstCorner.x - 80,
+  //     firstCorner.y - 30
+  //   )
+  //   pieceCtx.fillStyle = '#f004'
   //
   //   if (pieceHexes.find(pieceHex => (
   //     pieceHex.x === hex.x && pieceHex.y === hex.y
@@ -155,7 +163,7 @@ const createPiece = (x, y, pieceKey, angle) => {
 export const createPieceBtnClick = event => {
   if (event.target.nodeName === 'BUTTON') {
     const pieceKey = event.target.dataset['piece']
-    const piece = createPiece(event.pageX, event.pageY, pieceKey, 0)
+    const piece = createPiece(event.pageX, event.pageY, pieceKey)
 
     document.getElementById('draggable-pieces').appendChild(piece.element)
 
