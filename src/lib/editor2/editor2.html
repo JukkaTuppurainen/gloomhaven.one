@@ -4,6 +4,7 @@
   top: 0;
   z-index: 5;
 }
+
 .map-tile {
   /*border: 1px solid #fff8;*/
   cursor: pointer;
@@ -14,12 +15,60 @@
   width: 300px;
   z-index: 1;
 }
+
+.map-tile.img-loading,
+.map-tile.img-error {
+  background: #fff8;
+}
+
+.map-tile.img-error img {
+  display: none;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.map-tile.img-loading::after {
+  animation: spin .6s infinite linear;
+  border: 15px solid #fff;
+  border-left-color: transparent;
+  border-radius: 100%;
+  content: "";
+  display: block;
+  height: 120px;
+  left: calc(50% - 60px);
+  position: absolute;
+  top: calc(50% - 60px);
+  width: 120px;
+}
+
+.map-tile.img-error::after {
+  color: #fff;
+  content: "Image failed to load.";
+  display: block;
+  font-size: 30px;
+  height: 120px;
+  left: calc(50% - 100px);
+  line-height: 40px;
+  position: absolute;
+  text-align: center;
+  top: calc(50% - 60px);
+  width: 200px;
+}
+
 .map-tile canvas {
   left: 0;
   position: relative;
   top: -2px;
   z-index: 3;
 }
+
 .map-tile img {
   left: -50px;
   pointer-events: none;

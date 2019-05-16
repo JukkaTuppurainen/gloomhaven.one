@@ -65,7 +65,7 @@ const createPiece = (x, y, pieceKey, angle = 0) => {
     })
   }
 
-  pieceElement.classList.add('map-tile')
+  pieceElement.classList.add('map-tile', 'img-loading')
   pieceElement.appendChild(pieceElementCanvas)
   pieceElement.style.height = `${pxSizeY}px`
   pieceElement.style.left = `${x}px`
@@ -77,6 +77,11 @@ const createPiece = (x, y, pieceKey, angle = 0) => {
 
   if (pieceFromList.bitmap) {
     const img = document.createElement('img')
+    img.onload = () => pieceElement.classList.remove('img-loading')
+    img.onerror = () => {
+      pieceElement.classList.remove('img-loading')
+      pieceElement.classList.add('img-error')
+    }
     img.src = pieceFromList.bitmap
     if (angle > 0) {
       img.style.transform = `rotate(${angle}deg)`
