@@ -65,6 +65,11 @@ const createPiece = (x, y, pieceKey, angle = 0) => {
     })
   }
 
+  const isSingleTile = pieceHexes.length === 1
+  const id = pieceKey + Date.now()
+
+  pieceElement.dataset['id'] = id
+  pieceElement.dataset['singleTile'] = isSingleTile
   pieceElement.classList.add('map-tile', 'img-loading')
   pieceElement.appendChild(pieceElementCanvas)
   pieceElement.style.height = `${pxSizeY}px`
@@ -154,8 +159,9 @@ const createPiece = (x, y, pieceKey, angle = 0) => {
     element: pieceElement,
     grid: pieceGrid,
     h: gridSize.height,
-    id: pieceKey,
-    isSingleTile: pieceHexes.length === 1,
+    id,
+    name: pieceKey,
+    isSingleTile,
     pieceHexes,
     pxH: pxSizeY,
     pxW: pxSizeX,
@@ -165,14 +171,43 @@ const createPiece = (x, y, pieceKey, angle = 0) => {
   }
 }
 
+const pieceSort = (a, b) => {
+  if (a.isSingleTile && !b.isSingleTile) {
+    return 1
+  }
+  if (!a.isSingleTile && b.isSingleTile) {
+    return -1
+  }
+  return a.id > b.id ? 1 : -1
+}
+
+const elementSort = (a, b) => {
+  if (a.dataset['singleTile'] === 'true' && b.dataset['singleTile'] !== 'true') {
+    return 1
+  }
+  if (a.dataset['singleTile'] !== 'true' && b.dataset['singleTile'] === 'true') {
+    return -1
+  }
+  return a.dataset['id'] > b.dataset['id'] ? 1 : -1
+}
+
 export const createPieceBtnClick = event => {
   if (event.target.nodeName === 'BUTTON') {
     const pieceKey = event.target.dataset['piece']
     const piece = createPiece(event.pageX, event.pageY, pieceKey)
+    const draggablePiecesElement = document.getElementById('draggable-pieces')
 
-    document.getElementById('draggable-pieces').appendChild(piece.element)
+    draggablePiecesElement.appendChild(piece.element)
 
-    editor2.hoverPiece = editor2pieces.push(piece) - 1
+    ;[...draggablePiecesElement.children]
+      .sort(elementSort)
+      .forEach(node => draggablePiecesElement.appendChild(node))
+
+    editor2pieces.push(piece)
+    editor2pieces.sort(pieceSort)
+
+    editor2.hoverPiece = editor2pieces.findIndex(p => p.id === piece.id)
+
     startDragging(0, 0)
 
     updateEditor2Controls()
@@ -189,7 +224,7 @@ export const updateEditor2Controls = () => {
     const pieceListItem = document.createElement('li')
     pieceListItem.id = piece.id
     pieceListItem.innerHTML = `
-<span>${piece.id}</span>
+<span>${piece.name}</span>
 <span>
   <!--<button data-rotate="${i}" type="button">R</button>-->
   <button data-delete="${i}" type="button">X</button>
@@ -198,7 +233,7 @@ export const updateEditor2Controls = () => {
     pieceListElement.appendChild(pieceListItem)
 
     if (!piece.isSingleTile) {
-      document.querySelectorAll(`button[data-piece="${piece.id}"]`).forEach(n => n.setAttribute('disabled', true))
+      document.querySelector(`button[data-piece="${piece.name}"]`).setAttribute('disabled', true)
     }
   })
 }
