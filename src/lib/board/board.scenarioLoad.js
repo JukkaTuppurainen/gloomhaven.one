@@ -1,7 +1,9 @@
 import {
   board,
   cornersCoordinates,
-  Grid
+  Grid,
+  hexHeight,
+  hexWidth
 }                 from './board'
 import {
   hexCoordinatesToHexes,
@@ -10,32 +12,27 @@ import {
 }                 from './board.functions'
 import {doAction} from '../actions'
 import {makeWall} from '../makeWall'
+import {
+  addPoint,
+  toPoint,
+  gridGet,
+  neighborsOf
+}                 from '../hexUtils'
 import {render}   from '../../index'
 
 
 export const getGridPxSize = grid => {
-  let maxX = 0
-  let maxY = 0
+  const lasthex = grid[grid.length - 1]
+  const point = toPoint(lasthex)
 
-  const hexSize = {
-    x: grid[0].width(),
-    y: grid[0].height()
+  let y = point.y + hexHeight + 1
+  if (lasthex.x % 2 === 1) {
+    y += hexHeight / 2
   }
 
-  grid.forEach(hex => {
-    const pointWithAddedSize = hex.toPoint().add(hexSize)
-
-    if (pointWithAddedSize.x > maxX) {
-      maxX = pointWithAddedSize.x
-    }
-    if (pointWithAddedSize.y > maxY) {
-      maxY = pointWithAddedSize.y
-    }
-  })
-
   return {
-    pxSizeX: maxX + 1,
-    pxSizeY: maxY + 1
+    pxSizeX: point.x + hexWidth + 1,
+    pxSizeY: y
   }
 }
 
@@ -105,25 +102,27 @@ export const scenarioLoad = scenario => {
 
   // Generate wall hexes around tiles
   board.scenario.hexes.forEach(hex => {
-    board.grid.neighborsOf(hex).forEach(adjHex => {
+    const neighbors = neighborsOf(hex, gridSize)
+    neighbors.forEach(adjHex => {
       if (
         !board.scenario.hexes.find(h => h.x === adjHex.x && h.y === adjHex.y) &&
         !board.scenario.wallHexes.find(h => h.x === adjHex.x && h.y === adjHex.y)
       ) {
-        board.scenario.wallHexes.push(adjHex)
+        board.scenario.wallHexes.push(
+          gridGet(adjHex, board.grid)
+        )
       }
     })
   })
 
   // Generate LOS blocking walls...
-  board.scenario.wallHexes.forEach(({x, y}) => {
-    const wallHex = board.grid.get({x, y})
-    const wallHexPoint = wallHex.toPoint()
-    const corners = cornersCoordinates.map(c => c.add(wallHexPoint))
+  board.scenario.wallHexes.forEach(wallHex => {
+    const wallHexPoint = toPoint(wallHex)
+    const corners = addPoint(cornersCoordinates, wallHexPoint)
 
     // ... around the wall hex
     for (let i = 0; i < 6; ++i) {
-      board.scenario.walls.push(makeWall({x, y}, i, (i < 5 ? i + 1 : 0)))
+      board.scenario.walls.push(makeWall(wallHex, i, (i < 5 ? i + 1 : 0), false, corners))
     }
 
     // ... and three throuhg the hex

@@ -2,12 +2,16 @@ import {
   board,
   cornersCoordinates
 } from './board/board'
+import {
+  addPoint,
+  toPoint
+} from './hexUtils'
 
 
-export const makeWall = (hexcoords, corner1, corner2, thin) => {
-  const hex = board.grid.get(hexcoords)
-  const point = hex.toPoint()
-  const corners = cornersCoordinates.map(c => c.add(point))
+export const makeWall = (hexOrCoordinates, corner1, corner2, thin, corners) => {
+  if (!corners) {
+    corners = addPoint(cornersCoordinates, toPoint(hexOrCoordinates))
+  }
 
   board.scenario.wallCorners.add(`${corners[corner1].x}-${corners[corner1].y}`)
   board.scenario.wallCorners.add(`${corners[corner2].x}-${corners[corner2].y}`)
@@ -25,8 +29,8 @@ export const makeWall = (hexcoords, corner1, corner2, thin) => {
       wall,
       {
         meta: {
-          x: hex.x,
-          y: hex.y,
+          x: hexOrCoordinates.x,
+          y: hexOrCoordinates.y,
           s: corner1
         }
       }

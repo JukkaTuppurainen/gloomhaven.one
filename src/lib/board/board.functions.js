@@ -1,3 +1,6 @@
+import {gridGet} from '../hexUtils'
+
+
 export const fromChar = c => {
   let n = c.charCodeAt(0)
   return n > 96 ? n - 96 : n - 38
@@ -81,10 +84,10 @@ export const hexCoordinatesToHexes = (hexCoordinates, grid) => {
   const hexes = []
 
   for (let i = 0; i < hexCoordinates.length; i += 2) {
-    const gridHex = grid.get({
+    const gridHex = gridGet({
       x: hexCoordinates[i],
       y: hexCoordinates[i + 1]
-    })
+    }, grid)
     if (gridHex) {
       hexes.push(gridHex)
     }

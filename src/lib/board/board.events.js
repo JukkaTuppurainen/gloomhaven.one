@@ -1,7 +1,7 @@
 import {
   board,
   Grid
-} from './board'
+}               from './board'
 import {render} from '../../index'
 
 
@@ -18,7 +18,7 @@ export const boardMousemove = event => {
 }
 
 export const boardClick = event => {
-  const clickHex = board.grid.get(Grid.pointToHex(event.layerX, event.layerY))
+  const clickHex = Grid.pointToHex(event.layerX, event.layerY)
   // if (clickHex) {
   //   const point = clickHex.toPoint()
   //   // const corners = clickHex.corners().map(corner => corner.add(point))

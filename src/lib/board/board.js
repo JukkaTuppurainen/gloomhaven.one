@@ -11,15 +11,17 @@ import {
 const hexSize = 60
 const orientation = 'flat' // 'pointy'
 
-const Grid = Honeycomb.defineGrid(Honeycomb.extendHex({
+export const Hex = Honeycomb.extendHex({
   size: hexSize,
   orientation
-}))
+})
 
-export const cornersCoordinates = Grid.rectangle({
-  height: 1,
-  width: 1
-})[0].corners()
+const exampleHex = Hex()
+export const Grid = Honeycomb.defineGrid(Hex)
+
+export const cornersCoordinates = exampleHex.corners()
+export const hexHeight = exampleHex.height()
+export const hexWidth = exampleHex.width()
 
 const defaultEvents = {
   click: boardClick,
@@ -38,7 +40,7 @@ const eventHandler = (eventName, event) => {
   }
 }
 
-const board = {
+export const board = {
   events: eventHandler,
   grid: null,
   loadScenario: id => {
@@ -77,9 +79,4 @@ const board = {
     hexSize,
     orientation
   }
-}
-
-export {
-  board,
-  Grid
 }

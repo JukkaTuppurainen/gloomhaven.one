@@ -2,10 +2,14 @@ import {
   board,
   cornersCoordinates
 }                     from './lib/board/board'
+import {
+  toPoint,
+  addPoint
+}                     from './lib/hexUtils'
 import {isInSight}    from './lib/isInSight'
 import                     './lib/testWebp'
 import {scenarioList} from './scenarios'
-import './style.css'
+import                     './style.css'
 
 
 const canvas = document.getElementById('c')
@@ -28,9 +32,7 @@ const renderer = () => {
       .filter(gridHex => !board.scenario.hexes.find(hex => hex.x === gridHex.x && hex.y === gridHex.y))
       .filter(gridHex => !board.scenario.wallHexes.find(hex => hex.x === gridHex.x && hex.y === gridHex.y))
       .forEach(gridHex => {
-        const point = gridHex.toPoint()
-        const corners = cornersCoordinates.map(corner => corner.add(point))
-        const [firstCorner, ...otherCorners] = corners
+        const [firstCorner, ...otherCorners] = addPoint(cornersCoordinates, toPoint(gridHex))
 
         ctx.beginPath()
         ctx.moveTo(firstCorner.x, firstCorner.y)
@@ -44,9 +46,7 @@ const renderer = () => {
   }
 
   board.scenario.wallHexes.forEach(wallHex => {
-    const point = wallHex.toPoint()
-    const corners = cornersCoordinates.map(corner => corner.add(point))
-    const [firstCorner, ...otherCorners] = corners
+    const [firstCorner, ...otherCorners] = addPoint(cornersCoordinates, toPoint(wallHex))
 
     if (style.wallHexes) {
       ctx.beginPath()
@@ -75,9 +75,7 @@ const renderer = () => {
   })
 
   board.scenario.hexes.forEach(hex => {
-    const point = hex.toPoint()
-    const corners = cornersCoordinates.map(corner => corner.add(point))
-    const [firstCorner, ...otherCorners] = corners
+    const [firstCorner, ...otherCorners] = addPoint(cornersCoordinates, toPoint(hex))
 
     ctx.beginPath()
     ctx.moveTo(firstCorner.x, firstCorner.y)
@@ -127,6 +125,19 @@ const renderer = () => {
     }
   })
 
+  // Numbers on hexes
+  // ctx.font = '18px Arial'
+  // board.grid.forEach(gridHex => {
+  //   const point = gridHex.toPoint()
+  //   const corners = cornersCoordinates.map(corner => corner.add(point))
+  //   const [firstCorner, ...otherCorners] = corners
+  //
+  //   ctx.fillStyle = '#000'
+  //   ctx.fillText(`${gridHex.x}, ${gridHex.y}`, firstCorner.x - 80, firstCorner.y - 30)
+  //   ctx.fillStyle = '#fff'
+  //   ctx.fillText(`${gridHex.x}, ${gridHex.y}`, firstCorner.x - 82, firstCorner.y - 32)
+  // })
+
   // noHex hover
   if (
     !hoverHex &&
@@ -135,9 +146,7 @@ const renderer = () => {
   ) {
     let hex = board.grid.get(board.mouseHex)
     if (hex) {
-      const point = hex.toPoint()
-      const corners = cornersCoordinates.map(corner => corner.add(point))
-      const [firstCorner, ...otherCorners] = corners
+      const [firstCorner, ...otherCorners] = addPoint(cornersCoordinates, toPoint(hex))
 
       ctx.beginPath()
       ctx.moveTo(firstCorner.x, firstCorner.y)
@@ -225,13 +234,13 @@ scenarioSelect.addEventListener('change', event => {
   window.location.hash = value === 'editor' ? ':' : value
 })
 
-let loadScenario = '1'
+let loadScenario = 'editor2'
 
 if (window.location.hash) {
   if (window.location.hash.match(/^#\d+/)) {
     loadScenario = window.location.hash.substr(1)
   } else if (window.location.hash.substr(0, 2) === '#:') {
-    loadScenario = 'editor'
+    loadScenario = 'editor2'
   }
 }
 

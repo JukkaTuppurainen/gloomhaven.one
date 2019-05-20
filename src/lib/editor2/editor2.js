@@ -8,17 +8,20 @@ import {pieceList}               from './editor2.pieces'
 import {
   board,
   cornersCoordinates,
-  Grid
+  Grid,
+  hexHeight,
+  hexWidth
 }                                from '../board/board'
 import {boardClick}              from '../board/board.events'
 import {scenarioLoad}            from '../board/board.scenarioLoad'
 import {generateBlueprintString} from '../editor/editor.functions'
+import {toPoint}                 from '../hexUtils'
 import {makeWall}                from '../makeWall'
 import {render}                  from '../../index'
 
 
-const editorGridDefaultHeight = 20
-const editorGridDefaultWidth = 20
+const editorGridDefaultHeight = 40
+const editorGridDefaultWidth = 40
 
 let mouseDownCoords = false
 
@@ -102,18 +105,15 @@ export const generateEditor2board = () => {
 
   if (editor2pieces.length) {
     const center = {
-      x: editor2pieces[0].pieceHexes[0].width() / 2,
-      y: editor2pieces[0].pieceHexes[0].height() / 2
+      x: hexWidth / 2,
+      y: hexHeight / 2
     }
-    let pieceXY
 
     editor2pieces.forEach(piece => {
-      pieceXY = {
-        x: piece.x,
-        y: piece.y
-      }
       piece.pieceHexes.forEach(pieceHex => {
-        const centerCoordinates = pieceHex.toPoint().add(center).add(pieceXY)
+        const centerCoordinates = toPoint(pieceHex)
+        centerCoordinates.x += piece.x + center.x
+        centerCoordinates.y += piece.y + center.y
         if (pieceHex.metaThinwalls) {
           centerCoordinates.metaThinwalls = pieceHex.metaThinwalls
         }
@@ -147,8 +147,6 @@ export const generateEditor2board = () => {
   scenarioLoad(editor2)
 }
 
-const TEMPORARY_FREE_DRAG_MODE = false
-
 const editor2documentMouseup = event => {
   if (editor2.dragging) {
     const piece = editor2pieces[editor2.hoverPiece]
@@ -159,37 +157,35 @@ const editor2documentMouseup = event => {
 
     let distance
     let shortestDistance
-    let boardPoint
+    let closestPoint
 
-
-    if (!TEMPORARY_FREE_DRAG_MODE) {
-      board.grid.forEach(hex => {
-        if (
-          hex.x > 0 &&
-          hex.y > 0 &&
-          hex.x < editorGridDefaultWidth - piece.w &&
-          hex.y < editorGridDefaultHeight - piece.h
-        ) {
-          const point = hex.toPoint()
-          const corners = cornersCoordinates.map(c => c.add(point))
-          distance = Math.sqrt(((x - corners[0].x) ** 2) + ((y - corners[0].y) ** 2))
-
-          if (!shortestDistance || distance < shortestDistance) {
-            shortestDistance = distance
-            boardPoint = point
-          }
+    board.grid.forEach(hex => {
+      if (
+        hex.x > 0 &&
+        hex.y > 0 &&
+        hex.x < editorGridDefaultWidth - piece.w &&
+        hex.y < editorGridDefaultHeight - piece.h
+      ) {
+        const point = toPoint(hex)
+        const corner0 = {
+          x: cornersCoordinates[0].x + point.x,
+          y: cornersCoordinates[0].y + point.y
         }
-      })
+        distance = Math.sqrt(((x - corner0.x) ** 2) + ((y - corner0.y) ** 2))
 
-      if (boardPoint) {
-        piece.x = boardPoint.x + 38
-        piece.y = boardPoint.y + 24
-        renderDOM()
+        if (!shortestDistance || distance < shortestDistance) {
+          shortestDistance = distance
+          closestPoint = point
+        }
       }
-      generateEditor2board()
-    } else {
+    })
+
+    if (closestPoint) {
+      piece.x = closestPoint.x + 38
+      piece.y = closestPoint.y + 24
       renderDOM()
     }
+    generateEditor2board()
   }
 }
 
@@ -237,6 +233,7 @@ export const editor2 = {
     document.addEventListener('mousedown', editor2documentMousedown)
     document.addEventListener('mousemove', editor2documentMousemove)
     document.addEventListener('mouseup', editor2documentMouseup)
+    document.body.classList.add('editor-open')
   },
   unload: () => {
     editor2pieces.length = 0
@@ -245,6 +242,7 @@ export const editor2 = {
     document.removeEventListener('mousedown', editor2documentMousedown)
     document.removeEventListener('mousemove', editor2documentMousemove)
     document.removeEventListener('mouseup', editor2documentMouseup)
+    document.body.classList.remove('editor-open')
   },
   grid: {
     height: editorGridDefaultHeight,
