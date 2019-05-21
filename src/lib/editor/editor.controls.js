@@ -6,6 +6,7 @@ import {startDragging}       from './editor.events'
 import {generateEditorBoard} from './editor.functions'
 import {pieceList}           from './editor.pieces'
 import {
+  board,
   // cornersCoordinates,
   Grid
 }                            from '../board/board'
@@ -15,6 +16,7 @@ import {
   parseThinwallString
 }                            from '../board/board.functions'
 import {getGridPxSize}       from '../hexUtils'
+import {render}              from '../../index'
 
 
 const createPiece = (x, y, pieceKey, angle = 0) => {
@@ -228,6 +230,9 @@ export const updateEditorControls = () => {
     pieceListItem.innerHTML = `<span>${piece.name}</span><span><button data-rotate="${i}" type="button">R</button><button data-delete="${i}" type="button">X</button></span>`
     pieceListElement.appendChild(pieceListItem)
 
+    pieceListItem.addEventListener('mouseenter', tileListMouseenter)
+    pieceListItem.addEventListener('mouseleave', tileListMouseleave)
+
     if (!piece.isSingleTile) {
       document.querySelector(`button[data-piece="${piece.name}"]`).setAttribute('disabled', true)
     }
@@ -270,6 +275,19 @@ export const tileListBtnClick = event => {
         .forEach(node => draggablePiecesElement.appendChild(node))
 
       generateEditorBoard()
+      updateEditorControls()
     }
   }
+}
+
+const tileListMouseenter = event => {
+  delete board.playerHex
+  editorPieces
+    .find(p => p.id === event.target.id)
+    .element.classList.add('list-item-hover')
+  render()
+}
+
+const tileListMouseleave = () => {
+  document.querySelectorAll('.list-item-hover').forEach(n => n.classList.remove('list-item-hover'))
 }
