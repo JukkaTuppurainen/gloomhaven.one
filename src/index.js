@@ -27,7 +27,7 @@ const renderer = () => {
   let hoverHex = false
   const style = board.scenario.style
 
-  if (style.noHexes) {
+  if ('noHexes' in style) {
     board.grid
       .filter(gridHex => !board.scenario.hexes.find(hex => hex.x === gridHex.x && hex.y === gridHex.y))
       .filter(gridHex => !board.scenario.wallHexes.find(hex => hex.x === gridHex.x && hex.y === gridHex.y))
@@ -201,18 +201,6 @@ const renderer = () => {
     ctx.lineWidth = 1
     // })
   }
-
-  if (board.editor && board.editor.hover) {
-    const sideWallCorners = board.editor.hover.sideWallCorners
-
-    ctx.beginPath()
-    ctx.moveTo(sideWallCorners.x1, sideWallCorners.y1)
-    ctx.lineTo(sideWallCorners.x2, sideWallCorners.y2)
-    ctx.lineWidth = 6
-    ctx.strokeStyle = '#f00a'
-    ctx.stroke()
-    ctx.lineWidth = 1
-  }
 }
 
 export const render = () => requestAnimationFrame(renderer)
@@ -234,13 +222,13 @@ scenarioSelect.addEventListener('change', event => {
   window.location.hash = value === 'editor' ? ':' : value
 })
 
-let loadScenario = 'editor2'
+let loadScenario = 'editor'
 
 if (window.location.hash) {
   if (window.location.hash.match(/^#\d+/)) {
     loadScenario = window.location.hash.substr(1)
   } else if (window.location.hash.substr(0, 2) === '#:') {
-    loadScenario = 'editor2'
+    loadScenario = 'editor'
   }
 }
 

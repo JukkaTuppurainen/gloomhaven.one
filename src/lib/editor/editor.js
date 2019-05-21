@@ -1,138 +1,91 @@
-import tileBitmap     from './editor.jpg'
+import editorHTML         from './editor.html'
+import editorControlsHTML from './editor.controls.html'
 import {
-  editorClear,
-  editorModeButtonClick,
-  gridSizeInputChange
-}                     from './editor.controls'
-import controlHTML    from './editor.controls.html'
+  createPieceBtnClick,
+  tileListBtnClick
+}                         from './editor.controls'
+import {pieceList}        from './editor.pieces'
 import {
-  editorClick,
-  editorKeyboardShortcutKeydown,
-  editorMousedown,
-  editorMousemove,
-  editorMouseup
-}                     from './editor.events'
-import {
-  updateWallHexDirections
-}                     from './updateWallHexDirection'
-import {
-  addAction,
-  removeAction
-}                     from '../actions'
-import {board}        from '../board/board'
-import {render}       from '../../index'
+  editorDocumentClick,
+  editorDocumentMousedown,
+  editorDocumentMousemove,
+  editorDocumentMouseup
+}                         from './editor.events'
 
 
-const editorGridDefaultHeight = 20
-const editorGridDefaultWidth = 20
-
+export const editorGridDefaultHeight = 40
+export const editorGridDefaultWidth = 40
+export const editorPieces = []
 export const editor = {
   blueprint: '',
+  dragging: false,
   events: {
-    click: editorClick,
-    mousedown: editorMousedown,
-    mousemove: editorMousemove,
-    mouseup: editorMouseup
+    click: editorDocumentClick
   },
   load: () => {
-    board.editor = {
-      mousedown: false,
-      previousEditHex: {x: null, y: null}
-    }
+    // Add editor html which contains the draggable pieces
+    const editor = document.createElement('div')
+    editor.id = 'editor'
+    editor.innerHTML = editorHTML
+    document.body.appendChild(editor)
 
-    const controls = document.createElement('div')
-    controls.id = 'editor'
-    controls.innerHTML = controlHTML
+    // Add controls for editor
+    const editorControls = document.createElement('div')
+    editorControls.id = 'editor-controls-wrap'
+    editorControls.innerHTML = editorControlsHTML
+    document.body.appendChild(editorControls)
 
-    document.body.appendChild(controls)
-
-    const gh = document.getElementById('grid-height')
-    gh.value = editor.grid.height
-    gh.addEventListener('change', gridSizeInputChange)
-
-    const gw = document.getElementById('grid-width')
-    gw.value = editor.grid.width
-    gw.addEventListener('change', gridSizeInputChange)
-
-    document.querySelectorAll('[data-editor-mode]').forEach(n => {
-      n.addEventListener('click', editorModeButtonClick)
+    // Add event listener and list of available pieces
+    const tileButtons = document.getElementById('tile-btns')
+    tileButtons.addEventListener('click', createPieceBtnClick)
+    Object.keys(pieceList).forEach(key => {
+      const addPieceBtn = document.createElement('button')
+      addPieceBtn.innerText = key
+      addPieceBtn.dataset['piece'] = key
+      tileButtons.appendChild(addPieceBtn)
     })
 
-    document.getElementById('editor-clear').addEventListener('click', editorClear)
+    // Add event listener for list of used pieces
+    document.getElementById('tile-list').addEventListener('click', tileListBtnClick)
 
-    document.addEventListener('keydown', editorKeyboardShortcutKeydown)
+    document.addEventListener('mousedown', editorDocumentMousedown)
+    document.addEventListener('mousemove', editorDocumentMousemove)
+    document.addEventListener('mouseup', editorDocumentMouseup)
     document.body.classList.add('editor-open')
-
-    const img = new Image()
-    img.onload = () => {
-      const patterns = ['#000']
-      const oCanvas = document.createElement('canvas')
-      oCanvas.width = 180
-      oCanvas.height = 104
-      const oCtx = oCanvas.getContext('2d')
-
-      for (let i = 0; i < 19; ++i) {
-        oCtx.drawImage(
-          img,
-          (i % 4) * 182,
-          (i / 4 | 0) * 106,
-          180,
-          104,
-          0,
-          0,
-          180,
-          104
-        )
-        patterns.push(oCtx.createPattern(oCanvas, 'repeat'))
-      }
-
-      editor.style.hexes.fill = patterns[1]
-      editor.style.wallHexes.fill = hex => patterns[hex.direction]
-      render()
-    }
-    img.src = tileBitmap
-
-    if (
-      window.location.hash &&
-      window.location.hash.substr(0, 2) === '#:'
-    ) {
-      editor.blueprint = window.location.hash.substr(2)
-    }
-
-    addAction('scenarioLoad', updateWallHexDirections)
   },
   unload: () => {
+    editorPieces.length = 0
     document.body.removeChild(document.getElementById('editor'))
+    document.body.removeChild(document.getElementById('editor-controls-wrap'))
+    document.removeEventListener('mousedown', editorDocumentMousedown)
+    document.removeEventListener('mousemove', editorDocumentMousemove)
+    document.removeEventListener('mouseup', editorDocumentMouseup)
     document.body.classList.remove('editor-open')
-    document.removeEventListener('keydown', editorKeyboardShortcutKeydown)
-    delete board.editor
-    removeAction('scenarioLoad', updateWallHexDirections)
   },
   grid: {
     height: editorGridDefaultHeight,
     width: editorGridDefaultWidth
   },
   style: {
-    hexes: {
-      fill: '#000'
-    },
-    noHexes: {
-      line: hex => (
-        hex.x === 0 ||
-        hex.y === 0 ||
-        hex.x === board.gridSize.width - 1 ||
-        hex.y === board.gridSize.height - 1
-      ) ? '#0000' : '#222'
-
-    },
-    wallHexes: {
-      fill: '#000'
-    },
+    // hexes: {
+    //   fill: '#000'
+    // },
+    // noHexes: {
+    //   line: hex => (
+    //     hex.x === 0 ||
+    //     hex.y === 0 ||
+    //     hex.x === board.gridSize.width - 1 ||
+    //     hex.y === board.gridSize.height - 1
+    //   ) ? '#0000' : '#222'
+    // },
+    // wallHexes: {
+    //   fill: '#00f4'
+    // },
     hexHover: '#32005080',
     noHexHover: '#50003280',
-    thinWalls: {
-      line: '#000',
-      width: 8
-    }
+    // thinWalls: {
+    //   line: '#f00',
+    //   width: 8
+    // }
   }
 }

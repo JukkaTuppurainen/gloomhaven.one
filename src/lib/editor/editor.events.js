@@ -1,121 +1,140 @@
-import {editBoard} from './editor.functions'
+import {
+  editor,
+  editorGridDefaultHeight,
+  editorGridDefaultWidth,
+  editorPieces
+}                            from './editor'
+import {generateEditorBoard} from './editor.functions'
 import {
   board,
-  cornersCoordinates,
-  Grid
-}                  from '../board/board'
-import {
-  boardClick,
-  boardMousemove
-}                  from '../board/board.events'
-import {render}    from '../../index'
+  cornersCoordinates
+}                            from '../board/board'
+import {boardClick}          from '../board/board.events'
+import {render}              from '../../index'
+import {toPoint}             from '../hexUtils'
 
 
-/*
-  This file is for editor's canvas keyboard and mouse events
- */
+let mouseDownCoords = false
+const minMouseMoveDeltaToConsiderClickAsDragging = 20
 
-export const editorClick = event => {
-  if (typeof board.editor.mode === 'undefined') {
-    boardClick(event)
+export const startDragging = (x, y) => {
+  editor.dragging = {x, y}
+  delete board.playerHex
+  editor.style.hexHover = '#0000'
+  editor.style.noHexHover = '#0000'
+  render()
+}
+
+const stopDragging = () => {
+  editor.style.hexHover = '#32005080'
+  editor.style.noHexHover = '#50003280'
+  editor.dragging = false
+  render()
+}
+
+export const editorDocumentClick = event => {
+  mouseDownCoords = false
+  if (editor.dragging !== false) {
+    stopDragging()
   } else {
-    const clickHex = board.grid.get(Grid.pointToHex(event.layerX, event.layerY))
-    if (clickHex) {
-      editBoard(clickHex)
+    boardClick(event)
+  }
+}
+
+export const editorDocumentMousedown = event => {
+  if (editor.hoverPiece !== null) {
+    mouseDownCoords = {
+      x: event.pageX,
+      y: event.pageY
     }
+
+    render()
   }
 }
 
-export const editorKeyboardShortcutKeydown = event => {
-  switch (event.key) {
-    case 't':
-      document.querySelector('[data-editor-mode="tile"]').click()
-      break
-    case 'r':
-      document.querySelector('[data-editor-mode="remove"]').click()
-      break
-    case 'h':
-      document.querySelector('[data-editor-mode="thin"]').click()
-      break
-    case 'e':
-      document.querySelector('[data-editor-mode="removethin"]').click()
-      break
-  }
-}
-
-export const editorMousedown = () => {
-  if (typeof board.editor.mode !== 'undefined') {
-    board.editor.mousedown = true
-  }
-}
-
-export const editorMousemove = event => {
-  if (
-    board.editor.mousedown &&
-    typeof board.editor.mode !== 'undefined'
-  ) {
-    const moveHex = board.grid.get(Grid.pointToHex(event.layerX, event.layerY))
-
+export const editorDocumentMousemove = event => {
+  if (mouseDownCoords) {
+    let deltaX = event.pageX - mouseDownCoords.x
+    let deltaY = event.pageY - mouseDownCoords.y
     if (
-      moveHex && (
-        moveHex.x !== board.editor.previousEditHex.x ||
-        moveHex.y !== board.editor.previousEditHex.y
+      !editor.dragging &&
+      editor.hoverPiece !== false && (
+        deltaX > minMouseMoveDeltaToConsiderClickAsDragging ||
+        deltaX < -minMouseMoveDeltaToConsiderClickAsDragging ||
+        deltaY > minMouseMoveDeltaToConsiderClickAsDragging ||
+        deltaY < -minMouseMoveDeltaToConsiderClickAsDragging
       )
     ) {
-      editBoard(moveHex)
-      board.editor.previousEditHex = moveHex
+      startDragging(
+        event.pageX - editorPieces[editor.hoverPiece].x,
+        event.pageY - editorPieces[editor.hoverPiece].y
+      )
     }
   }
-
-  if (
-    board.editor.mode === 'thin' ||
-    board.editor.mode === 'removethin'
-  ) {
-    const previousEditorHover = board.editor.hover
-    const hoverHex = board.grid.get(Grid.pointToHex(event.layerX, event.layerY))
-
-    if (hoverHex) {
-      const point = hoverHex.toPoint()
-      const adjust = board.settings.hexSize
-      const corners = cornersCoordinates.map(corner => corner.add(point))
-
-      point.x += adjust
-      point.y += adjust / 2 * Math.sqrt(3)
-
-      const side = (
-        Math.atan2(
-          point.y - event.layerY,
-          point.x - event.layerX
-        ) + Math.PI
-      ) / Math.PI * 3 | 0
-
-      const nextSide = side < 5 ? side + 1 : 0
-
-      board.editor.hover = {
-        hex: hoverHex,
-        side,
-        sideWallCorners: {
-          x1: corners[side].x,
-          y1: corners[side].y,
-          x2: corners[nextSide].x,
-          y2: corners[nextSide].y
-        }
-      }
-
+  if (editor.dragging) {
+    editorPieces[editor.hoverPiece].x = event.pageX - editor.dragging.x
+    editorPieces[editor.hoverPiece].y = event.pageY - editor.dragging.y
+    renderDOM()
+  } else {
+    editor.hoverPiece = null
+    editorPieces.forEach((piece, i) => {
       if (
-        !previousEditorHover ||
-        previousEditorHover.side !== side
+        event.pageX >= piece.x &&
+        event.pageX <= piece.x + piece.pxW &&
+        event.pageY >= piece.y &&
+        event.pageY <= piece.y + piece.pxH
       ) {
-        render()
+        editor.hoverPiece = i
       }
-    }
+    })
   }
-
-  boardMousemove(event)
 }
 
-export const editorMouseup = () => {
-  if (typeof board.editor.mode !== 'undefined') {
-    board.editor.mousedown = false
+export const editorDocumentMouseup = event => {
+  if (editor.dragging) {
+    const piece = editorPieces[editor.hoverPiece]
+    const pieceFirstHexCorners = cornersCoordinates.map(corner => corner.add(piece.grid[0].toPoint()))
+
+    const x = event.pageX + pieceFirstHexCorners[0].x - editor.dragging.x
+    const y = event.pageY + pieceFirstHexCorners[0].y - editor.dragging.y
+
+    let distance
+    let shortestDistance
+    let closestPoint
+
+    board.grid.forEach(hex => {
+      if (
+        hex.x > 0 &&
+        hex.y > 0 &&
+        hex.x < editorGridDefaultWidth - piece.w &&
+        hex.y < editorGridDefaultHeight - piece.h
+      ) {
+        const point = toPoint(hex)
+        const corner0 = {
+          x: cornersCoordinates[0].x + point.x,
+          y: cornersCoordinates[0].y + point.y
+        }
+        distance = Math.sqrt(((x - corner0.x) ** 2) + ((y - corner0.y) ** 2))
+
+        if (!shortestDistance || distance < shortestDistance) {
+          shortestDistance = distance
+          closestPoint = point
+        }
+      }
+    })
+
+    if (closestPoint) {
+      piece.x = closestPoint.x + 38
+      piece.y = closestPoint.y + 24
+      renderDOM()
+    }
+    generateEditorBoard()
   }
+}
+
+const renderDOM = () => {
+  const piece = editorPieces[editor.hoverPiece]
+  const draggedPieceStyle = piece.element.style
+  draggedPieceStyle.left = `${piece.x}px`
+  draggedPieceStyle.top = `${piece.y}px`
 }

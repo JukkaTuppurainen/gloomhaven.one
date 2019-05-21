@@ -8,77 +8,34 @@
   right: 0;
   top: 0;
   width: 260px;
+  z-index: 99;
 }
-
-#editor-controls input {
-  margin-bottom: 5px;
+#tile-btns {
+  margin: 10px 0;
 }
-
-.underline,
-.underline-first::first-letter {
-  text-decoration: underline;
+#tile-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
 }
-
-.grid {
-  display: grid;
-  grid-template-columns: 50% 50%;
+#tile-list li {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  margin: 5px 0;
+  width: 100%;
+}
+section {
+  margin: 20px 0;
 }
 </style>
 <div id="editor-controls">
-  <div class="grid">
-    <div>Grid height:</div>
-    <input id="grid-height" type="number">
-    <div>Grid width:</div>
-    <input id="grid-width" type="number">
-  </div>
-
-  <div>
-    Tile edit mode:
-    <div>
-      <button
-        data-editor-mode="tile"
-        class="underline-first"
-        type="button"
-      >
-        Tile
-      </button>
-      <button
-        data-editor-mode="remove"
-        class="underline-first"
-        type="button"
-      >
-        Remove
-      </button>
-    </div>
-  </div>
-  <p>Use Tile mode to add tiles to map. Click again on active button to return to "play" mode.</p>
-
-  <div>
-    Thin wall edit mode:
-    <div>
-      <button
-        data-editor-mode="thin"
-        type="button"
-      >
-        T<span class="underline">h</span>in wall
-      </button>
-      <button
-        data-editor-mode="removethin"
-        type="button"
-      >
-        R<span class="underline">e</span>move thin wall
-      </button>
-    </div>
-  </div>
-  <p>Use thin walls to block line of sight between board pieces when they are placed next to each other in a way that there is no actual wall hexes between them.</p>
-
-  <div>
-    <button
-      id="editor-clear"
-      type="button"
-    >
-      Clear
-    </button>
-    <p>Clears the entire board</p>
-  </div>
+  <section>
+    Add tile:
+    <div id="tile-btns"></div>
+  </section>
+  <section>
+    Tile list:
+    <ol id="tile-list"></ol>
+  </section>
 </div>

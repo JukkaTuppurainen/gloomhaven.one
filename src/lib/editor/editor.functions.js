@@ -1,83 +1,17 @@
-import {editor}   from './editor'
+import {
+  editor,
+  editorPieces
+}                     from './editor'
 import {
   board,
-  cornersCoordinates
-}                 from '../board/board'
-import {makeWall} from '../makeWall'
-import {render}   from '../../index'
+  Grid,
+  hexHeight,
+  hexWidth
+}                     from '../board/board'
+import {scenarioLoad} from '../board/board.scenarioLoad'
+import {toPoint}      from '../hexUtils'
+import {makeWall}     from '../makeWall'
 
-
-export const editBoard = eventHex => {
-  const editorHover = board.editor.hover
-
-  switch (board.editor.mode) {
-    case 'remove':
-      removeHex(eventHex)
-      break
-    case 'tile':
-      if (
-        eventHex.x > 0 &&
-        eventHex.y > 0 &&
-        eventHex.x < board.scenario.grid.width - 1 &&
-        eventHex.y < board.scenario.grid.height - 1
-      ) {
-        board.scenario.hexes.push(eventHex)
-      }
-      break
-    case 'thin':
-      if (editorHover) {
-        removeThinwall(editorHover.sideWallCorners)
-        const side = editorHover.side
-        makeWall(
-          editorHover.hex,
-          side,
-          side < 5 ? side + 1 : 0,
-          true
-        )
-      }
-      break
-    case 'removethin':
-      if (editorHover) {
-        removeThinwall(editorHover.sideWallCorners)
-      }
-      break
-  }
-
-  updateBlueprint()
-  render()
-}
-
-export const removeHex = hexToRemove => {
-  const hexFilter = filterHex => !(filterHex.x === hexToRemove.x && filterHex.y === hexToRemove.y)
-  board.scenario.hexes = board.scenario.hexes.filter(hexFilter)
-
-  const point = hexToRemove.toPoint()
-  const corners = cornersCoordinates.map(corner => corner.add(point))
-
-  for (let i = 0; i < 6; ++i) {
-    removeThinwall({
-      x1: corners[i].x,
-      y1: corners[i].y,
-      x2: corners[i < 5 ? i + 1 : 0].x,
-      y2: corners[i < 5 ? i + 1 : 0].y,
-    })
-  }
-}
-
-export const removeThinwall = thinwallToRemove =>
-  board.scenario.thinWalls = board.scenario.thinWalls.filter(tw => !(
-    (
-      thinwallToRemove.x1 === tw.x1 &&
-      thinwallToRemove.y1 === tw.y1 &&
-      thinwallToRemove.x2 === tw.x2 &&
-      thinwallToRemove.y2 === tw.y2
-    ) || (
-      thinwallToRemove.x1 === tw.x2 &&
-      thinwallToRemove.y1 === tw.y2 &&
-      thinwallToRemove.x2 === tw.x1 &&
-      thinwallToRemove.y2 === tw.y1
-    )
-  ))
 
 const toChar = n => String.fromCharCode(n + (n < 27 ? 96 : 38))
 
@@ -141,8 +75,49 @@ export const generateBlueprintString = () => {
   return blueprintString
 }
 
-export const updateBlueprint = () => {
-  const hexesString = generateBlueprintString()
-  board.scenario.blueprint = editor.blueprint = hexesString
-  window.location.hash = ':' + hexesString
+export const generateEditorBoard = () => {
+  const hexesCenterCoordinates = []
+
+  if (editorPieces.length) {
+    const center = {
+      x: hexWidth / 2,
+      y: hexHeight / 2
+    }
+
+    editorPieces.forEach(piece => {
+      piece.pieceHexes.forEach(pieceHex => {
+        const centerCoordinates = toPoint(pieceHex)
+        centerCoordinates.x += piece.x + center.x
+        centerCoordinates.y += piece.y + center.y
+        if (pieceHex.metaThinwalls) {
+          centerCoordinates.metaThinwalls = pieceHex.metaThinwalls
+        }
+
+        hexesCenterCoordinates.push(centerCoordinates)
+      })
+    })
+  }
+
+  delete board.playerHex
+  board.scenario.hexes.length = 0
+  board.scenario.thinWalls.length = 0
+
+  hexesCenterCoordinates.forEach(hexCenterCoordinates => {
+    const hexFromPoint = Grid.pointToHex(hexCenterCoordinates.x, hexCenterCoordinates.y)
+    board.scenario.hexes.push(hexFromPoint)
+
+    if (hexCenterCoordinates.metaThinwalls) {
+      hexCenterCoordinates.metaThinwalls.forEach(metaThinWall => {
+        makeWall(
+          hexFromPoint,
+          metaThinWall,
+          metaThinWall === 5 ? 0 : metaThinWall + 1,
+          true
+        )
+      })
+    }
+  })
+
+  editor.blueprint = generateBlueprintString()
+  scenarioLoad(editor)
 }
