@@ -2,6 +2,7 @@ import editorHTML         from './editor.html'
 import editorControlsHTML from './editor.controls.html'
 import {
   createPieceBtnClick,
+  editorControlPaneHandler,
   tileListBtnClick
 }                         from './editor.controls'
 import {pieceList}        from './editor.pieces'
@@ -47,6 +48,9 @@ export const editor = {
 
     // Add event listener for list of used pieces
     document.getElementById('tile-list').addEventListener('click', tileListBtnClick)
+
+    document.getElementById('editor-controls').addEventListener('click', editorControlPaneHandler)
+    document.getElementById('editor-controls').addEventListener('mousedown', editorControlPaneHandler)
 
     document.addEventListener('mousedown', editorDocumentMousedown)
     document.addEventListener('mousemove', editorDocumentMousemove)

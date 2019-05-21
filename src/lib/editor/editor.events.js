@@ -18,14 +18,16 @@ let mouseDownCoords = false
 const minMouseMoveDeltaToConsiderClickAsDragging = 20
 
 export const startDragging = (x, y) => {
-  editor.dragging = {x, y}
   delete board.playerHex
+  document.getElementById('editor-controls').style.display = 'none'
+  editor.dragging = {x, y}
   editor.style.hexHover = '#0000'
   editor.style.noHexHover = '#0000'
   render()
 }
 
 const stopDragging = () => {
+  document.getElementById('editor-controls').style.display = 'block'
   editor.style.hexHover = '#32005080'
   editor.style.noHexHover = '#50003280'
   editor.dragging = false

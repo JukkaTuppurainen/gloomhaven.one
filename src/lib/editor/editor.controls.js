@@ -192,6 +192,8 @@ const elementSort = (a, b) => {
   return a.dataset['id'] > b.dataset['id'] ? 1 : -1
 }
 
+export const editorControlPaneHandler = event => event.stopPropagation()
+
 export const createPieceBtnClick = event => {
   if (event.target.nodeName === 'BUTTON') {
     const pieceKey = event.target.dataset['piece']
