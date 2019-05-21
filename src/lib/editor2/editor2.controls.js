@@ -14,7 +14,7 @@ import {
   parseHexString,
   parseThinwallString
 }                      from '../board/board.functions'
-import {getGridPxSize} from '../board/board.scenarioLoad'
+import {getGridPxSize} from '../hexUtils'
 
 
 const createPiece = (x, y, pieceKey, angle = 0) => {
@@ -165,6 +165,7 @@ const createPiece = (x, y, pieceKey, angle = 0) => {
     pieceHexes,
     pxH: pxSizeY,
     pxW: pxSizeX,
+    rotation: angle,
     w: gridSize.width,
     x,
     y
@@ -198,7 +199,6 @@ export const createPieceBtnClick = event => {
     const draggablePiecesElement = document.getElementById('draggable-pieces')
 
     draggablePiecesElement.appendChild(piece.element)
-
     ;[...draggablePiecesElement.children]
       .sort(elementSort)
       .forEach(node => draggablePiecesElement.appendChild(node))
@@ -223,13 +223,7 @@ export const updateEditor2Controls = () => {
   editor2pieces.forEach((piece, i) => {
     const pieceListItem = document.createElement('li')
     pieceListItem.id = piece.id
-    pieceListItem.innerHTML = `
-<span>${piece.name}</span>
-<span>
-  <!--<button data-rotate="${i}" type="button">R</button>-->
-  <button data-delete="${i}" type="button">X</button>
-</span>
-`
+    pieceListItem.innerHTML = `<span>${piece.name}</span><span><button data-rotate="${i}" type="button">R</button><button data-delete="${i}" type="button">X</button></span>`
     pieceListElement.appendChild(pieceListItem)
 
     if (!piece.isSingleTile) {
@@ -241,16 +235,39 @@ export const updateEditor2Controls = () => {
 export const tileListBtnClick = event => {
   if (event.target.nodeName === 'BUTTON') {
     if (event.target.dataset['delete']) {
-      const id = parseInt(event.target.dataset['delete'], 10)
-      editor2pieces.splice(id, 1)
+      const index = parseInt(event.target.dataset['delete'], 10)
+      editor2pieces.splice(index, 1)
       updateEditor2Controls()
 
       document.getElementById('draggable-pieces').removeChild(
-        document.querySelectorAll('.map-tile')[id]
+        document.querySelectorAll('.map-tile')[index]
       )
 
       generateEditor2board()
     }
-    // if (event.target.dataset['rotate']) {}
+    if (event.target.dataset['rotate']) {
+      const index = parseInt(event.target.dataset['rotate'], 10)
+      const piece = editor2pieces[index]
+      const name = piece.name
+      const newAngle = piece.rotation === 0 ? 180 : 0
+      const draggablePiecesElement = document.getElementById('draggable-pieces')
+
+      draggablePiecesElement.removeChild(
+        document.querySelectorAll('.map-tile')[index]
+      )
+
+      const newPiece = createPiece(piece.x, piece.y, name, newAngle)
+      editor2pieces.splice(index, 1)
+      editor2pieces.push(newPiece)
+      editor2pieces.sort(pieceSort)
+
+      draggablePiecesElement.appendChild(newPiece.element)
+
+      ;[...draggablePiecesElement.children]
+        .sort(elementSort)
+        .forEach(node => draggablePiecesElement.appendChild(node))
+
+      generateEditor2board()
+    }
   }
 }

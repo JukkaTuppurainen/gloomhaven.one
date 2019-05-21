@@ -22,6 +22,26 @@ export const toPoint = hex => {
   }
 }
 
+export const getGridPxSize = grid => {
+  const lastPoint = toPoint(grid[grid.length - 1])
+  const bottomPoint = toPoint(grid.reduce((accumulator, currentHex) => {
+    if (
+      currentHex.y > accumulator.y || (
+        currentHex.y === accumulator.y &&
+        currentHex.x % 2 === 1
+      )
+    ) {
+      accumulator = currentHex
+    }
+    return accumulator
+  }, {y: 0}))
+
+  return {
+    pxSizeX: lastPoint.x + hexWidth + 1,
+    pxSizeY: bottomPoint.y + hexHeight + 1
+  }
+}
+
 export const gridGet = (hex, grid) => grid[hex.x * (grid[grid.length - 1].y + 1) + hex.y]
 
 export const neighborsOf = ({x, y}, {height, width}) => {

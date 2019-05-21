@@ -14,27 +14,13 @@ import {doAction} from '../actions'
 import {makeWall} from '../makeWall'
 import {
   addPoint,
-  toPoint,
+  getGridPxSize,
   gridGet,
-  neighborsOf
+  neighborsOf,
+  toPoint
 }                 from '../hexUtils'
 import {render}   from '../../index'
 
-
-export const getGridPxSize = grid => {
-  const lasthex = grid[grid.length - 1]
-  const point = toPoint(lasthex)
-
-  let y = point.y + hexHeight + 1
-  if (lasthex.x % 2 === 1) {
-    y += hexHeight / 2
-  }
-
-  return {
-    pxSizeX: point.x + hexWidth + 1,
-    pxSizeY: y
-  }
-}
 
 export const scenarioLoad = scenario => {
   board.scenario = {
