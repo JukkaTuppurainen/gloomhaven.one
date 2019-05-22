@@ -144,9 +144,8 @@ const renderer = () => {
     board.mouseHex &&
     style.noHexHover
   ) {
-    let hex = board.grid.get(board.mouseHex)
-    if (hex) {
-      const [firstCorner, ...otherCorners] = addPoint(cornersCoordinates, toPoint(hex))
+    if (board.mouseHex.x !== null && board.mouseHex.y !== null) {
+      const [firstCorner, ...otherCorners] = addPoint(cornersCoordinates, toPoint(board.mouseHex))
 
       ctx.beginPath()
       ctx.moveTo(firstCorner.x, firstCorner.y)

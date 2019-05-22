@@ -6,7 +6,6 @@
 }
 
 .map-tile {
-  /*border: 1px solid #fff8;*/
   cursor: pointer;
   height: 200px;
   left: 0;
@@ -63,7 +62,7 @@
 }
 
 .list-item-hover {
-  z-index: 99;
+  z-index: 10;
 }
 
 .list-item-hover img {
@@ -83,6 +82,11 @@
   position: absolute;
   top: -25px;
   z-index: 2;
+}
+
+#drag-shadow {
+  position: absolute;
+  z-index: 9;
 }
 </style>
 <div id="draggable-pieces"></div>

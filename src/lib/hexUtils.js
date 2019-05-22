@@ -1,4 +1,5 @@
 import {
+  Hex,
   hexHeight,
   hexWidth
 } from './board/board'
@@ -80,4 +81,16 @@ export const neighborsOf = ({x, y}, {height, width}) => {
   }
 
   return neighbors
+}
+
+export const rectangle = gridSize => {
+  const rectangle = []
+
+  for (let x = 0; x < gridSize.width; ++x) {
+    for (let y = 0; y < gridSize.height; ++y) {
+      rectangle.push(Hex(x, y))
+    }
+  }
+
+  return rectangle
 }

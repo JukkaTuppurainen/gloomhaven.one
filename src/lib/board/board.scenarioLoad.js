@@ -1,9 +1,6 @@
 import {
   board,
-  cornersCoordinates,
-  Grid,
-  hexHeight,
-  hexWidth
+  cornersCoordinates
 }                 from './board'
 import {
   hexCoordinatesToHexes,
@@ -17,6 +14,7 @@ import {
   getGridPxSize,
   gridGet,
   neighborsOf,
+  rectangle,
   toPoint
 }                 from '../hexUtils'
 import {render}   from '../../index'
@@ -53,7 +51,7 @@ export const scenarioLoad = scenario => {
   }
 
   board.gridSize = gridSize
-  board.grid = Grid.rectangle(gridSize)
+  board.grid = rectangle(gridSize)
 
   const {pxSizeX, pxSizeY} = getGridPxSize(board.grid)
   const canvas = document.getElementById('c')
