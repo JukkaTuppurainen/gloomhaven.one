@@ -227,7 +227,7 @@ export const updateEditorControls = () => {
   editorPieces.forEach((piece, i) => {
     const pieceListItem = document.createElement('li')
     pieceListItem.id = piece.id
-    pieceListItem.innerHTML = `<span>${piece.name}</span><span><button data-rotate="${i}" type="button">R</button><button data-delete="${i}" type="button">X</button></span>`
+    pieceListItem.innerHTML = `<span>${piece.name}</span><span><button data-angle="60" data-rotate="${i}" type="button">60°</button><button data-angle="180" data-rotate="${i}" type="button">180°</button><button data-delete="${i}" type="button">X</button></span>`
     pieceListElement.appendChild(pieceListItem)
 
     pieceListItem.addEventListener('mouseenter', tileListMouseenter)
@@ -254,16 +254,20 @@ export const tileListBtnClick = event => {
     }
     if (event.target.dataset['rotate']) {
       const index = parseInt(event.target.dataset['rotate'], 10)
+      let angle = parseInt(event.target.dataset['angle'], 10)
       const piece = editorPieces[index]
       const name = piece.name
-      const newAngle = piece.rotation === 0 ? 180 : 0
+      angle = piece.rotation + angle
+      if (angle >= 360) {
+        angle -= 360
+      }
       const draggablePiecesElement = document.getElementById('draggable-pieces')
 
       draggablePiecesElement.removeChild(
         document.querySelectorAll('.map-tile')[index]
       )
 
-      const newPiece = createPiece(piece.x, piece.y, name, newAngle)
+      const newPiece = createPiece(piece.x, piece.y, name, angle)
       editorPieces.splice(index, 1)
       editorPieces.push(newPiece)
       editorPieces.sort(pieceSort)

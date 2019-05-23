@@ -100,7 +100,6 @@ const stopDragging = () => {
   if (dragShadowElement) {
     document.body.removeChild(dragShadowElement)
   }
-
 }
 
 export const editorDocumentClick = event => {
