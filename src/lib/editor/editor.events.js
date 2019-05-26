@@ -1,26 +1,27 @@
 import {
+  canvasPxOffsetX,
+  canvasPxOffsetY,
   editor,
-  editorGridDefaultHeight,
-  editorGridDefaultWidth,
   editorPieces
-}                            from './editor'
-import {generateEditorBoard} from './editor.functions'
+}                   from './editor'
+import {
+  findSnap,
+  generateEditorBoard
+}                   from './editor.functions'
 import {
   board,
   cornersCoordinates
-}                            from '../board/board'
-import {boardClick}          from '../board/board.events'
-import {render}              from '../../index'
+}                   from '../board/board'
+import {boardClick} from '../board/board.events'
+import {render}     from '../../index'
 import {
   addPoint,
   toPoint
-}                            from '../hexUtils'
+}                   from '../hexUtils'
 
 
 let mouseDownCoords = false
 const minMouseMoveDeltaToConsiderClickAsDragging = 20
-const canvasPxOffsetX = 38
-const canvasPxOffsetY = 24
 
 export const startDragging = (x, y) => {
   delete board.playerHex
@@ -124,7 +125,7 @@ export const editorDocumentMousedown = event => {
 
 const updateDragShadow = (x, y) => {
   const piece = editorPieces[editor.hoverPiece]
-  const closestPoint = findSnap(piece, x, y)
+  const {closestPoint} = findSnap(piece, x, y)
   const dragShadow = document.getElementById('drag-shadow')
 
   if (closestPoint) {
@@ -172,47 +173,15 @@ export const editorDocumentMousemove = event => {
   }
 }
 
-const findSnap = (piece, eventX, eventY) => {
-  const dragPoint = toPoint(piece.grid[0])
-  const dragPxX = eventX + cornersCoordinates[0].x + dragPoint.x - editor.dragging.x - canvasPxOffsetX
-  const dragPxY = eventY + cornersCoordinates[0].y + dragPoint.y - editor.dragging.y - canvasPxOffsetY
-
-  let distance
-  let shortestDistance
-  let closestPoint = false
-
-  board.grid.forEach(hex => {
-    if (
-      hex.x > 0 &&
-      hex.y > 0 &&
-      hex.x < editorGridDefaultWidth - piece.w &&
-      hex.y < editorGridDefaultHeight - piece.h
-    ) {
-      const point = toPoint(hex)
-      const corner0 = {
-        x: cornersCoordinates[0].x + point.x,
-        y: cornersCoordinates[0].y + point.y
-      }
-      distance = Math.sqrt(((dragPxX - corner0.x) ** 2) + ((dragPxY - corner0.y) ** 2))
-
-      if (!shortestDistance || distance < shortestDistance) {
-        shortestDistance = distance
-        closestPoint = point
-      }
-    }
-  })
-
-  return closestPoint
-}
-
 export const editorDocumentMouseup = event => {
   if (editor.dragging) {
     const piece = editorPieces[editor.hoverPiece]
-    const closestPoint = findSnap(piece, event.pageX, event.pageY)
+    const closest = findSnap(piece, event.pageX, event.pageY)
 
-    if (closestPoint) {
-      piece.x = closestPoint.x + canvasPxOffsetX
-      piece.y = closestPoint.y + canvasPxOffsetY
+    if (closest.closestPoint) {
+      piece.x = closest.closestPoint.x + canvasPxOffsetX
+      piece.y = closest.closestPoint.y + canvasPxOffsetY
+      piece.ch = closest.closestHex
       renderDOM()
     }
     generateEditorBoard()

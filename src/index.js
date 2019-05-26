@@ -128,9 +128,7 @@ const renderer = () => {
   // Numbers on hexes
   // ctx.font = '18px Arial'
   // board.grid.forEach(gridHex => {
-  //   const point = gridHex.toPoint()
-  //   const corners = cornersCoordinates.map(corner => corner.add(point))
-  //   const [firstCorner, ...otherCorners] = corners
+  //   const firstCorner = addPoint(cornersCoordinates, toPoint(gridHex))[0]
   //
   //   ctx.fillStyle = '#000'
   //   ctx.fillText(`${gridHex.x}, ${gridHex.y}`, firstCorner.x - 80, firstCorner.y - 30)

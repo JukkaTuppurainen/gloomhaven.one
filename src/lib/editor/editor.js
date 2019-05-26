@@ -5,6 +5,9 @@ import {
   editorControlPaneHandler,
   tileListBtnClick
 }                         from './editor.controls'
+import {
+  generateBoardFromLayoutString
+}                         from './editor.functions'
 import {pieceList}        from './editor.pieces'
 import {
   editorDocumentClick,
@@ -14,6 +17,8 @@ import {
 }                         from './editor.events'
 
 
+export const canvasPxOffsetX = 38
+export const canvasPxOffsetY = 24
 export const editorGridDefaultHeight = 40
 export const editorGridDefaultWidth = 40
 export const editorPieces = []
@@ -56,6 +61,13 @@ export const editor = {
     document.addEventListener('mousemove', editorDocumentMousemove)
     document.addEventListener('mouseup', editorDocumentMouseup)
     document.body.classList.add('editor-open')
+
+    if (
+      window.location.hash &&
+      window.location.hash.substr(0, 2) === '#:'
+    ) {
+      generateBoardFromLayoutString(window.location.hash.substr(2))
+    }
   },
   unload: () => {
     editorPieces.length = 0
@@ -75,18 +87,13 @@ export const editor = {
     //   fill: '#000'
     // },
     // noHexes: {
-    //   line: hex => (
-    //     hex.x === 0 ||
-    //     hex.y === 0 ||
-    //     hex.x === board.gridSize.width - 1 ||
-    //     hex.y === board.gridSize.height - 1
-    //   ) ? '#0000' : '#222'
+    //   line: '#222'
     // },
     // wallHexes: {
     //   fill: '#00f4'
     // },
     hexHover: '#32005080',
-    noHexHover: '#50003280',
+    noHexHover: '#58002460',
     // thinWalls: {
     //   line: '#f00',
     //   width: 8
