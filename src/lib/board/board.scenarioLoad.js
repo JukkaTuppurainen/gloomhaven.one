@@ -45,23 +45,14 @@ export const scenarioLoad = scenario => {
 
   // Initialize grid with correct size and set canvas dimensions in pixels
 
-  if (board.editor) {
-    document.getElementById('grid-height').value = gridSize.height
-    document.getElementById('grid-width').value = gridSize.width
-  }
-
   board.gridSize = gridSize
   board.grid = rectangle(gridSize)
 
   const {pxSizeX, pxSizeY} = getGridPxSize(board.grid)
   const canvas = document.getElementById('c')
-  const canvasBackground = document.getElementById('b')
 
   canvas.height = pxSizeY
   canvas.width = pxSizeX
-
-  canvasBackground.height = pxSizeY + 99
-  canvasBackground.width = pxSizeX + 99
 
   // Get actual Hex objects from coordinates
 
@@ -110,37 +101,28 @@ export const scenarioLoad = scenario => {
     }
 
     // ... and three throuhg the hex
-    board.scenario.walls.push(
-      {
-        x1: (corners[4].x + corners[5].x) / 2,
-        y1: corners[4].y,
-        x2: (corners[1].x + corners[2].x) / 2,
-        y2: corners[1].y
-      },
-      {
-        x1: (corners[3].x + corners[4].x) / 2,
-        y1: (corners[3].y + corners[4].y) / 2,
-        x2: (corners[0].x + corners[1].x) / 2,
-        y2: (corners[0].y + corners[1].y) / 2,
-      },
-      {
-        x1: (corners[2].x + corners[3].x) / 2,
-        y1: (corners[2].y + corners[3].y) / 2,
-        x2: (corners[5].x + corners[0].x) / 2,
-        y2: (corners[5].y + corners[0].y) / 2,
-      }
-    )
+    // (these may be disabled without 2nd LOS mode)
+    // board.scenario.walls.push(
+    //   {
+    //     x1: (corners[4].x + corners[5].x) / 2,
+    //     y1: corners[4].y,
+    //     x2: (corners[1].x + corners[2].x) / 2,
+    //     y2: corners[1].y
+    //   },
+    //   {
+    //     x1: (corners[3].x + corners[4].x) / 2,
+    //     y1: (corners[3].y + corners[4].y) / 2,
+    //     x2: (corners[0].x + corners[1].x) / 2,
+    //     y2: (corners[0].y + corners[1].y) / 2,
+    //   },
+    //   {
+    //     x1: (corners[2].x + corners[3].x) / 2,
+    //     y1: (corners[2].y + corners[3].y) / 2,
+    //     x2: (corners[5].x + corners[0].x) / 2,
+    //     y2: (corners[5].y + corners[0].y) / 2,
+    //   }
+    // )
   })
-
-  if (scenario.bitmap) {
-    const img = new Image()
-    img.src = scenario.bitmap
-
-    img.onload = () => {
-      const ctx2 = canvasBackground.getContext('2d')
-      ctx2.drawImage(img, 90, 158, img.width * scenario.bitmapScale, img.height * scenario.bitmapScale)
-    }
-  }
 
   doAction('scenarioLoad')
 

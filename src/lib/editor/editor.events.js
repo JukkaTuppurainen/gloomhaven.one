@@ -1,6 +1,4 @@
 import {
-  canvasPxOffsetX,
-  canvasPxOffsetY,
   editor,
   editorPieces
 }                   from './editor'
@@ -46,6 +44,10 @@ export const startDragging = (x, y) => {
   let y2
   let prevLength
 
+  dragShadowCtx.lineWidth = 2
+  dragShadowCtx.setLineDash([5, 5]);
+  dragShadowCtx.strokeStyle = '#fff'
+
   hoverPiece.pieceHexes.forEach(hex => {
     const corners = addPoint(cornersCoordinates, toPoint(hex))
 
@@ -70,23 +72,12 @@ export const startDragging = (x, y) => {
     }
   })
 
-  dragShadowCtx.lineWidth = 5
-  dragShadowCtx.strokeStyle = '#808'
   dragShadowCtx.beginPath()
   outerEdges.forEach(edge => {
     dragShadowCtx.moveTo(edge.x1, edge.y1)
     dragShadowCtx.lineTo(edge.x2, edge.y2)
   })
   dragShadowCtx.stroke()
-  dragShadowCtx.lineWidth = 2
-  dragShadowCtx.strokeStyle = '#f0f'
-  dragShadowCtx.beginPath()
-  outerEdges.forEach(edge => {
-    dragShadowCtx.moveTo(edge.x1, edge.y1)
-    dragShadowCtx.lineTo(edge.x2, edge.y2)
-  })
-  dragShadowCtx.stroke()
-  dragShadowCtx.lineWidth = 1
 
   document.body.appendChild(dragShadowElement)
 }
@@ -129,8 +120,8 @@ const updateDragShadow = (x, y) => {
   const dragShadow = document.getElementById('drag-shadow')
 
   if (closestPoint) {
-    dragShadow.style.left = `${closestPoint.x + canvasPxOffsetX}px`
-    dragShadow.style.top = `${closestPoint.y + canvasPxOffsetY}px`
+    dragShadow.style.left = `${closestPoint.x}px`
+    dragShadow.style.top = `${closestPoint.y}px`
   }
 }
 
@@ -179,8 +170,8 @@ export const editorDocumentMouseup = event => {
     const closest = findSnap(piece, event.pageX, event.pageY)
 
     if (closest.closestPoint) {
-      piece.x = closest.closestPoint.x + canvasPxOffsetX
-      piece.y = closest.closestPoint.y + canvasPxOffsetY
+      piece.x = closest.closestPoint.x
+      piece.y = closest.closestPoint.y
       piece.ch = closest.closestHex
       renderDOM()
     }

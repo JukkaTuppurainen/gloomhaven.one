@@ -25,7 +25,7 @@ body {
   position: relative;
 }
 
-body.editor-open #b {
+body.editor-open #c {
   margin-right: 260px;
 }
 
@@ -44,9 +44,7 @@ p {
 }
 
 #c {
-  left: 38px;
-  position: absolute;
-  top: 23px;
+  position: relative;
   z-index: 10;
 }
 

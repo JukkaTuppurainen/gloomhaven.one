@@ -1,14 +1,14 @@
 import * as Honeycomb from 'honeycomb-grid/src/honeycomb'
 
 import {scenarioLoad} from './board.scenarioLoad'
-import {scenarioList} from '../../scenarios'
 import {
   boardClick,
   boardMousemove
 }                     from './board.events'
+import {editor}       from '../editor/editor'
 
 
-const hexSize = 60
+const hexSize = 45
 const orientation = 'flat' // 'pointy'
 
 export const Hex = Honeycomb.extendHex({
@@ -43,12 +43,12 @@ const eventHandler = (eventName, event) => {
 export const board = {
   events: eventHandler,
   grid: null,
-  loadScenario: id => {
+  loadScenario: () => {
     if (board.scenario !== null) {
       board.unload()
     }
 
-    const scenario = scenarioList[id].scenario
+    const scenario = editor
 
     if (scenario.load) {
       scenario.load()
@@ -64,10 +64,6 @@ export const board = {
     if (board.scenario && board.scenario.unload) {
       board.scenario.unload()
     }
-    const canvasBackground = document.getElementById('b')
-    canvasBackground
-      .getContext('2d')
-      .clearRect(0, 0, canvasBackground.width, canvasBackground.height)
     board.mouseHex = {
       x: null,
       y: null

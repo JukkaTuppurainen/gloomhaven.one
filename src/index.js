@@ -8,7 +8,6 @@ import {
 }                     from './lib/hexUtils'
 import {isInSight}    from './lib/isInSight'
 import                     './lib/testWebp'
-import {scenarioList} from './scenarios'
 import                     './style.css'
 
 
@@ -126,14 +125,14 @@ const renderer = () => {
   })
 
   // Numbers on hexes
-  // ctx.font = '18px Arial'
+  // ctx.font = '14px Arial'
   // board.grid.forEach(gridHex => {
   //   const firstCorner = addPoint(cornersCoordinates, toPoint(gridHex))[0]
   //
   //   ctx.fillStyle = '#000'
   //   ctx.fillText(`${gridHex.x}, ${gridHex.y}`, firstCorner.x - 80, firstCorner.y - 30)
   //   ctx.fillStyle = '#fff'
-  //   ctx.fillText(`${gridHex.x}, ${gridHex.y}`, firstCorner.x - 82, firstCorner.y - 32)
+  //   ctx.fillText(`${gridHex.x}, ${gridHex.y}`, firstCorner.x - 60, firstCorner.y - 22)
   // })
 
   // noHex hover
@@ -204,33 +203,33 @@ export const render = () => requestAnimationFrame(renderer)
 
 render()
 
-const scenarioSelect = document.getElementById('scenario')
-for (let [id, scenario] of Object.entries(scenarioList)) {
-  const option = document.createElement('option')
-  option.value = id
-  option.innerText = scenario.name
-  scenarioSelect.appendChild(option)
-}
-
-scenarioSelect.addEventListener('change', event => {
-  const value = event.target.value
-  board.loadScenario(value)
-
-  window.location.hash = value === 'editor' ? ':' : value
-})
-
-let loadScenario = 'editor'
-
-if (window.location.hash) {
-  if (window.location.hash.match(/^#\d+/)) {
-    loadScenario = window.location.hash.substr(1)
-  } else if (window.location.hash.substr(0, 2) === '#:') {
-    loadScenario = 'editor'
-  }
-}
-
-scenarioSelect.value = loadScenario
-board.loadScenario(loadScenario)
+// const scenarioSelect = document.getElementById('scenario')
+// for (let [id, scenario] of Object.entries(scenarioList)) {
+//   const option = document.createElement('option')
+//   option.value = id
+//   option.innerText = scenario.name
+//   scenarioSelect.appendChild(option)
+// }
+//
+// scenarioSelect.addEventListener('change', event => {
+//   const value = event.target.value
+//   board.loadScenario(value)
+//
+//   window.location.hash = value === 'editor' ? ':' : value
+// })
+//
+// let loadScenario = 'editor'
+//
+// if (window.location.hash) {
+//   if (window.location.hash.match(/^#\d+/)) {
+//     loadScenario = window.location.hash.substr(1)
+//   } else if (window.location.hash.substr(0, 2) === '#:') {
+//     loadScenario = 'editor'
+//   }
+// }
+//
+// scenarioSelect.value = loadScenario
+board.loadScenario()
 
 canvas.addEventListener('click', event => board.events('click', event))
 canvas.addEventListener('mousedown', event => board.events('mousedown', event))

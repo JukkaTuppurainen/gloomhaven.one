@@ -1,6 +1,4 @@
 import {
-  canvasPxOffsetX,
-  canvasPxOffsetY,
   editor,
   editorGridDefaultHeight,
   editorGridDefaultWidth,
@@ -105,12 +103,12 @@ export const createPiece = (x, y, pieceKey, angle = 0) => {
     if (pieceFromList.styles) {
       if (pieceFromList.styles[angle]) {
         Object.entries(pieceFromList.styles[angle]).forEach(keyValue => {
-          img.style[keyValue[0]] = keyValue[1] + 'px'
+          img.style[keyValue[0]] = keyValue[1] * .75 + 'px'
         })
       }
       else if (pieceFromList.styles[useAngle]) {
         Object.entries(pieceFromList.styles[useAngle]).forEach(keyValue => {
-          img.style[keyValue[0]] = keyValue[1] + 'px'
+          img.style[keyValue[0]] = keyValue[1] * .75 + 'px'
         })
       }
     }
@@ -119,8 +117,9 @@ export const createPiece = (x, y, pieceKey, angle = 0) => {
 
   // -- Temporary render start
   // ---- grid for piece and highlight hexes based on blueprint
-  // pieceCtx.font = '18px Arial'
+  // pieceCtx.font = '15px Arial'
   // pieceGrid.forEach(hex => {
+  //   pieceCtx.strokeStyle = '#f00'
   //   const point = hex.toPoint()
   //   const corners = cornersCoordinates.map(corner => corner.add(point))
   //   const [firstCorner, ...otherCorners] = corners
@@ -134,8 +133,8 @@ export const createPiece = (x, y, pieceKey, angle = 0) => {
   //   pieceCtx.fillStyle = '#fff'
   //   pieceCtx.fillText(
   //     String.fromCharCode(hex.y + 97),
-  //     firstCorner.x - 80,
-  //     firstCorner.y - 30
+  //     firstCorner.x - 66,
+  //     firstCorner.y - 22
   //   )
   //   pieceCtx.fillStyle = '#f004'
   //
@@ -182,7 +181,7 @@ export const createPiece = (x, y, pieceKey, angle = 0) => {
     y
   }
 
-  const closest = findSnap(piece, x - canvasPxOffsetX, y - canvasPxOffsetY)
+  const closest = findSnap(piece, x, y)
   piece.ch = closest.closestHex
 
   return piece
@@ -190,8 +189,8 @@ export const createPiece = (x, y, pieceKey, angle = 0) => {
 
 export const findSnap = (piece, eventX, eventY) => {
   const dragPoint = toPoint(piece.grid[0])
-  let dragPxX = eventX + cornersCoordinates[0].x + dragPoint.x - canvasPxOffsetX
-  let dragPxY = eventY + cornersCoordinates[0].y + dragPoint.y - canvasPxOffsetY
+  let dragPxX = eventX + cornersCoordinates[0].x + dragPoint.x
+  let dragPxY = eventY + cornersCoordinates[0].y + dragPoint.y
 
   if (editor.dragging !== false) {
     dragPxX -= editor.dragging.x
@@ -199,7 +198,7 @@ export const findSnap = (piece, eventX, eventY) => {
   }
 
   let distance
-  let shortestDistance
+  let shortestDistance = 999
   let closestPoint = false
   let closestHex = false
 
@@ -217,7 +216,7 @@ export const findSnap = (piece, eventX, eventY) => {
       }
       distance = Math.sqrt(((dragPxX - corner0.x) ** 2) + ((dragPxY - corner0.y) ** 2))
 
-      if (!shortestDistance || distance < shortestDistance) {
+      if (distance < shortestDistance) {
         shortestDistance = distance
         closestPoint = point
         closestHex = hex
@@ -393,8 +392,8 @@ export const generateBoardFromLayoutString = layoutString => {
   piecesToCreate.forEach(pieceToCreate => {
     const point = toPoint(pieceToCreate)
     const piece = createPiece(
-      point.x + canvasPxOffsetX,
-      point.y + canvasPxOffsetY,
+      point.x,
+      point.y,
       pieceToCreate.n,
       pieceToCreate.r
     )

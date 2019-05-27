@@ -17,8 +17,6 @@ import {
 }                         from './editor.events'
 
 
-export const canvasPxOffsetX = 38
-export const canvasPxOffsetY = 24
 export const editorGridDefaultHeight = 40
 export const editorGridDefaultWidth = 40
 export const editorPieces = []
