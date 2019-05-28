@@ -50,14 +50,16 @@ export const isInSight = (hex1, hex2, returnLines) => {
     if ((
       returnLines || !los
     ) && (
-      board.losMode || !board.scenario.wallCorners.has(`${c1.x}-${c1.y}`)
+      board.losMode ||
+      !board.scenario.wallCorners.has((c1.x * 1000 | 0) * 10000000 + (c1.y * 1000 | 0))
     )) {
       c2index = 0
       corners2.forEach(c2 => {
         if ((
           returnLines || !los
         ) && (
-          board.losMode || !board.scenario.wallCorners.has(`${c2.x}-${c2.y}`)
+          board.losMode ||
+          !board.scenario.wallCorners.has((c2.x * 1000 | 0) * 10000000 + (c2.y * 1000 | 0))
         )) {
           let ok = true
           board.scenario.walls.forEach(wall => {

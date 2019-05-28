@@ -13,8 +13,12 @@ export const makeWall = (hexOrCoordinates, corner1, corner2, thin, corners) => {
     corners = addPoint(cornersCoordinates, toPoint(hexOrCoordinates))
   }
 
-  board.scenario.wallCorners.add(`${corners[corner1].x}-${corners[corner1].y}`)
-  board.scenario.wallCorners.add(`${corners[corner2].x}-${corners[corner2].y}`)
+  board.scenario.wallCorners.add(
+    (corners[corner1].x * 1000 | 0) * 10000000 + (corners[corner1].y * 1000 | 0)
+  )
+  board.scenario.wallCorners.add(
+    (corners[corner2].x * 1000 | 0) * 10000000 + (corners[corner2].y * 1000 | 0)
+  )
 
   const wall = {
     x1: corners[corner1].x,
