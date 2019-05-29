@@ -130,7 +130,7 @@ const renderer = () => {
   //   const firstCorner = addPoint(cornersCoordinates, toPoint(gridHex))[0]
   //
   //   ctx.fillStyle = '#000'
-  //   ctx.fillText(`${gridHex.x}, ${gridHex.y}`, firstCorner.x - 80, firstCorner.y - 30)
+  //   ctx.fillText(`${gridHex.x}, ${gridHex.y}`, firstCorner.x - 61, firstCorner.y - 23)
   //   ctx.fillStyle = '#fff'
   //   ctx.fillText(`${gridHex.x}, ${gridHex.y}`, firstCorner.x - 60, firstCorner.y - 22)
   // })
@@ -248,11 +248,7 @@ canvas.addEventListener('mouseout', event => board.events('mouseup', event))
 //
 //   let start = window.performance.now()
 //
-//   const hexesToTest = board.scenario.hexes.filter(h => (
-//     !board.scenario.wallHexes.find(wh => (
-//       h.x === wh.x && h.y === wh.y
-//     ))
-//   ))
+//   const hexesToTest = board.scenario.hexes
 //
 //   hexesToTest.forEach(hex => {
 //     hexesToTest.forEach(hex2 => {

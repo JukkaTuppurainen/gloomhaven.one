@@ -28,17 +28,22 @@ export const makeWall = (hexOrCoordinates, corner1, corner2, thin, corners) => {
   }
 
   if (thin) {
-    board.scenario.thinWalls.push(Object.assign(
-      {},
-      wall,
-      {
-        meta: {
-          x: hexOrCoordinates.x,
-          y: hexOrCoordinates.y,
-          s: corner1
+    if (!board.scenario.thinWalls.find(t => (
+      (wall.x1 === t.x1 && wall.y1 === t.y1 && wall.x2 === t.x2 && wall.y2 === t.y2) ||
+      (wall.x1 === t.x2 && wall.y1 === t.y2 && wall.x2 === t.x1 && wall.y2 === t.y1)
+    ))) {
+      board.scenario.thinWalls.push(Object.assign(
+        {},
+        wall,
+        {
+          meta: {
+            x: hexOrCoordinates.x,
+            y: hexOrCoordinates.y,
+            s: corner1
+          }
         }
-      }
-    ))
+      ))
+    }
   }
 
   return wall

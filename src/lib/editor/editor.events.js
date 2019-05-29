@@ -104,7 +104,7 @@ export const editorDocumentClick = event => {
 }
 
 export const editorDocumentMousedown = event => {
-  if (editor.hoverPiece !== null) {
+  if (editor.hoverPiece !== false) {
     mouseDownCoords = {
       x: event.pageX,
       y: event.pageY
@@ -150,7 +150,7 @@ export const editorDocumentMousemove = event => {
     renderDOM()
     updateDragShadow(event.pageX, event.pageY)
   } else {
-    editor.hoverPiece = null
+    editor.hoverPiece = false
     editorPieces.forEach((piece, i) => {
       if (
         event.pageX >= piece.x &&

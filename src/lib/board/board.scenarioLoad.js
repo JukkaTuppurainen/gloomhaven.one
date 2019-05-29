@@ -77,9 +77,9 @@ export const scenarioLoad = scenario => {
 
   // Generate wall hexes around tiles
   board.scenario.hexes.forEach(hex => {
-    const neighbors = neighborsOf(hex, gridSize)
-    neighbors.forEach(adjHex => {
+    neighborsOf(hex, gridSize).forEach(adjHex => {
       if (
+        adjHex !== null &&
         !board.scenario.hexes.find(h => h.x === adjHex.x && h.y === adjHex.y) &&
         !board.scenario.wallHexes.find(h => h.x === adjHex.x && h.y === adjHex.y)
       ) {
@@ -92,13 +92,19 @@ export const scenarioLoad = scenario => {
 
   // Generate LOS blocking walls...
   board.scenario.wallHexes.forEach(wallHex => {
-    const wallHexPoint = toPoint(wallHex)
-    const corners = addPoint(cornersCoordinates, wallHexPoint)
+    const corners = addPoint(cornersCoordinates, toPoint(wallHex))
 
     // ... around the wall hex
-    for (let i = 0; i < 6; ++i) {
-      board.scenario.walls.push(makeWall(wallHex, i, (i < 5 ? i + 1 : 0), false, corners))
-    }
+    neighborsOf(wallHex, gridSize).forEach((neighbor, i) => {
+      if (
+        neighbor !== null &&
+        board.scenario.hexes.find(hex => (
+          hex.x === neighbor.x && hex.y === neighbor.y
+        ))
+      ) {
+        board.scenario.walls.push(makeWall(wallHex, i, (i < 5 ? i + 1 : 0), false, corners))
+      }
+    })
 
     // ... and three throuhg the hex
     // (these may be disabled without 2nd LOS mode)

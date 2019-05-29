@@ -47,36 +47,39 @@ export const gridGet = (hex, grid) => grid[hex.x * (grid[grid.length - 1].y + 1)
 
 export const neighborsOf = ({x, y}, {height, width}) => {
   const neighbors = []
+  neighbors.length = 6
+  neighbors.fill(null)
 
-  if (y > 0) {
-    neighbors.push({x, y: y - 1})
+  if (x < width -  1) {
+    const dir0newY = y + (x % 2 === 0 ? 0 : 1)
+    if (dir0newY < height) {
+      neighbors[0] = {x: x + 1, y: dir0newY}
+    }
   }
 
   if (y < height - 1) {
-    neighbors.push({x, y: y + 1})
+    neighbors[1] = {x, y: y + 1}
   }
 
   if (x > 0) {
-    const dir3newY = y + (x % 2 === 0 ? -1 : 0)
-    if (dir3newY >= 0) {
-      neighbors.push({x: x - 1, y: dir3newY})
-    }
-
     const dir2newY = y + (x % 2 === 0 ? 0 : 1)
     if (dir2newY < height) {
-      neighbors.push({x: x - 1, y: dir2newY})
+      neighbors[2] = {x: x - 1, y: dir2newY}
     }
+    const dir3newY = y + (x % 2 === 0 ? -1 : 0)
+    if (dir3newY >= 0) {
+      neighbors[3] = {x: x - 1, y: dir3newY}
+    }
+  }
+
+  if (y > 0) {
+    neighbors[4] = {x, y: y - 1}
   }
 
   if (x < width -  1) {
     const dir5newY = y + (x % 2 === 0 ? -1 : 0)
     if (dir5newY >= 0) {
-      neighbors.push({x: x + 1, y: dir5newY})
-    }
-
-    const dir0newY = y + (x % 2 === 0 ? 0 : 1)
-    if (dir0newY < height) {
-      neighbors.push({x: x + 1, y: dir0newY})
+      neighbors[5] = {x: x + 1, y: dir5newY}
     }
   }
 

@@ -2,6 +2,10 @@ import {
   board,
   cornersCoordinates
 }                         from './board/board'
+import {
+  addPoint,
+  toPoint
+}                         from './hexUtils'
 import {getCornerOffset}  from './getCornerOffset'
 import {intersects}       from './intersects'
 import {isPointOnSegment} from './isPointOnSegment'
@@ -9,8 +13,6 @@ import {isThinWallCorner} from './isThinWallCorner'
 
 
 let cache = {}
-
-// Current correct value 3796 / 3344
 
 const getOffsets = (hex, corner1, corner2, cornerIndex1, cornerIndex2) => {
   if (
@@ -27,8 +29,7 @@ const getOffsets = (hex, corner1, corner2, cornerIndex1, cornerIndex2) => {
 export const isInSight = (hex1, hex2, returnLines) => {
   let corners1
   if (cache.x !== hex1.x || cache.y !== hex1.y) {
-    const point1 = hex1.toPoint()
-    corners1 = cornersCoordinates.map(c => c.add(point1))
+    corners1 = addPoint(cornersCoordinates, toPoint(hex1))
     cache = {
       x: hex1.x,
       y: hex1.y,
@@ -38,8 +39,7 @@ export const isInSight = (hex1, hex2, returnLines) => {
     corners1 = cache.corners
   }
 
-  const point2 = hex2.toPoint()
-  const corners2 = cornersCoordinates.map(c => c.add(point2))
+  const corners2 = addPoint(cornersCoordinates, toPoint(hex2))
   let los = false
   let lines = []
 

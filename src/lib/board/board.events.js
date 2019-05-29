@@ -20,9 +20,7 @@ export const boardMousemove = event => {
 export const boardClick = event => {
   const clickHex = Grid.pointToHex(event.layerX, event.layerY)
   // if (clickHex) {
-  //   const point = clickHex.toPoint()
-  //   // const corners = clickHex.corners().map(corner => corner.add(point))
-  //   console.log('clickHex:', clickHex/*, clickHex && corners*/)
+  //   console.log('clickHex:', clickHex)
   // }
 
   if (
