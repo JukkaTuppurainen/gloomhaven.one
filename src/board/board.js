@@ -1,11 +1,19 @@
 import * as Honeycomb from 'honeycomb-grid/src/honeycomb'
 
-import {scenarioLoad} from './board.scenarioLoad'
+import {
+  scenarioInit,
+  scenarioLoad
+}                     from './board.scenarioLoad'
 import {
   boardClick,
+  boardMouseLeave,
   boardMousemove
 }                     from './board.events'
+import {
+  generatePiecesFromLayoutString
+}                     from './board.functions'
 import {editor}       from '../editor/editor'
+import {scenarioList} from '../scenarios'
 
 
 const hexSize = 45
@@ -25,7 +33,8 @@ export const hexWidth = exampleHex.width()
 
 const defaultEvents = {
   click: boardClick,
-  mousemove: boardMousemove
+  mousemove: boardMousemove,
+  mouseleave: boardMouseLeave
 }
 
 const eventHandler = (eventName, event) => {
@@ -43,16 +52,28 @@ const eventHandler = (eventName, event) => {
 export const board = {
   events: eventHandler,
   grid: null,
-  loadScenario: () => {
+  loadScenario: id => {
     if (board.scenario !== null) {
       board.unload()
     }
 
-    const scenario = editor
+    let scenario
+    if (id === 'editor') {
+      scenario = editor
+    } else {
+      scenario = scenarioList[id]
+    }
 
     if (scenario.load) {
       scenario.load()
     }
+
+    scenarioInit()
+
+    if (scenario.layout) {
+      generatePiecesFromLayoutString(scenario.layout)
+    }
+
     scenarioLoad(scenario)
   },
   losMode: false,
@@ -74,5 +95,22 @@ export const board = {
   settings: {
     hexSize,
     orientation
+  },
+  style: {
+    // hexes: {
+    //   fill: '#000'
+    // },
+    // noHexes: {
+    //   line: '#222'
+    // },
+    // wallHexes: {
+    //   fill: '#00f4'
+    // },
+    hexHover: '#32005080',
+    noHexHover: '#58002460',
+    // thinWalls: {
+    //   line: '#f00',
+    //   width: 8
+    // }
   }
 }

@@ -1,14 +1,12 @@
 import {
   board,
   cornersCoordinates
-} from './board/board'
+}                   from '../board/board'
 import {
   addPoint,
   toPoint
-} from './hexUtils'
-import {
-  isInSight
-} from './isInSight'
+}                   from './hexUtils'
+import {isInSight}  from './isInSight'
 
 
 const canvas = document.getElementById('c')
@@ -24,7 +22,7 @@ export const renderer = () => {
 
   let linesToHover = false
   let hoverHex = false
-  const style = board.scenario.style
+  const style = board.style
 
   if ('noHexes' in style) {
     board.grid
@@ -167,16 +165,14 @@ export const renderer = () => {
   }
 
   // Draw walls
-  // if (renderDebug) {
-  //   ctx.strokeStyle = '#fff'
-  //   ctx.lineWidth = 1
-  //   board.scenario.walls.forEach(wall => {
-  //     ctx.beginPath()
-  //     ctx.moveTo(wall.x1, wall.y1)
-  //     ctx.lineTo(wall.x2, wall.y2)
-  //     ctx.stroke()
-  //   })
-  // }
+  // ctx.strokeStyle = '#fff'
+  // ctx.lineWidth = 1
+  // board.scenario.walls.forEach(wall => {
+  //   ctx.beginPath()
+  //   ctx.moveTo(wall.x1, wall.y1)
+  //   ctx.lineTo(wall.x2, wall.y2)
+  //   ctx.stroke()
+  // })
 
   if (linesToHover) {
     let shortestLine = linesToHover.reduce((acc, line) => {

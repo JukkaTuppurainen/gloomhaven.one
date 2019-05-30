@@ -1,26 +1,21 @@
 import {
   board,
   cornersCoordinates
-}                 from './board'
-import {
-  hexCoordinatesToHexes,
-  parseHexString,
-  parseThinwallString
-}                 from './board.functions'
-import {doAction} from '../actions'
-import {makeWall} from '../makeWall'
+}                               from './board'
+import {getDataFromBoardPieces} from './board.functions'
+import {makeWall}               from '../lib/makeWall'
 import {
   addPoint,
   getGridPxSize,
-  gridGet,
+  getGridSize,
   neighborsOf,
   rectangle,
   toPoint
-}                 from '../hexUtils'
-import {render}   from '../../index'
+}                               from '../lib/hexUtils'
+import {render}                 from '../index'
 
 
-export const scenarioLoad = scenario => {
+export const clearScenario = () => {
   board.scenario = {
     hexes: [],
     thinWalls: [],
@@ -28,23 +23,21 @@ export const scenarioLoad = scenario => {
     wallHexes: [],
     walls: []
   }
+}
 
-  Object.assign(board.scenario, scenario)
+export const scenarioInit = () => {
+  document.getElementById('board').innerHTML = ''
 
-  const hexString = scenario.blueprint.split('.')[0]
-  const thinWallString = scenario.blueprint.split('.')[1]
+  clearScenario()
 
-  let gridSize = {
-    height: board.scenario.grid ? board.scenario.grid.height : 0,
-    width: board.scenario.grid ? board.scenario.grid.width : 0
+  board.pieces = []
+
+  const gridSize = {
+    height: 40,
+    width: 40
   }
 
-  // Parse hexString, resolve needed board size and push all hexes' coordinates to temp array
-
-  const hexCoordinates = parseHexString(hexString, gridSize, 2)
-
-  // Initialize grid with correct size and set canvas dimensions in pixels
-
+  // Initialize grid with temporary size and set canvas dimensions in pixels
   board.gridSize = gridSize
   board.grid = rectangle(gridSize)
 
@@ -53,39 +46,48 @@ export const scenarioLoad = scenario => {
 
   canvas.height = pxSizeY
   canvas.width = pxSizeX
+}
 
-  // Get actual Hex objects from coordinates
+export const scenarioLoad = scenario => {
+  Object.assign(board.scenario, scenario)
+  const dataFromPieces = getDataFromBoardPieces()
+  board.scenario.hexes = dataFromPieces.hexes
 
-  board.scenario.hexes = hexCoordinatesToHexes(hexCoordinates, board.grid)
+  if (!board.editor) {
+    // Resize the canvas and grid to match the scenario layout
+    const gridSize = getGridSize(board.scenario.hexes)
+    ++gridSize.height
+    ++gridSize.width
 
-  // Parse and make thinWalls
+    board.gridSize = gridSize
+    board.grid = rectangle(gridSize)
 
-  if (thinWallString) {
-    const a = parseThinwallString(thinWallString)
-    a.forEach(b => {
-      board.scenario.walls.push(makeWall(
-        {
-          x: b[0],
-          y: b[1],
-        },
-        b[2],
-        b[2] === 5 ? 0 : b[2] + 1,
-        true
-      ))
-    })
+    const {pxSizeX, pxSizeY} = getGridPxSize(board.grid)
+    const canvas = document.getElementById('c')
+
+    canvas.height = pxSizeY
+    canvas.width = pxSizeX
   }
+
+  // Make thinWalls
+  dataFromPieces.thinWalls.forEach(thinWall => {
+    board.scenario.walls.push(makeWall(
+      thinWall,
+      thinWall.s,
+      thinWall.s === 5 ? 0 : thinWall.s + 1,
+      true
+    ))
+  })
 
   // Generate wall hexes around tiles
   board.scenario.hexes.forEach(hex => {
-    neighborsOf(hex, gridSize).forEach(adjHex => {
+    neighborsOf(hex, board.gridSize).forEach(neighborHex => {
       if (
-        adjHex !== null &&
-        !board.scenario.hexes.find(h => h.x === adjHex.x && h.y === adjHex.y) &&
-        !board.scenario.wallHexes.find(h => h.x === adjHex.x && h.y === adjHex.y)
+        neighborHex !== null &&
+        !board.scenario.hexes.find(h => h.x === neighborHex.x && h.y === neighborHex.y) &&
+        !board.scenario.wallHexes.find(h => h.x === neighborHex.x && h.y === neighborHex.y)
       ) {
-        board.scenario.wallHexes.push(
-          gridGet(adjHex, board.grid)
-        )
+        board.scenario.wallHexes.push(neighborHex)
       }
     })
   })
@@ -95,7 +97,7 @@ export const scenarioLoad = scenario => {
     const corners = addPoint(cornersCoordinates, toPoint(wallHex))
 
     // ... around the wall hex
-    neighborsOf(wallHex, gridSize).forEach((neighbor, i) => {
+    neighborsOf(wallHex, board.gridSize).forEach((neighbor, i) => {
       if (
         neighbor !== null &&
         board.scenario.hexes.find(hex => (
@@ -129,8 +131,6 @@ export const scenarioLoad = scenario => {
     //   }
     // )
   })
-
-  doAction('scenarioLoad')
 
   render()
 }

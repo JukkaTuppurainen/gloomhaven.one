@@ -1,9 +1,5 @@
+import {editor}     from './editor'
 import {
-  editor,
-  editorPieces
-}                   from './editor'
-import {
-  findSnap,
   generateEditorBoard
 }                   from './editor.functions'
 import {
@@ -11,11 +7,12 @@ import {
   cornersCoordinates
 }                   from '../board/board'
 import {boardClick} from '../board/board.events'
-import {render}     from '../../index'
+import {findSnap}   from '../board/board.functions'
+import {render}     from '../index'
 import {
   addPoint,
   toPoint
-}                   from '../hexUtils'
+}                   from '../lib/hexUtils'
 
 
 let mouseDownCoords = false
@@ -25,10 +22,10 @@ export const startDragging = (x, y) => {
   delete board.playerHex
   document.getElementById('editor-controls').style.display = 'none'
   editor.dragging = {x, y}
-  editor.style.hexHover = '#0000'
-  editor.style.noHexHover = '#0000'
+  board.style.hexHover = '#0000'
+  board.style.noHexHover = '#0000'
   render()
-  const hoverPiece = editorPieces[editor.hoverPiece]
+  const hoverPiece = board.pieces[editor.hoverPiece]
   const dragShadowElement = document.createElement('canvas')
   dragShadowElement.id = 'drag-shadow'
   dragShadowElement.height = hoverPiece.canvas.height
@@ -84,8 +81,8 @@ export const startDragging = (x, y) => {
 
 const stopDragging = () => {
   document.getElementById('editor-controls').style.display = 'block'
-  editor.style.hexHover = '#32005080'
-  editor.style.noHexHover = '#50003280'
+  board.style.hexHover = '#32005080'
+  board.style.noHexHover = '#50003280'
   editor.dragging = false
   render()
   const dragShadowElement = document.getElementById('drag-shadow')
@@ -115,8 +112,12 @@ export const editorDocumentMousedown = event => {
 }
 
 const updateDragShadow = (x, y) => {
-  const piece = editorPieces[editor.hoverPiece]
-  const {closestPoint} = findSnap(piece, x, y)
+  const piece = board.pieces[editor.hoverPiece]
+  const {closestPoint} = findSnap(
+    piece,
+    x - editor.dragging.x,
+    y - editor.dragging.y
+  )
   const dragShadow = document.getElementById('drag-shadow')
 
   if (closestPoint) {
@@ -139,19 +140,19 @@ export const editorDocumentMousemove = event => {
       )
     ) {
       startDragging(
-        event.pageX - editorPieces[editor.hoverPiece].x,
-        event.pageY - editorPieces[editor.hoverPiece].y
+        event.pageX - board.pieces[editor.hoverPiece].x,
+        event.pageY - board.pieces[editor.hoverPiece].y
       )
     }
   }
   if (editor.dragging) {
-    editorPieces[editor.hoverPiece].x = event.pageX - editor.dragging.x
-    editorPieces[editor.hoverPiece].y = event.pageY - editor.dragging.y
+    board.pieces[editor.hoverPiece].x = event.pageX - editor.dragging.x
+    board.pieces[editor.hoverPiece].y = event.pageY - editor.dragging.y
     renderDOM()
     updateDragShadow(event.pageX, event.pageY)
   } else {
     editor.hoverPiece = false
-    editorPieces.forEach((piece, i) => {
+    board.pieces.forEach((piece, i) => {
       if (
         event.pageX >= piece.x &&
         event.pageX <= piece.x + piece.pxW &&
@@ -166,8 +167,12 @@ export const editorDocumentMousemove = event => {
 
 export const editorDocumentMouseup = event => {
   if (editor.dragging) {
-    const piece = editorPieces[editor.hoverPiece]
-    const closest = findSnap(piece, event.pageX, event.pageY)
+    const piece = board.pieces[editor.hoverPiece]
+    const closest = findSnap(
+      piece,
+      event.pageX - editor.dragging.x,
+      event.pageY - editor.dragging.y
+    )
 
     if (closest.closestPoint) {
       piece.x = closest.closestPoint.x
@@ -180,7 +185,7 @@ export const editorDocumentMouseup = event => {
 }
 
 const renderDOM = () => {
-  const piece = editorPieces[editor.hoverPiece]
+  const piece = board.pieces[editor.hoverPiece]
   const draggedPieceStyle = piece.element.style
   draggedPieceStyle.left = `${piece.x}px`
   draggedPieceStyle.top = `${piece.y}px`

@@ -1,7 +1,7 @@
 import {
   board,
   cornersCoordinates
-} from './board/board'
+} from '../board/board'
 import {
   addPoint,
   toPoint

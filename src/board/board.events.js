@@ -2,19 +2,40 @@ import {
   board,
   Grid
 }               from './board'
-import {render} from '../../index'
+import {render} from '../index'
 
 
 export const boardMousemove = event => {
-  let newMouseHex = Grid.pointToHex(event.layerX, event.layerY)
+  const newMouseHex = Grid.pointToHex(event.layerX, event.layerY)
 
   if (
-    newMouseHex.x !== board.mouseHex.x ||
-    newMouseHex.y !== board.mouseHex.y
+    newMouseHex.x >= 0 &&
+    newMouseHex.y >= 0 &&
+    newMouseHex.x < board.gridSize.width &&
+    newMouseHex.y < board.gridSize.height
   ) {
-    Object.assign(board.mouseHex, newMouseHex)
+    if (
+      newMouseHex.x !== board.mouseHex.x ||
+      newMouseHex.y !== board.mouseHex.y
+    ) {
+      board.mouseHex = newMouseHex
+      render()
+    }
+  } else if (board.mouseHex.x !== null) {
+    board.mouseHex = {
+      x: null,
+      y: null
+    }
     render()
   }
+}
+
+export const boardMouseLeave = () => {
+  board.mouseHex = {
+    x: null,
+    y: null
+  }
+  render()
 }
 
 export const boardClick = event => {

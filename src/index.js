@@ -1,48 +1,71 @@
-import {board}    from './lib/board/board'
-import {renderer} from './lib/renderer'
-import                 './lib/testWebp'
-import                 './style.css'
+import {board}        from './board/board'
+import {renderer}     from './lib/renderer'
+import                     './lib/testWebp'
+import {scenarioList} from './scenarios'
+import                     './style.css'
 
 
 const canvas = document.getElementById('c')
 
 export const render = () => requestAnimationFrame(renderer)
+export const stopPropagation = event => event.stopPropagation()
 
-render()
+document.getElementsByTagName('footer')[0].addEventListener('mousedown', stopPropagation)
 
-// const scenarioSelect = document.getElementById('scenario')
-// for (let [id, scenario] of Object.entries(scenarioList)) {
-//   const option = document.createElement('option')
-//   option.value = id
-//   option.innerText = scenario.name
-//   scenarioSelect.appendChild(option)
-// }
-//
-// scenarioSelect.addEventListener('change', event => {
-//   const value = event.target.value
-//   board.loadScenario(value)
-//
-//   window.location.hash = value === 'editor' ? ':' : value
-// })
-//
-// let loadScenario = 'editor'
-//
-// if (window.location.hash) {
-//   if (window.location.hash.match(/^#\d+/)) {
-//     loadScenario = window.location.hash.substr(1)
-//   } else if (window.location.hash.substr(0, 2) === '#:') {
-//     loadScenario = 'editor'
-//   }
-// }
-//
-// scenarioSelect.value = loadScenario
-board.loadScenario()
+const scenarioSelectElement = document.getElementById('scenario')
+for (let [id, scenario] of Object.entries(scenarioList)) {
+  const option = document.createElement('option')
+  option.value = id
+  option.innerText = scenario.name
+  scenarioSelectElement.appendChild(option)
+}
+
+board.skipHashChangeHandler = false
+
+scenarioSelectElement.addEventListener('change', event => {
+  const value = event.target.value
+  board.loadScenario(value)
+
+  board.skipHashChangeHandler = true
+  window.location.hash = value === 'editor' ? ':' : value
+})
+
+window.addEventListener('hashchange', () => {
+  if (!board.skipHashChangeHandler) {
+    if (window.location.hash.match(/^#\d+/)) {
+      const id = window.location.hash.substr(1)
+      if (id in scenarioList) {
+        scenarioSelectElement.value = id
+        board.loadScenario(id)
+      }
+    }
+    if (window.location.hash.substr(0, 2) === '#:') {
+      scenarioSelectElement.value = 'editor'
+      board.loadScenario('editor')
+    }
+  }
+  board.skipHashChangeHandler = false
+})
+
+let loadScenario = '1'
+
+if (window.location.hash) {
+  if (window.location.hash.match(/^#\d+/)) {
+    loadScenario = window.location.hash.substr(1)
+  } else if (window.location.hash.substr(0, 2) === '#:') {
+    loadScenario = 'editor'
+  }
+}
+
+scenarioSelectElement.value = loadScenario
+board.loadScenario(loadScenario)
 
 canvas.addEventListener('click', event => board.events('click', event))
 canvas.addEventListener('mousedown', event => board.events('mousedown', event))
+canvas.addEventListener('mouseleave', event => board.events('mouseleave', event))
 canvas.addEventListener('mousemove', event => board.events('mousemove', event))
-canvas.addEventListener('mouseup', event => board.events('mouseup', event))
 canvas.addEventListener('mouseout', event => board.events('mouseup', event))
+canvas.addEventListener('mouseup', event => board.events('mouseup', event))
 
 // document.getElementById('los-mode').addEventListener('change', event => {
 //   board.losMode = event.target.value === '1'

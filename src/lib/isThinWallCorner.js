@@ -1,4 +1,4 @@
-import {board} from './board/board'
+import {board} from '../board/board'
 
 
 export const isThinWallCorner = (mapX, mapY) => (

@@ -2,7 +2,7 @@ import {
   Hex,
   hexHeight,
   hexWidth
-} from './board/board'
+} from '../board/board'
 
 
 export const addPoint = (corners, point) => corners.map(c => ({
@@ -23,9 +23,9 @@ export const toPoint = hex => {
   }
 }
 
-export const getGridPxSize = grid => {
-  const lastPoint = toPoint(grid[grid.length - 1])
-  const bottomPoint = toPoint(grid.reduce((accumulator, currentHex) => {
+const getGridEdgeHexes = grid => {
+  const lastHex = grid[grid.length - 1]
+  const bottomHex = grid.reduce((accumulator, currentHex) => {
     if (
       currentHex.y > accumulator.y || (
         currentHex.y === accumulator.y &&
@@ -35,11 +35,29 @@ export const getGridPxSize = grid => {
       accumulator = currentHex
     }
     return accumulator
-  }, {y: 0}))
+  }, {y: 0})
 
   return {
-    pxSizeX: lastPoint.x + hexWidth + 1,
-    pxSizeY: bottomPoint.y + hexHeight + 1
+    bottomHex,
+    lastHex
+  }
+}
+
+export const getGridSize = grid => {
+  const gridEdges = getGridEdgeHexes(grid)
+
+  return {
+    height: gridEdges.bottomHex.y + 1,
+    width: gridEdges.lastHex.x + 1
+  }
+}
+
+export const getGridPxSize = grid => {
+  const gridEdges = getGridEdgeHexes(grid)
+
+  return {
+    pxSizeX: toPoint(gridEdges.lastHex).x + hexWidth + 1,
+    pxSizeY: toPoint(gridEdges.bottomHex).y + hexHeight + 1
   }
 }
 

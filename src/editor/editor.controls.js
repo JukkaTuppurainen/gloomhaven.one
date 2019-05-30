@@ -1,14 +1,9 @@
-import {
-  editor,
-  editorPieces
-}                      from './editor'
-import {startDragging} from './editor.events'
-import {
-  createPiece,
-  generateEditorBoard
-}                      from './editor.functions'
-import {board}         from '../board/board'
-import {render}        from '../../index'
+import {editor}               from './editor'
+import {startDragging}        from './editor.events'
+import {generateEditorBoard}  from './editor.functions'
+import {board}                from '../board/board'
+import {createPiece}          from '../board/board.functions'
+import {render}               from '../index'
 
 
 const pieceSort = (a, b) => {
@@ -31,23 +26,21 @@ const elementSort = (a, b) => {
   return a.dataset['id'] > b.dataset['id'] ? 1 : -1
 }
 
-export const editorControlPaneHandler = event => event.stopPropagation()
-
 export const createPieceBtnClick = event => {
   if (event.target.nodeName === 'BUTTON') {
     const pieceKey = event.target.dataset['piece']
     const piece = createPiece(event.pageX, event.pageY, pieceKey)
-    const draggablePiecesElement = document.getElementById('draggable-pieces')
+    const boardElement = document.getElementById('board')
 
-    draggablePiecesElement.appendChild(piece.element)
-    ;[...draggablePiecesElement.children]
+    boardElement.appendChild(piece.element)
+    ;[...boardElement.children]
       .sort(elementSort)
-      .forEach(node => draggablePiecesElement.appendChild(node))
+      .forEach(node => boardElement.appendChild(node))
 
-    editorPieces.push(piece)
-    editorPieces.sort(pieceSort)
+    board.pieces.push(piece)
+    board.pieces.sort(pieceSort)
 
-    editor.hoverPiece = editorPieces.findIndex(p => p.id === piece.id)
+    editor.hoverPiece = board.pieces.findIndex(p => p.id === piece.id)
 
     startDragging(0, 0)
 
@@ -61,7 +54,7 @@ export const updateEditorControls = () => {
 
   document.querySelectorAll('#tile-btns button').forEach(n => n.removeAttribute('disabled'))
 
-  editorPieces.forEach((piece, i) => {
+  board.pieces.forEach((piece, i) => {
     const pieceListItem = document.createElement('li')
     pieceListItem.id = piece.id
 
@@ -87,10 +80,10 @@ export const tileListBtnClick = event => {
   if (event.target.nodeName === 'BUTTON') {
     if (event.target.dataset['delete']) {
       const index = parseInt(event.target.dataset['delete'], 10)
-      editorPieces.splice(index, 1)
+      board.pieces.splice(index, 1)
       updateEditorControls()
 
-      document.getElementById('draggable-pieces').removeChild(
+      document.getElementById('board').removeChild(
         document.querySelectorAll('.map-tile')[index]
       )
 
@@ -99,28 +92,28 @@ export const tileListBtnClick = event => {
     if (event.target.dataset['rotate']) {
       const index = parseInt(event.target.dataset['rotate'], 10)
       let angle = parseInt(event.target.dataset['angle'], 10)
-      const piece = editorPieces[index]
+      const piece = board.pieces[index]
       const name = piece.name
       angle = piece.rotation + angle
       if (angle >= 360) {
         angle -= 360
       }
-      const draggablePiecesElement = document.getElementById('draggable-pieces')
+      const boardElement = document.getElementById('board')
 
-      draggablePiecesElement.removeChild(
+      boardElement.removeChild(
         document.querySelectorAll('.map-tile')[index]
       )
 
       const newPiece = createPiece(piece.x, piece.y, name, angle)
-      editorPieces.splice(index, 1)
-      editorPieces.push(newPiece)
-      editorPieces.sort(pieceSort)
+      board.pieces.splice(index, 1)
+      board.pieces.push(newPiece)
+      board.pieces.sort(pieceSort)
 
-      draggablePiecesElement.appendChild(newPiece.element)
+      boardElement.appendChild(newPiece.element)
 
-      ;[...draggablePiecesElement.children]
+      ;[...boardElement.children]
         .sort(elementSort)
-        .forEach(node => draggablePiecesElement.appendChild(node))
+        .forEach(node => boardElement.appendChild(node))
 
       generateEditorBoard()
       updateEditorControls()
@@ -130,12 +123,14 @@ export const tileListBtnClick = event => {
 
 const tileListMouseenter = event => {
   delete board.playerHex
-  editorPieces
+  board.pieces
     .find(p => p.id === event.target.id)
-    .element.classList.add('list-item-hover')
+    .element.classList.add('with-control-hover')
   render()
 }
 
 const tileListMouseleave = () => {
-  document.querySelectorAll('.list-item-hover').forEach(n => n.classList.remove('list-item-hover'))
+  document.querySelectorAll('.with-control-hover').forEach(n => (
+    n.classList.remove('with-control-hover')
+  ))
 }

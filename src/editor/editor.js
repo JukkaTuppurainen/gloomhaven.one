@@ -1,37 +1,27 @@
-import editorHTML         from './editor.html'
 import editorControlsHTML from './editor.controls.html'
 import {
   createPieceBtnClick,
-  editorControlPaneHandler,
-  tileListBtnClick
+  tileListBtnClick,
+  updateEditorControls
 }                         from './editor.controls'
-import {
-  generateBoardFromLayoutString
-}                         from './editor.functions'
-import {pieceList}        from './editor.pieces'
 import {
   editorDocumentClick,
   editorDocumentMousedown,
   editorDocumentMousemove,
   editorDocumentMouseup
 }                         from './editor.events'
+import {board}            from '../board/board'
+import {pieceList}        from '../board/board.pieces'
+import {stopPropagation}  from '../index'
 
 
-export const editorGridDefaultHeight = 40
-export const editorGridDefaultWidth = 40
-export const editorPieces = []
 export const editor = {
-  blueprint: '',
   dragging: false,
   events: {
     click: editorDocumentClick
   },
   load: () => {
-    // Add editor html which contains the draggable pieces
-    const editor = document.createElement('div')
-    editor.id = 'editor'
-    editor.innerHTML = editorHTML
-    document.body.appendChild(editor)
+    board.editor = true
 
     // Add controls for editor
     const editorControls = document.createElement('div')
@@ -52,8 +42,8 @@ export const editor = {
     // Add event listener for list of used pieces
     document.getElementById('tile-list').addEventListener('click', tileListBtnClick)
 
-    document.getElementById('editor-controls').addEventListener('click', editorControlPaneHandler)
-    document.getElementById('editor-controls').addEventListener('mousedown', editorControlPaneHandler)
+    editorControls.addEventListener('click', stopPropagation)
+    editorControls.addEventListener('mousedown', stopPropagation)
 
     document.addEventListener('mousedown', editorDocumentMousedown)
     document.addEventListener('mousemove', editorDocumentMousemove)
@@ -64,37 +54,22 @@ export const editor = {
       window.location.hash &&
       window.location.hash.substr(0, 2) === '#:'
     ) {
-      generateBoardFromLayoutString(window.location.hash.substr(2))
+      editor.layout = window.location.hash.substr(2)
+      setTimeout(updateEditorControls)
     }
   },
   unload: () => {
-    editorPieces.length = 0
-    document.body.removeChild(document.getElementById('editor'))
+    board.editor = false
+
     document.body.removeChild(document.getElementById('editor-controls-wrap'))
     document.removeEventListener('mousedown', editorDocumentMousedown)
     document.removeEventListener('mousemove', editorDocumentMousemove)
     document.removeEventListener('mouseup', editorDocumentMouseup)
     document.body.classList.remove('editor-open')
-  },
-  grid: {
-    height: editorGridDefaultHeight,
-    width: editorGridDefaultWidth
-  },
-  style: {
-    // hexes: {
-    //   fill: '#000'
-    // },
-    // noHexes: {
-    //   line: '#222'
-    // },
-    // wallHexes: {
-    //   fill: '#00f4'
-    // },
-    hexHover: '#32005080',
-    noHexHover: '#58002460',
-    // thinWalls: {
-    //   line: '#f00',
-    //   width: 8
-    // }
+
+    const dragShadow = document.getElementById('drag-shadow')
+    if (dragShadow) {
+      document.body.removeChild(dragShadow)
+    }
   }
 }

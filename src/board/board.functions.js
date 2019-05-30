@@ -1,34 +1,15 @@
 import {
-  editor,
-  editorGridDefaultHeight,
-  editorGridDefaultWidth,
-  editorPieces
-}                             from './editor'
-import {pieceList}            from './editor.pieces'
-import {
   board,
-  cornersCoordinates,
-  Grid,
-  hexHeight,
-  hexWidth
-}                             from '../board/board'
-import {
-  fromChar,
-  hexCoordinatesToHexes,
-  parseHexString,
-  parseThinwallString
-}                             from '../board/board.functions'
-import {scenarioLoad}         from '../board/board.scenarioLoad'
+  cornersCoordinates
+}      from './board'
 import {
   getGridPxSize,
+  gridGet,
   rectangle,
   toPoint
-}                             from '../hexUtils'
-import {makeWall}             from '../makeWall'
-import {updateEditorControls} from './editor.controls'
+}                   from '../lib/hexUtils'
+import {pieceList}  from './board.pieces'
 
-
-export const toChar = n => String.fromCharCode(n + (n < 27 ? 96 : 38))
 
 export const createPiece = (x, y, pieceKey, angle = 0) => {
   const gridSize = {
@@ -192,11 +173,6 @@ export const findSnap = (piece, eventX, eventY) => {
   let dragPxX = eventX + cornersCoordinates[0].x + dragPoint.x
   let dragPxY = eventY + cornersCoordinates[0].y + dragPoint.y
 
-  if (editor.dragging !== false) {
-    dragPxX -= editor.dragging.x
-    dragPxY -= editor.dragging.y
-  }
-
   let distance
   let shortestDistance = 999
   let closestPoint = false
@@ -206,8 +182,8 @@ export const findSnap = (piece, eventX, eventY) => {
     if (
       hex.x > 0 &&
       hex.y > 0 &&
-      hex.x < editorGridDefaultWidth - piece.w &&
-      hex.y < editorGridDefaultHeight - piece.h
+      hex.x < board.gridSize.width - piece.w &&
+      hex.y < board.gridSize.height - piece.h
     ) {
       const point = toPoint(hex)
       const corner0 = {
@@ -230,128 +206,12 @@ export const findSnap = (piece, eventX, eventY) => {
   }
 }
 
-export const generateBlueprintString = () => {
-  const hexExport = {}
-  let blueprintString = ''
-
-  board.scenario.hexes.forEach(hex => {
-    if (!hexExport[hex.x]) {
-      hexExport[hex.x] = new Set()
-    }
-
-    hexExport[hex.x].add(hex.y)
-  })
-
-  let previousX = 0
-  let previousLastY = 99
-
-  Object.keys(hexExport).forEach(x => {
-    x = parseInt(x, 10)
-    const yArray = [...hexExport[x]].sort((a, b) => a > b ? 1 : -1)
-
-    if (
-      yArray[0] > previousLastY ||
-      x > previousX + 1
-    ) {
-      blueprintString += x
-    }
-
-    previousX = x
-    previousLastY = yArray[yArray.length - 1]
-
-    let i = 0
-    let start = 0
-
-    while (i < yArray.length) {
-      if (!start) {
-        start = yArray[i]
-      }
-      if (
-        (yArray[i + 1] > yArray[i] + 1) ||
-        i === yArray.length - 1
-      ) {
-        blueprintString += toChar(start) + toChar(yArray[i])
-        start = 0
-      }
-      ++i
-    }
-  })
-
-  if (board.scenario.thinWalls.length) {
-    blueprintString += '.'
-    board.scenario.thinWalls.forEach(thinWall => {
-      blueprintString += thinWall.meta.x + toChar(thinWall.meta.y)
-      if (thinWall.meta.s !== 1) {
-        blueprintString += toChar(thinWall.meta.s + 1)
-      }
-    })
-  }
-
-  return blueprintString
+export const fromChar = c => {
+  let n = c.charCodeAt(0)
+  return n > 96 ? n - 96 : n - 38
 }
 
-export const generateEditorBoard = () => {
-  const hexesCenterCoordinates = []
-
-  if (editorPieces.length) {
-    const center = {
-      x: hexWidth / 2,
-      y: hexHeight / 2
-    }
-
-    editorPieces.forEach(piece => {
-      piece.pieceHexes.forEach(pieceHex => {
-        const centerCoordinates = toPoint(pieceHex)
-        centerCoordinates.x += piece.x + center.x
-        centerCoordinates.y += piece.y + center.y
-        if (pieceHex.metaThinwalls) {
-          centerCoordinates.metaThinwalls = pieceHex.metaThinwalls
-        }
-
-        hexesCenterCoordinates.push(centerCoordinates)
-      })
-    })
-  }
-
-  delete board.playerHex
-  board.scenario.hexes.length = 0
-  board.scenario.thinWalls.length = 0
-
-  hexesCenterCoordinates.forEach(hexCenterCoordinates => {
-    const hexFromPoint = Grid.pointToHex(hexCenterCoordinates.x, hexCenterCoordinates.y)
-    board.scenario.hexes.push(hexFromPoint)
-
-    if (hexCenterCoordinates.metaThinwalls) {
-      hexCenterCoordinates.metaThinwalls.forEach(metaThinWall => {
-        makeWall(
-          hexFromPoint,
-          metaThinWall,
-          metaThinWall === 5 ? 0 : metaThinWall + 1,
-          true
-        )
-      })
-    }
-  })
-
-  editor.blueprint = generateBlueprintString()
-  scenarioLoad(editor)
-  generateBoardLayoutString()
-}
-
-const generateBoardLayoutString = () => {
-  let layoutString = ''
-
-  editorPieces.forEach(piece => {
-    layoutString += piece.ch.x + toChar(piece.ch.y) + (piece.name === 'door' ? '0' : piece.name)
-    if (piece.rotation > 0) {
-      layoutString += toChar((piece.rotation + 1) / 60)
-    }
-  })
-
-  window.location.hash = ':' + layoutString
-}
-
-export const generateBoardFromLayoutString = layoutString => {
+export const generatePiecesFromLayoutString = layoutString => {
   let i = 0
   let ii = 0
   let m
@@ -386,8 +246,7 @@ export const generateBoardFromLayoutString = layoutString => {
     piecesToCreate.push({x, y, n, r})
   }
 
-  scenarioLoad(editor)
-  const draggablePiecesElement = document.getElementById('draggable-pieces')
+  const boardElement = document.getElementById('board')
 
   piecesToCreate.forEach(pieceToCreate => {
     const point = toPoint(pieceToCreate)
@@ -397,10 +256,159 @@ export const generateBoardFromLayoutString = layoutString => {
       pieceToCreate.n,
       pieceToCreate.r
     )
-    draggablePiecesElement.appendChild(piece.element)
-    editorPieces.push(piece)
+    board.pieces.push(piece)
+    boardElement.appendChild(piece.element)
+  })
+}
+
+const hexSort = (a, b) => {
+  if (a.x > b.x) {
+    return 1
+  }
+  if (a.x < b.x) {
+    return -1
+  }
+  if (a.y > b.y) {
+    return 1
+  }
+  if (a.y < b.y) {
+    return -1
+  }
+  return 0
+}
+
+export const getDataFromBoardPieces = () => {
+  const hexesFromAllPieces = []
+  const thinWallsFromAllPieces = []
+
+  let x
+  let y
+
+  board.pieces.forEach(piece => {
+    piece.pieceHexes.forEach(hex => {
+      x = hex.x + piece.ch.x
+      y = hex.y + piece.ch.y
+
+      if (piece.ch.x % 2 === 1 && hex.x % 2 === 1) {
+        y++
+      }
+
+      if (!hexesFromAllPieces.find(existingHex => (
+        existingHex.x === x && existingHex.y === y
+      ))) {
+        hexesFromAllPieces.push({x, y})
+      }
+
+      if (hex.metaThinwalls) {
+        hex.metaThinwalls.forEach(s => {
+
+          if (!thinWallsFromAllPieces.find(existingThinWall => (
+            existingThinWall.x === x &&
+            existingThinWall.y === y &&
+            existingThinWall.s === s
+          ))) {
+            thinWallsFromAllPieces.push({x, y, s})
+          }
+        })
+      }
+    })
   })
 
-  generateEditorBoard()
-  updateEditorControls()
+  hexesFromAllPieces.sort(hexSort)
+  thinWallsFromAllPieces.sort(hexSort)
+
+  return {
+    hexes: hexesFromAllPieces,
+    thinWalls: thinWallsFromAllPieces
+  }
+}
+
+export const parseThinwallString = (thinWallString) => {
+  let s
+  let x = 0
+  let y
+  let i = 0
+  const walls = []
+
+  while (i < thinWallString.length) {
+    let m = thinWallString.substr(i).match(/^\d+/)
+    if (m) {
+      x = parseInt(m[0], 10)
+      i += m[0].length
+    } else {
+      y = fromChar(thinWallString.substr(i, 1))
+      ++i
+
+      if (i === thinWallString.length || thinWallString.substr(i, 1).match(/\d/)) {
+        s = 1
+      } else {
+        s = fromChar(thinWallString[i]) - 1
+        ++i
+      }
+
+      walls.push([x, y, s])
+    }
+  }
+
+  return walls
+}
+
+export const parseHexString = (hexString, gridSize, gridSizeAdjust = 0, hexCoordAdjust = 0) => {
+  let end
+  let i = 0
+  let previousLastY = 0
+  let start
+  let x = 1
+
+  const hexCoordinates = []
+
+  while (i < hexString.length) {
+    let m = hexString.substr(i).match(/^\d+/)
+    if (m) {
+      x = parseInt(m[0], 10)
+      i += m[0].length
+      previousLastY = 0
+    } else {
+      start = fromChar(hexString.substr(i, 1))
+      end = fromChar(hexString.substr(i + 1, 1))
+
+      if (start <= previousLastY) {
+        ++x
+      }
+
+      previousLastY = end
+
+      if (end + gridSizeAdjust > gridSize.height) {
+        gridSize.height = end + gridSizeAdjust
+      }
+
+      if (x + gridSizeAdjust > gridSize.width) {
+        gridSize.width = x + gridSizeAdjust
+      }
+
+      for (let y = start; y <= end; ++y) {
+        hexCoordinates.push(x + hexCoordAdjust, y + hexCoordAdjust)
+      }
+
+      i += 2
+    }
+  }
+
+  return hexCoordinates
+}
+
+export const hexCoordinatesToHexes = (hexCoordinates, grid) => {
+  const hexes = []
+
+  for (let i = 0; i < hexCoordinates.length; i += 2) {
+    const gridHex = gridGet({
+      x: hexCoordinates[i],
+      y: hexCoordinates[i + 1]
+    }, grid)
+    if (gridHex) {
+      hexes.push(gridHex)
+    }
+  }
+
+  return hexes
 }
