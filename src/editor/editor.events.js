@@ -101,6 +101,18 @@ export const editorDocumentClick = event => {
 }
 
 export const editorDocumentMousedown = event => {
+  editor.hoverPiece = false
+  board.pieces.forEach((piece, i) => {
+    if (
+      event.pageX >= piece.x &&
+      event.pageX <= piece.x + piece.pxW &&
+      event.pageY >= piece.y &&
+      event.pageY <= piece.y + piece.pxH
+    ) {
+      editor.hoverPiece = i
+    }
+  })
+
   if (editor.hoverPiece !== false) {
     mouseDownCoords = {
       x: event.pageX,
@@ -150,18 +162,6 @@ export const editorDocumentMousemove = event => {
     board.pieces[editor.hoverPiece].y = event.pageY - editor.dragging.y
     renderDOM()
     updateDragShadow(event.pageX, event.pageY)
-  } else {
-    editor.hoverPiece = false
-    board.pieces.forEach((piece, i) => {
-      if (
-        event.pageX >= piece.x &&
-        event.pageX <= piece.x + piece.pxW &&
-        event.pageY >= piece.y &&
-        event.pageY <= piece.y + piece.pxH
-      ) {
-        editor.hoverPiece = i
-      }
-    })
   }
 }
 
@@ -189,4 +189,34 @@ const renderDOM = () => {
   const draggedPieceStyle = piece.element.style
   draggedPieceStyle.left = `${piece.x}px`
   draggedPieceStyle.top = `${piece.y}px`
+}
+
+const synthesiseEventPageCoordinates = event => {
+  if (event.touches && event.touches[0]) {
+    event.pageX = event.touches[0].pageX
+    event.pageY = event.touches[0].pageY
+  }
+}
+
+let lastTouch = false
+
+export const editorTouchend = event => {
+  event.pageX = lastTouch.pageX
+  event.pageY = lastTouch.pageY
+  editorDocumentMouseup(event)
+  editorDocumentClick(event)
+}
+
+export const editorTouchmove = event => {
+  if (editor.hoverPiece !== false) {
+    event.preventDefault()
+  }
+  synthesiseEventPageCoordinates(event)
+  editorDocumentMousemove(event)
+  lastTouch = event
+}
+
+export const editorTouchstart = event => {
+  synthesiseEventPageCoordinates(event)
+  editorDocumentMousedown(event)
 }

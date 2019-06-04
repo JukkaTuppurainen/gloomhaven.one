@@ -8,7 +8,10 @@ import {
   editorDocumentClick,
   editorDocumentMousedown,
   editorDocumentMousemove,
-  editorDocumentMouseup
+  editorDocumentMouseup,
+  editorTouchend,
+  editorTouchmove,
+  editorTouchstart
 }                         from './editor.events'
 import {board}            from '../board/board'
 import {pieceList}        from '../board/board.pieces'
@@ -48,6 +51,9 @@ export const editor = {
     document.addEventListener('mousedown', editorDocumentMousedown)
     document.addEventListener('mousemove', editorDocumentMousemove)
     document.addEventListener('mouseup', editorDocumentMouseup)
+    document.addEventListener('touchend', editorTouchend)
+    document.addEventListener('touchmove', editorTouchmove, {passive: false})
+    document.addEventListener('touchstart', editorTouchstart)
     document.body.classList.add('editor-open')
 
     if (
@@ -65,6 +71,9 @@ export const editor = {
     document.removeEventListener('mousedown', editorDocumentMousedown)
     document.removeEventListener('mousemove', editorDocumentMousemove)
     document.removeEventListener('mouseup', editorDocumentMouseup)
+    document.removeEventListener('touchend', editorTouchend)
+    document.removeEventListener('touchmove', editorTouchmove)
+    document.removeEventListener('touchstart', editorTouchstart)
     document.body.classList.remove('editor-open')
 
     const dragShadow = document.getElementById('drag-shadow')
