@@ -3,6 +3,7 @@ import {
   cornersCoordinates
 }      from './board'
 import {
+  addPoint,
   getGridPxSize,
   gridGet,
   rectangle,
@@ -33,8 +34,6 @@ export const createPiece = (x, y, pieceKey, angle = 0) => {
   const hexString = stringSplit[0]
   const thinwallString = stringSplit[1]
   const pieceElement = document.createElement('div')
-  const pieceElementCanvas = document.createElement('canvas')
-  const pieceCtx = pieceElementCanvas.getContext('2d')
   const hexCoordinates = parseHexString(hexString, gridSize, 0, -1)
   const pieceGrid = rectangle(gridSize)
   const pieceHexes = hexCoordinatesToHexes(hexCoordinates, pieceGrid)
@@ -61,14 +60,10 @@ export const createPiece = (x, y, pieceKey, angle = 0) => {
   pieceElement.dataset['id'] = id
   pieceElement.dataset['singleTile'] = isSingleTile
   pieceElement.classList.add('map-tile', 'img-loading')
-  pieceElement.appendChild(pieceElementCanvas)
   pieceElement.style.height = `${pxSizeY}px`
   pieceElement.style.left = `${x}px`
   pieceElement.style.top = `${y}px`
   pieceElement.style.width = `${pxSizeX}px`
-  pieceElementCanvas.height = pxSizeY
-  pieceElementCanvas.width = pxSizeX
-  pieceCtx.strokeStyle = '#fff'
 
   if (pieceFromList.bitmap) {
     const img = document.createElement('img')
@@ -76,6 +71,26 @@ export const createPiece = (x, y, pieceKey, angle = 0) => {
     img.onerror = () => {
       pieceElement.classList.remove('img-loading')
       pieceElement.classList.add('img-error')
+
+      const pieceElementCanvas = document.createElement('canvas')
+      const pieceCtx = pieceElementCanvas.getContext('2d')
+      pieceElementCanvas.height = pxSizeY
+      pieceElementCanvas.width = pxSizeX
+      pieceElement.appendChild(pieceElementCanvas)
+
+      pieceCtx.fillStyle = '#0006'
+      pieceGrid.forEach(hex => {
+        if (pieceHexes.find(pieceHex => (
+          pieceHex.x === hex.x && pieceHex.y === hex.y
+        ))) {
+          const [firstCorner, ...otherCorners] = addPoint(cornersCoordinates, toPoint(hex))
+          pieceCtx.beginPath()
+          pieceCtx.moveTo(firstCorner.x, firstCorner.y)
+          otherCorners.forEach(({x, y}) => pieceCtx.lineTo(x, y))
+          pieceCtx.lineTo(firstCorner.x, firstCorner.y)
+          pieceCtx.fill()
+        }
+      })
     }
     img.src = pieceFromList.bitmap
     if (angle > 0) {
@@ -96,57 +111,7 @@ export const createPiece = (x, y, pieceKey, angle = 0) => {
     pieceElement.appendChild(img)
   }
 
-  // -- Temporary render start
-  // ---- grid for piece and highlight hexes based on blueprint
-  // pieceCtx.font = '15px Arial'
-  // pieceGrid.forEach(hex => {
-  //   pieceCtx.strokeStyle = '#f00'
-  //   const point = hex.toPoint()
-  //   const corners = cornersCoordinates.map(corner => corner.add(point))
-  //   const [firstCorner, ...otherCorners] = corners
-  //
-  //   pieceCtx.beginPath()
-  //   pieceCtx.moveTo(firstCorner.x, firstCorner.y)
-  //   otherCorners.forEach(({x, y}) => pieceCtx.lineTo(x, y))
-  //   pieceCtx.lineTo(firstCorner.x, firstCorner.y)
-  //   pieceCtx.stroke()
-  //
-  //   pieceCtx.fillStyle = '#fff'
-  //   pieceCtx.fillText(
-  //     String.fromCharCode(hex.y + 97),
-  //     firstCorner.x - 66,
-  //     firstCorner.y - 22
-  //   )
-  //   pieceCtx.fillStyle = '#f004'
-  //
-  //   if (pieceHexes.find(pieceHex => (
-  //     pieceHex.x === hex.x && pieceHex.y === hex.y
-  //   ))) {
-  //     pieceCtx.fill()
-  //   }
-  // })
-  // // ---- draw thinwalls
-  // pieceCtx.lineWidth = 15
-  // pieceCtx.strokeStyle = '#f0ff'
-  // pieceHexes.forEach(pieceHex => {
-  //   if (pieceHex.metaThinwalls) {
-  //     const point = pieceHex.toPoint()
-  //     const corners = cornersCoordinates.map(corner => corner.add(point))
-  //     pieceHex.metaThinwalls.forEach(m => {
-  //       pieceCtx.beginPath()
-  //       pieceCtx.moveTo(corners[m].x, corners[m].y)
-  //       m = m === 5 ? 0 : m + 1
-  //       pieceCtx.lineTo(corners[m].x, corners[m].y)
-  //       pieceCtx.stroke()
-  //     })
-  //   }
-  // })
-  // pieceCtx.lineWidth = 1
-  // -- Temporary render end
-
   const piece = {
-    canvas: pieceElementCanvas,
-    ctx: pieceCtx,
     element: pieceElement,
     grid: pieceGrid,
     h: gridSize.height,

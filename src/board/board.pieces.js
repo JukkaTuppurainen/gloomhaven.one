@@ -299,7 +299,7 @@ export const pieceList = {
       0: 'aa'
     },
     styles: {
-      0: {left: 0, top: 0}
+      0: {left: 1, top: -1}
     },
     symmetrical: true
   },

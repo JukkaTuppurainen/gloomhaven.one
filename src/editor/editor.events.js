@@ -28,8 +28,8 @@ export const startDragging = (x, y) => {
   const hoverPiece = board.pieces[editor.hoverPiece]
   const dragShadowElement = document.createElement('canvas')
   dragShadowElement.id = 'drag-shadow'
-  dragShadowElement.height = hoverPiece.canvas.height
-  dragShadowElement.width = hoverPiece.canvas.width
+  dragShadowElement.height = hoverPiece.pxH
+  dragShadowElement.width = hoverPiece.pxW
 
   const dragShadowCtx = dragShadowElement.getContext('2d')
   dragShadowCtx.fillStyle = '#f006'
