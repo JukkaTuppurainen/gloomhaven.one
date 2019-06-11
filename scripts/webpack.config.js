@@ -1,5 +1,8 @@
-const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin')
+const path = require('path')
+const TerserPlugin = require('terser-webpack-plugin')
 const WebpackShellPlugin = require('webpack-shell-plugin')
 
 module.exports = {
@@ -29,8 +32,23 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        use: ['style-loader', 'css-loader']
+        use: [
+          {
+            loader: MiniCssExtractPlugin.loader,
+            options: {
+              hmr: false
+            }
+          },
+          'css-loader'
+        ]
       }
+    ]
+  },
+  optimization: {
+    minimize: true,
+    minimizer: [
+      new OptimizeCSSAssetsPlugin({}),
+      new TerserPlugin()
     ]
   },
   output: {
@@ -56,6 +74,7 @@ module.exports = {
     }),
     new WebpackShellPlugin({
       onBuildStart: ['node scripts/build.js']
-    })
+    }),
+    new MiniCssExtractPlugin({})
   ]
 }
