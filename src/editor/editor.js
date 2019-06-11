@@ -1,8 +1,8 @@
 import editorControlsHTML from './editor.controls.html'
 import {
-  createPieceBtnClick,
-  tileListBtnClick,
-  updateEditorControls
+  editorToggleChange,
+  tileSelectChange,
+  updateTileSelectOptions
 }                         from './editor.controls'
 import {
   editorDocumentClick,
@@ -32,18 +32,18 @@ export const editor = {
     editorControls.innerHTML = editorControlsHTML
     document.body.appendChild(editorControls)
 
-    // Add event listener and list of available pieces
-    const tileButtons = document.getElementById('tile-btns')
-    tileButtons.addEventListener('click', createPieceBtnClick)
+    // Tile creation select
+    const tileSelect = document.getElementById('tile-select')
+    tileSelect.addEventListener('change', tileSelectChange)
+    setTimeout(updateTileSelectOptions)
     Object.keys(pieceList).forEach(key => {
-      const addPieceBtn = document.createElement('button')
-      addPieceBtn.innerText = key
-      addPieceBtn.dataset['piece'] = key
-      tileButtons.appendChild(addPieceBtn)
+      const option = document.createElement('option')
+      option.innerText = key
+      option.value = key
+      tileSelect.appendChild(option)
     })
 
-    // Add event listener for list of used pieces
-    document.getElementById('tile-list').addEventListener('click', tileListBtnClick)
+    document.getElementById('editor-toggle').addEventListener('change', editorToggleChange)
 
     editorControls.addEventListener('click', stopPropagation)
     editorControls.addEventListener('mousedown', stopPropagation)
@@ -61,7 +61,6 @@ export const editor = {
       window.location.hash.substr(0, 2) === '#:'
     ) {
       editor.layout = window.location.hash.substr(2)
-      setTimeout(updateEditorControls)
     }
   },
   unload: () => {
@@ -74,7 +73,7 @@ export const editor = {
     document.removeEventListener('touchend', editorTouchend)
     document.removeEventListener('touchmove', editorTouchmove)
     document.removeEventListener('touchstart', editorTouchstart)
-    document.body.classList.remove('editor-open')
+    document.body.classList.remove('editor-open', 'editor-on')
 
     const dragShadow = document.getElementById('drag-shadow')
     if (dragShadow) {

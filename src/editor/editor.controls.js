@@ -1,9 +1,12 @@
-import {editor}               from './editor'
-import {startDragging}        from './editor.events'
-import {generateEditorBoard}  from './editor.functions'
-import {board}                from '../board/board'
-import {createPiece}          from '../board/board.functions'
-import {render}               from '../index'
+import {editor}       from './editor'
+import {
+  generateEditorBoard,
+  startDragging
+}                     from './editor.functions'
+import {board}        from '../board/board'
+import {createPiece}  from '../board/board.functions'
+import {pieceList}    from '../board/board.pieces'
+import {render}       from '../index'
 
 
 const pieceSort = (a, b) => {
@@ -26,111 +29,178 @@ const elementSort = (a, b) => {
   return a.dataset['id'] > b.dataset['id'] ? 1 : -1
 }
 
-export const createPieceBtnClick = event => {
-  if (event.target.nodeName === 'BUTTON') {
-    const pieceKey = event.target.dataset['piece']
-    const piece = createPiece(event.pageX, event.pageY, pieceKey)
-    const boardElement = document.getElementById('board')
+const deletePiece = index => {
+  board.pieces.splice(index, 1)
 
-    boardElement.appendChild(piece.element)
-    ;[...boardElement.children]
-      .sort(elementSort)
-      .forEach(node => boardElement.appendChild(node))
+  document.getElementById('board').removeChild(
+    document.querySelectorAll('.map-tile')[index]
+  )
 
-    board.pieces.push(piece)
-    board.pieces.sort(pieceSort)
+  document.getElementById('piece-controls').removeChild(
+    document.querySelectorAll('.control-wrap')[index]
+  )
 
-    editor.hoverPiece = board.pieces.findIndex(p => p.id === piece.id)
-
-    startDragging(0, 0)
-
-    updateEditorControls()
-  }
+  generateEditorBoard()
+  updateTileSelectOptions()
+  createPieceControls()
 }
 
-export const updateEditorControls = () => {
-  const pieceListElement = document.getElementById('tile-list')
-  pieceListElement.innerHTML = ''
+const rotatePiece = (index, angle) => {
+  const piece = board.pieces[index]
+  const name = piece.name
+  angle = piece.rotation + angle
+  if (angle >= 360) {
+    angle -= 360
+  }
+  const boardElement = document.getElementById('board')
 
-  document.querySelectorAll('#tile-btns button').forEach(n => n.removeAttribute('disabled'))
+  boardElement.removeChild(
+    document.querySelectorAll('.map-tile')[index]
+  )
 
+  const newPiece = createPiece(piece.x, piece.y, name, angle)
+  board.pieces.splice(index, 1)
+  board.pieces.push(newPiece)
+  board.pieces.sort(pieceSort)
+
+  boardElement.appendChild(newPiece.element)
+
+  ;[...boardElement.children]
+    .sort(elementSort)
+    .forEach(node => boardElement.appendChild(node))
+
+  generateEditorBoard()
+  updateTileSelectOptions()
+  createPieceControls()
+}
+
+export const updateTileSelectOptions = () => {
+  const tileSelect = document.getElementById('tile-select')
+  tileSelect.innerHTML = '<option value=""></option>'
+  tileSelect.value = ''
+  Object.keys(pieceList)
+    .filter(key => (
+      key === 'door' || (
+        board.pieces &&
+        !board.pieces.find(a => a.name.substr(0, 2) === key.substr(0, 2))
+      )
+    ))
+    .forEach(key => {
+      const option = document.createElement('option')
+      option.innerText = key
+      option.value = key
+      tileSelect.appendChild(option)
+    })
+}
+
+export const tileSelectChange = event => {
+  const piece = createPiece(event.pageX, event.pageY, event.target.value)
+  const boardElement = document.getElementById('board')
+
+  boardElement.appendChild(piece.element)
+  ;[...boardElement.children]
+    .sort(elementSort)
+    .forEach(node => boardElement.appendChild(node))
+
+  board.pieces.push(piece)
+  board.pieces.sort(pieceSort)
+
+  editor.hoverPiece = board.pieces.findIndex(p => p.id === piece.id)
+
+  startDragging(0, 0)
+
+  updateTileSelectOptions()
+  createPieceControls()
+  event.target.value = ''
+}
+
+export const updatePieceControlPositions = () => {
   board.pieces.forEach((piece, i) => {
-    const pieceListItem = document.createElement('li')
-    pieceListItem.id = piece.id
+    const image = piece.element.children[0]
+    const pieceControlWrap = document.querySelectorAll('.control-wrap')[i]
 
-    let html = `<span>${piece.name}</span><span>`
-    if (!piece.isSingleTile) {
-      html += `<button data-angle="60" data-rotate="${i}" type="button">60°</button><button data-angle="180" data-rotate="${i}" type="button">180°</button>`
+    if (image.style.transform) {
+      const m = image.style.transform.match(/rotate\((\d+)/)
+      if (m[1]) {
+        if (image.width === 0) {
+          let prevOnLoad
+          if (image.onload) {
+            prevOnLoad = image.onload
+          }
+
+          pieceControlWrap.style.display = 'none'
+
+          image.onload = () => {
+            pieceControlWrap.style.display = 'block'
+            pieceControlWrap.style.transformOrigin = `${image.width / 2}px ${image.height / 2}px`
+            prevOnLoad()
+          }
+        }
+
+        pieceControlWrap.style.transform = `rotate(${parseInt(m[1])}deg)`
+        pieceControlWrap.style.transformOrigin = `${image.width / 2}px ${image.height / 2}px`
+      }
+    } else {
+      pieceControlWrap.style.transform = ''
     }
-    html += `<button data-delete="${i}" type="button">X</button></span>`
 
-    pieceListItem.innerHTML = html
-    pieceListElement.appendChild(pieceListItem)
+    pieceControlWrap.style.left =
+      parseFloat(piece.element.style.left, 10) +
+      (parseFloat(image.style.left, 10) || -38) +
+      'px'
 
-    pieceListItem.addEventListener('mouseenter', tileListMouseenter)
-    pieceListItem.addEventListener('mouseleave', tileListMouseleave)
-
-    if (!piece.isSingleTile) {
-      document.querySelector(`button[data-piece="${piece.name}"]`).setAttribute('disabled', true)
-    }
+    pieceControlWrap.style.top =
+      parseFloat(piece.element.style.top, 10) +
+      (parseFloat(image.style.top, 10) || -16) +
+      'px'
   })
 }
 
-export const tileListBtnClick = event => {
-  if (event.target.nodeName === 'BUTTON') {
-    if (event.target.dataset['delete']) {
-      const index = parseInt(event.target.dataset['delete'], 10)
-      board.pieces.splice(index, 1)
-      updateEditorControls()
+const createPieceControls = () => {
+  const pieceControls = document.getElementById('piece-controls')
+  pieceControls.innerHTML = ''
 
-      document.getElementById('board').removeChild(
-        document.querySelectorAll('.map-tile')[index]
-      )
+  board.pieces.forEach((piece, i) => {
+    const pieceControlWrap = document.createElement('div')
+    pieceControlWrap.classList.add('control-wrap')
 
-      generateEditorBoard()
+    if (!piece.isSingleTile) {
+      const btn1 = document.createElement('button')
+      btn1.classList.add('control-button', 'control-button-1')
+      btn1.addEventListener('click', () => rotatePiece(i, 60))
+      pieceControlWrap.appendChild(btn1)
+
+      const btn2 = document.createElement('button')
+      btn2.classList.add('control-button', 'control-button-2')
+      btn2.addEventListener('click', () => rotatePiece(i, 180))
+      pieceControlWrap.appendChild(btn2)
     }
-    if (event.target.dataset['rotate']) {
-      const index = parseInt(event.target.dataset['rotate'], 10)
-      let angle = parseInt(event.target.dataset['angle'], 10)
-      const piece = board.pieces[index]
-      const name = piece.name
-      angle = piece.rotation + angle
-      if (angle >= 360) {
-        angle -= 360
-      }
-      const boardElement = document.getElementById('board')
 
-      boardElement.removeChild(
-        document.querySelectorAll('.map-tile')[index]
-      )
+    const btn3 = document.createElement('button')
+    btn3.classList.add('control-button', 'control-button-3')
+    btn3.addEventListener('click', () => deletePiece(i))
+    pieceControlWrap.appendChild(btn3)
 
-      const newPiece = createPiece(piece.x, piece.y, name, angle)
-      board.pieces.splice(index, 1)
-      board.pieces.push(newPiece)
-      board.pieces.sort(pieceSort)
+    pieceControls.appendChild(pieceControlWrap)
+  })
 
-      boardElement.appendChild(newPiece.element)
+  updatePieceControlPositions()
+}
 
-      ;[...boardElement.children]
-        .sort(elementSort)
-        .forEach(node => boardElement.appendChild(node))
-
-      generateEditorBoard()
-      updateEditorControls()
-    }
+export const editorToggleChange = event => {
+  if (event.target.checked) {
+    document.body.classList.add('editor-on')
+    createPieceControls()
+    editor.on = true
+    delete board.playerHex
+    board.style.hexHover = '#0000'
+    board.style.noHexHover = '#0000'
+    render()
+  } else {
+    document.body.classList.remove('editor-on')
+    document.getElementById('piece-controls').innerHTML = ''
+    editor.on = false
+    board.style.hexHover = '#32005080'
+    board.style.noHexHover = '#50003280'
   }
-}
-
-const tileListMouseenter = event => {
-  delete board.playerHex
-  board.pieces
-    .find(p => p.id === event.target.id)
-    .element.classList.add('with-control-hover')
-  render()
-}
-
-const tileListMouseleave = () => {
-  document.querySelectorAll('.with-control-hover').forEach(n => (
-    n.classList.remove('with-control-hover')
-  ))
 }

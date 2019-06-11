@@ -555,8 +555,12 @@ export const pieceList = {
     bitmap: bitmap_I1b,
     blueprints: blueprints_I,
     styles: {
-      0: {left: -56, top: -27},
-      180: {left: -47, top: -18}
+      0: {left: -55, top: -26},
+      60: {left: 84, top: 51},
+      120: {left: 88, top: 3},
+      180: {left: -48, top: -17},
+      240: {left: 81, top: 61},
+      300: {left: 78, top: 5}
     },
     symmetrical: true
   },
