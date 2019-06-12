@@ -1,13 +1,12 @@
 import {
-  Hex,
   hexHeight,
   hexWidth
 } from '../board/board'
 
 
-export const addPoint = (corners, point) => corners.map(c => ({
-  x: c.x + point.x,
-  y: c.y + point.y
+export const addPoint = (corners, point) => Object.entries(corners).map(c => ({
+  x: c[1].x + point.x,
+  y: c[1].y + point.y
 }))
 
 export const toPoint = hex => {
@@ -104,12 +103,57 @@ export const neighborsOf = ({x, y}, {height, width}) => {
   return neighbors
 }
 
+export const pointToHex = (xCoordinate, yCoordinate) => {
+  let x = xCoordinate / (hexWidth * .75)
+  let y = yCoordinate / hexHeight
+
+  let xf = x - (x | 0)
+  x |= 0
+
+  if (x % 2 === 1 && y < .5) {
+    y -= 1
+  }
+  if (xf < .33) {
+    xf *= 3
+    let yf = y - (y | 0)
+    y |= 0
+    if (x % 2 === 1) {
+      yf += .5
+      if (yf >= 1) {
+        yf -= 1
+      }
+      if (yf < 0) {
+        yf += 1
+      }
+    }
+    if (yf > .5) {
+      if (xf < (yf - .5) * 2) {
+        x -= 1
+      } else if (x % 2 === 1) {
+        y -= 1
+      }
+    } else if (xf < (1 - yf * 2)) {
+      if (x % 2 === 0) {
+        y -= 1
+      }
+      x -= 1
+    }
+  } else {
+    if (x % 2 === 1) {
+      y -= .5
+    }
+    y |= 0
+  }
+
+  return {x, y}
+}
+
 export const rectangle = gridSize => {
   const rectangle = []
 
   for (let x = 0; x < gridSize.width; ++x) {
     for (let y = 0; y < gridSize.height; ++y) {
-      rectangle.push(Hex(x, y))
+      rectangle.push({x, y})
     }
   }
 

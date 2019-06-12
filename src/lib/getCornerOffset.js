@@ -1,12 +1,17 @@
 import {
   board,
-  cornersCoordinates
+  cornersCoordinates,
+  hexSize
 } from '../board/board'
+import {
+  gridGet,
+  toPoint
+} from './hexUtils'
 
 
 export const getCornerOffset = (x, y, c) => {
-  let hex = board.grid.get({x, y})
-  let point = hex.toPoint()
+  let hex = gridGet({x, y}, board.grid)
+  let point = toPoint(hex)
   let corners = cornersCoordinates.map(c => c.add(point))
 
   let centerx = 0
@@ -20,7 +25,7 @@ export const getCornerOffset = (x, y, c) => {
   centerx /= 6
   centery /= 6
 
-  const extraWallDistance = board.settings.hexSize / 30
+  const extraWallDistance = hexSize / 30
 
   let dx = centerx - corners[c].x
   let dy = centery - corners[c].y

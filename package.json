@@ -11,9 +11,7 @@
   "author": "Jukka Tuppurainen",
   "license": "ISC",
   "private": true,
-  "dependencies": {
-    "honeycomb-grid": "^1.4.1"
-  },
+  "dependencies": {},
   "devDependencies": {
     "css-loader": "^2.1.0",
     "extract-text-webpack-plugin": "^3.0.2",

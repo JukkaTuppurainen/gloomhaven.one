@@ -1,5 +1,3 @@
-import * as Honeycomb from 'honeycomb-grid/src/honeycomb'
-
 import {
   scenarioInit,
   scenarioLoad
@@ -16,20 +14,18 @@ import {editor}       from '../editor/editor'
 import {scenarioList} from '../scenarios'
 
 
-const hexSize = 45
-const orientation = 'flat' // 'pointy'
+export const hexSize = 45
+export const hexHeight = Math.sqrt(3) * hexSize
+export const hexWidth = hexSize * 2
 
-export const Hex = Honeycomb.extendHex({
-  size: hexSize,
-  orientation
-})
-
-const exampleHex = Hex()
-export const Grid = Honeycomb.defineGrid(Hex)
-
-export const cornersCoordinates = exampleHex.corners()
-export const hexHeight = exampleHex.height()
-export const hexWidth = exampleHex.width()
+export const cornersCoordinates = {
+  0: {x: hexWidth,       y: hexHeight / 2},
+  1: {x: hexWidth * .75, y: hexHeight},
+  2: {x: hexWidth * .25, y: hexHeight},
+  3: {x: 0,              y: hexHeight / 2},
+  4: {x: hexWidth * .25, y: 0},
+  5: {x: hexWidth * .75, y: 0}
+}
 
 const defaultEvents = {
   click: boardClick,
@@ -92,10 +88,6 @@ export const board = {
     delete board.playerHex
   },
   scenario: null,
-  settings: {
-    hexSize,
-    orientation
-  },
   style: {
     // hexes: {
     //   fill: '#000'

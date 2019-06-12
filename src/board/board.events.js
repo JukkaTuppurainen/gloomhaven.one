@@ -1,12 +1,10 @@
-import {
-  board,
-  Grid
-}               from './board'
-import {render} from '../index'
+import {board}      from './board'
+import {render}     from '../index'
+import {pointToHex} from '../lib/hexUtils'
 
 
 export const boardMousemove = event => {
-  const newMouseHex = Grid.pointToHex(event.layerX, event.layerY)
+  const newMouseHex = pointToHex(event.layerX, event.layerY)
 
   if (
     newMouseHex.x >= 0 &&
@@ -39,7 +37,7 @@ export const boardMouseLeave = () => {
 }
 
 export const boardClick = event => {
-  const clickHex = Grid.pointToHex(event.layerX, event.layerY)
+  const clickHex = pointToHex(event.layerX, event.layerY)
   // if (clickHex) {
   //   console.log('clickHex:', clickHex)
   // }
