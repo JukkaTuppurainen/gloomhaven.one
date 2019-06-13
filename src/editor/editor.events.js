@@ -121,7 +121,10 @@ export const editorTouchend = event => {
 }
 
 export const editorTouchmove = event => {
-  if (editor.hoverPiece !== false) {
+  if (
+    editor.on &&
+    editor.hoverPiece !== false
+  ) {
     event.preventDefault()
   }
   synthesiseEventPageCoordinates(event)

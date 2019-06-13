@@ -7,6 +7,7 @@ import {board}        from '../board/board'
 import {createPiece}  from '../board/board.functions'
 import {pieceList}    from '../board/board.pieces'
 import {render}       from '../index'
+import {resolveLOS}   from '../lib/resolveLOS'
 
 
 const pieceSort = (a, b) => {
@@ -187,20 +188,29 @@ const createPieceControls = () => {
   updatePieceControlPositions()
 }
 
+const setEditorOn = () => {
+  document.body.classList.add('editor-on')
+  createPieceControls()
+  editor.on = true
+  delete board.playerHex
+  resolveLOS()
+  board.style.hexHover = '#0000'
+  board.style.noHexHover = '#0000'
+  render()
+}
+
+export const setEditorOff = () => {
+  document.body.classList.remove('editor-on')
+  document.getElementById('piece-controls').innerHTML = ''
+  editor.on = false
+  board.style.hexHover = '#32005080'
+  board.style.noHexHover = '#50003280'
+}
+
 export const editorToggleChange = event => {
   if (event.target.checked) {
-    document.body.classList.add('editor-on')
-    createPieceControls()
-    editor.on = true
-    delete board.playerHex
-    board.style.hexHover = '#0000'
-    board.style.noHexHover = '#0000'
-    render()
+    setEditorOn()
   } else {
-    document.body.classList.remove('editor-on')
-    document.getElementById('piece-controls').innerHTML = ''
-    editor.on = false
-    board.style.hexHover = '#32005080'
-    board.style.noHexHover = '#50003280'
+    setEditorOff()
   }
 }

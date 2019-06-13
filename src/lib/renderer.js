@@ -24,23 +24,23 @@ export const renderer = () => {
   let hoverHex = false
   const style = board.style
 
-  if ('noHexes' in style) {
-    board.grid
-      .filter(gridHex => !board.scenario.hexes.find(hex => hex.x === gridHex.x && hex.y === gridHex.y))
-      .filter(gridHex => !board.scenario.wallHexes.find(hex => hex.x === gridHex.x && hex.y === gridHex.y))
-      .forEach(gridHex => {
-        const [firstCorner, ...otherCorners] = addPoint(cornersCoordinates, toPoint(gridHex))
-
-        ctx.beginPath()
-        ctx.moveTo(firstCorner.x, firstCorner.y)
-        otherCorners.forEach(({x, y}) => ctx.lineTo(x, y))
-        ctx.lineTo(firstCorner.x, firstCorner.y)
-        if (style.noHexes.line) {
-          ctx.strokeStyle = applyStyle(style.noHexes.line, gridHex)
-          ctx.stroke()
-        }
-      })
-  }
+  // if ('noHexes' in style) {
+  //   board.grid
+  //     .filter(gridHex => !board.scenario.hexes.find(hex => hex.x === gridHex.x && hex.y === gridHex.y))
+  //     .filter(gridHex => !board.scenario.wallHexes.find(hex => hex.x === gridHex.x && hex.y === gridHex.y))
+  //     .forEach(gridHex => {
+  //       const [firstCorner, ...otherCorners] = addPoint(cornersCoordinates, toPoint(gridHex))
+  //
+  //       ctx.beginPath()
+  //       ctx.moveTo(firstCorner.x, firstCorner.y)
+  //       otherCorners.forEach(({x, y}) => ctx.lineTo(x, y))
+  //       ctx.lineTo(firstCorner.x, firstCorner.y)
+  //       if (style.noHexes.line) {
+  //         ctx.strokeStyle = applyStyle(style.noHexes.line, gridHex)
+  //         ctx.stroke()
+  //       }
+  //     })
+  // }
 
   board.scenario.wallHexes.forEach(wallHex => {
     const [firstCorner, ...otherCorners] = addPoint(cornersCoordinates, toPoint(wallHex))
@@ -71,56 +71,48 @@ export const renderer = () => {
     }
   })
 
+  ctx.fillStyle = '#000a'
   board.scenario.hexes.forEach(hex => {
-    const [firstCorner, ...otherCorners] = addPoint(cornersCoordinates, toPoint(hex))
+    if (hex.inSight === false) {
+      const [firstCorner, ...otherCorners] = addPoint(cornersCoordinates, toPoint(hex))
+
+      ctx.beginPath()
+      ctx.moveTo(firstCorner.x, firstCorner.y)
+      otherCorners.forEach(({x, y}) => ctx.lineTo(x, y))
+      ctx.lineTo(firstCorner.x, firstCorner.y)
+      ctx.fill()
+    }
+  })
+
+  if (board.mouseHex) {
+    const isTileHover = board.scenario.hexes.find(hex => hex.x === board.mouseHex.x && hex.y === board.mouseHex.y)
+
+    if (isTileHover && style.hexHover) {
+      const [firstCorner, ...otherCorners] = addPoint(cornersCoordinates, toPoint(board.mouseHex))
+
+      ctx.beginPath()
+      ctx.moveTo(firstCorner.x, firstCorner.y)
+      otherCorners.forEach(({x, y}) => ctx.lineTo(x, y))
+      ctx.lineTo(firstCorner.x, firstCorner.y)
+      ctx.fillStyle = applyStyle(style.hexHover)
+      ctx.fill()
+      hoverHex = true
+    }
+  }
+
+  // Player
+  if (board.playerHex) {
+    const [firstCorner, ...otherCorners] = addPoint(cornersCoordinates, toPoint(board.playerHex))
 
     ctx.beginPath()
     ctx.moveTo(firstCorner.x, firstCorner.y)
     otherCorners.forEach(({x, y}) => ctx.lineTo(x, y))
     ctx.lineTo(firstCorner.x, firstCorner.y)
+    ctx.fillStyle = '#00f8'
+    ctx.fill()
 
-    if (style.hexes) {
-      if (style.hexes.line) {
-        ctx.strokeStyle = style.hexes.line
-        ctx.stroke()
-      }
-
-      if (style.hexes.fill) {
-        ctx.fillStyle = style.hexes.fill
-        ctx.fill()
-      }
-    }
-
-    ctx.closePath()
-
-    let isMouseHex = hex.x === board.mouseHex.x && hex.y === board.mouseHex.y
-    let responseToisInSight = board.playerHex && isInSight(board.playerHex, hex, isMouseHex)
-
-    if (isMouseHex && responseToisInSight instanceof Array) {
-      linesToHover = responseToisInSight
-    }
-
-    // Line of sight
-    if (responseToisInSight === false) {
-      ctx.fillStyle = '#000a'
-      ctx.fill()
-    }
-
-    // Hex hover
-    if (hex.x === board.mouseHex.x && hex.y === board.mouseHex.y) {
-      if (style.hexHover) {
-        ctx.fillStyle = applyStyle(style.hexHover)
-        ctx.fill()
-      }
-      hoverHex = true
-    }
-
-    // Player
-    if (board.playerHex && hex.x === board.playerHex.x && hex.y === board.playerHex.y) {
-      ctx.fillStyle = '#00f8'
-      ctx.fill()
-    }
-  })
+    linesToHover = isInSight(board.playerHex, board.mouseHex, true)
+  }
 
   // Numbers on hexes
   // ctx.font = '14px Arial'
@@ -150,18 +142,6 @@ export const renderer = () => {
       ctx.fillStyle = applyStyle(style.noHexHover)
       ctx.fill()
     }
-  }
-
-  if (style.thinWalls) {
-    ctx.lineWidth = style.thinWalls.width
-    ctx.strokeStyle = style.thinWalls.line
-    board.scenario.thinWalls.forEach(thinWall => {
-      ctx.beginPath()
-      ctx.moveTo(thinWall.x1, thinWall.y1)
-      ctx.lineTo(thinWall.x2, thinWall.y2)
-      ctx.stroke()
-    })
-    ctx.lineWidth = 1
   }
 
   // Draw walls

@@ -1,21 +1,22 @@
-import {editor}   from './editor'
+import {editor}     from './editor'
+import {
+  updatePieceControlPositions
+}                   from './editor.controls'
 import {
   board,
   cornersCoordinates
-}                 from '../board/board'
+}                   from '../board/board'
+import {findSnap}   from '../board/board.functions'
 import {
   clearScenario,
   scenarioLoad
-}                 from '../board/board.scenarioLoad'
-import {render}   from '../index'
+}                   from '../board/board.scenarioLoad'
+import {render}     from '../index'
 import {
   addPoint,
   toPoint
-}                 from '../lib/hexUtils'
-import {
-  updatePieceControlPositions
-}                 from './editor.controls'
-import {findSnap} from '../board/board.functions'
+}                   from '../lib/hexUtils'
+import {resolveLOS} from '../lib/resolveLOS'
 
 
 const toChar = n => String.fromCharCode(n + (n < 27 ? 96 : 38))
@@ -42,6 +43,7 @@ const generateBoardLayoutString = () => {
 
 export const startDragging = (x, y) => {
   delete board.playerHex
+  resolveLOS()
   document.body.classList.add('editor-dragging')
   document.getElementById('editor-controls').style.display = 'none'
   editor.dragging = {x, y}

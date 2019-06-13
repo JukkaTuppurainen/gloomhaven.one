@@ -1,6 +1,7 @@
 import {board}      from './board'
 import {render}     from '../index'
 import {pointToHex} from '../lib/hexUtils'
+import {resolveLOS} from '../lib/resolveLOS'
 
 
 export const boardMousemove = event => {
@@ -57,5 +58,6 @@ export const boardClick = event => {
     ? null
     : clickHex
 
+  resolveLOS()
   render()
 }

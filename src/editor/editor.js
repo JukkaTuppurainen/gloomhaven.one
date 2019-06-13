@@ -1,6 +1,7 @@
 import editorControlsHTML from './editor.controls.html'
 import {
   editorToggleChange,
+  setEditorOff,
   tileSelectChange,
   updateTileSelectOptions
 }                         from './editor.controls'
@@ -65,7 +66,7 @@ export const editor = {
   },
   unload: () => {
     board.editor = false
-
+    setEditorOff()
     document.body.removeChild(document.getElementById('editor-controls-wrap'))
     document.removeEventListener('mousedown', editorDocumentMousedown)
     document.removeEventListener('mousemove', editorDocumentMousemove)

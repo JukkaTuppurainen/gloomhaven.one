@@ -89,20 +89,7 @@ export const board = {
   },
   scenario: null,
   style: {
-    // hexes: {
-    //   fill: '#000'
-    // },
-    // noHexes: {
-    //   line: '#222'
-    // },
-    // wallHexes: {
-    //   fill: '#00f4'
-    // },
     hexHover: '#32005080',
-    noHexHover: '#58002460',
-    // thinWalls: {
-    //   line: '#f00',
-    //   width: 8
-    // }
+    noHexHover: '#58002460'
   }
 }
