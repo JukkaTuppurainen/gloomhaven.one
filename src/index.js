@@ -67,6 +67,22 @@ canvas.addEventListener('mousemove', event => board.events('mousemove', event))
 canvas.addEventListener('mouseout', event => board.events('mouseup', event))
 canvas.addEventListener('mouseup', event => board.events('mouseup', event))
 
+let keyboardInteraction = false
+
+document.addEventListener('keydown', () => {
+  if (!keyboardInteraction) {
+    document.body.classList.add('keyboard')
+  }
+  keyboardInteraction = true
+}, {capture: true})
+
+document.addEventListener('mousedown', () => {
+  if (keyboardInteraction) {
+    document.body.classList.remove('keyboard')
+  }
+  keyboardInteraction = false
+}, {capture: true})
+
 // document.getElementById('los-mode').addEventListener('change', event => {
 //   board.losMode = event.target.value === '1'
 //   render()

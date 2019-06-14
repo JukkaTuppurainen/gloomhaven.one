@@ -57,11 +57,11 @@ select {
   border: 1px solid #fff;
   box-shadow: none;
   color: #fff;
+  cursor: pointer;
   display: inline-block;
 }
 
 button {
-  cursor: pointer;
   margin: 0 5px 5px 0;
 }
 
@@ -214,7 +214,7 @@ button.active {
 .control-wrap {
   height: 0;
   position: absolute;
-  width: 170px;
+  width: 220px;
 }
 
 .editor-dragging .control-wrap {
@@ -224,19 +224,23 @@ button.active {
 .control-button {
   background: #000 -1px -1px;
   height: 40px;
-  left: 8px;
-  margin-right: 16px;
+  margin: 16px;
   position: relative;
-  top: 8px;
   width: 40px;
 }
 
-.control-button:hover {
-  border-color: #c0f;
+input:focus,
+select:focus,
+.control-button:focus {
+  outline: none;
 }
 
-.control-button:focus {
-  outline: 1px dotted #ccc;
+.keyboard input:focus,
+.keyboard select:focus,
+.keyboard .toggle input:focus + label,
+.keyboard .control-button:focus {
+  outline: 2px solid #a0f;
+  outline-offset: 0;
 }
 
 .control-button-1 {
