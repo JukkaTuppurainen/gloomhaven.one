@@ -29,9 +29,21 @@ export const generateEditorBoard = () => {
 
 const generateBoardLayoutString = () => {
   let layoutString = ''
+  let k
 
   board.pieces.forEach(piece => {
-    layoutString += piece.ch.x + toChar(piece.ch.y) + (piece.name === 'door' ? '0' : piece.name)
+    switch (piece.name) {
+      case 'corridor':
+        k = '1'
+        break
+      case 'door':
+        k = '0'
+        break
+      default:
+        k = piece.name
+    }
+
+    layoutString += piece.ch.x + toChar(piece.ch.y) + k
     if (piece.rotation > 0) {
       layoutString += toChar((piece.rotation + 1) / 60)
     }

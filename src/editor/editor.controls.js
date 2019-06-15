@@ -11,20 +11,20 @@ import {resolveLOS}   from '../lib/resolveLOS'
 
 
 const pieceSort = (a, b) => {
-  if (a.isSingleTile && !b.isSingleTile) {
+  if (!a.isUnique && b.isUnique) {
     return 1
   }
-  if (!a.isSingleTile && b.isSingleTile) {
+  if (a.isUnique && !b.isUnique) {
     return -1
   }
   return a.id > b.id ? 1 : -1
 }
 
 const elementSort = (a, b) => {
-  if (a.dataset['singleTile'] === 'true' && b.dataset['singleTile'] !== 'true') {
+  if (a.dataset['isUnique'] !== 'true' && b.dataset['isUnique'] === 'true') {
     return 1
   }
-  if (a.dataset['singleTile'] !== 'true' && b.dataset['singleTile'] === 'true') {
+  if (a.dataset['isUnique'] === 'true' && b.dataset['isUnique'] !== 'true') {
     return -1
   }
   return a.dataset['id'] > b.dataset['id'] ? 1 : -1
@@ -81,6 +81,7 @@ export const updateTileSelectOptions = () => {
   tileSelect.value = ''
   Object.keys(pieceList)
     .filter(key => (
+      key === 'corridor' ||
       key === 'door' || (
         board.pieces &&
         !board.pieces.find(a => a.name.substr(0, 2) === key.substr(0, 2))

@@ -1,3 +1,4 @@
+import bitmap_corridor from '../assets/corridor.webp'
 import bitmap_door from '../assets/door.webp'
 import bitmap_A1a  from '../assets/A1a.webp'
 import bitmap_A1b  from '../assets/A1b.webp'
@@ -293,268 +294,283 @@ const styles_N = {
 }
 
 export const pieceList = {
-  door: {
-    bitmap: bitmap_door,
-    blueprints: {
+  corridor: [
+    bitmap_corridor,
+    {
+      0: 'ab',
+      60: 'bbaa',
+      120: 'aaaa'
+    },
+    {
+      0: {left: 0, top: 0},
+      60: {left: 45, top: 26},
+      120: {left: 45, top: -26},
+    },
+    true
+  ],
+
+  door: [
+    bitmap_door,
+    {
       0: 'aa'
     },
-    styles: {
+    {
       0: {left: 1, top: -1}
     },
-    symmetrical: true
-  },
+    true
+  ],
 
-  A1a: {
-    bitmap: bitmap_A1a,
-    blueprints: blueprints_A,
-    styles: styles_A
-  },
+  A1a: [
+    bitmap_A1a,
+    blueprints_A,
+    styles_A
+  ],
 
-  A1b: {
-    bitmap: bitmap_A1b,
-    blueprints: blueprints_A,
-    styles: styles_A
-  },
+  A1b: [
+    bitmap_A1b,
+    blueprints_A,
+    styles_A
+  ],
 
-  A2a: {
-    bitmap: bitmap_A2a,
-    blueprints: blueprints_A,
-    styles: styles_A
-  },
+  A2a: [
+    bitmap_A2a,
+    blueprints_A,
+    styles_A
+  ],
 
-  A2b: {
-    bitmap: bitmap_A2b,
-    blueprints: blueprints_A,
-    styles: styles_A
-  },
+  A2b: [
+    bitmap_A2b,
+    blueprints_A,
+    styles_A
+  ],
 
-  A3a: {
-    bitmap: bitmap_A3a,
-    blueprints: blueprints_A,
-    styles: styles_A
-  },
+  A3a: [
+    bitmap_A3a,
+    blueprints_A,
+    styles_A
+  ],
 
-  A3b: {
-    bitmap: bitmap_A3b,
-    blueprints: blueprints_A,
-    styles: styles_A
-  },
+  A3b: [
+    bitmap_A3b,
+    blueprints_A,
+    styles_A
+  ],
 
-  A4a: {
-    bitmap: bitmap_A4a,
-    blueprints: blueprints_A,
-    styles: styles_A
-  },
+  A4a: [
+    bitmap_A4a,
+    blueprints_A,
+    styles_A
+  ],
 
-  A4b: {
-    bitmap: bitmap_A4b,
-    blueprints: blueprints_A,
-    styles: styles_A
-  },
+  A4b: [
+    bitmap_A4b,
+    blueprints_A,
+    styles_A
+  ],
 
-  B1a: {
-    bitmap: bitmap_B1a,
-    blueprints: blueprints_B,
-    styles: styles_B
-  },
+  B1a: [
+    bitmap_B1a,
+    blueprints_B,
+    styles_B
+  ],
 
-  B1b: {
-    bitmap: bitmap_B1b,
-    blueprints: blueprints_B,
-    styles: styles_B
-  },
+  B1b: [
+    bitmap_B1b,
+    blueprints_B,
+    styles_B
+  ],
 
-  B2a: {
-    bitmap: bitmap_B2a,
-    blueprints: blueprints_B,
-    styles: styles_B
-  },
+  B2a: [
+    bitmap_B2a,
+    blueprints_B,
+    styles_B
+  ],
 
-  B2b: {
-    bitmap: bitmap_B2b,
-    blueprints: blueprints_B,
-    styles: styles_B
-  },
+  B2b: [
+    bitmap_B2b,
+    blueprints_B,
+    styles_B
+  ],
 
-  B3a: {
-    bitmap: bitmap_B3a,
-    blueprints: blueprints_B,
-    styles: styles_B
-  },
+  B3a: [
+    bitmap_B3a,
+    blueprints_B,
+    styles_B
+  ],
 
-  B3b: {
-    bitmap: bitmap_B3b,
-    blueprints: blueprints_B,
-    styles: styles_B
-  },
+  B3b: [
+    bitmap_B3b,
+    blueprints_B,
+    styles_B
+  ],
 
-  B4a: {
-    bitmap: bitmap_B4a,
-    blueprints: blueprints_B,
-    styles: styles_B
-  },
+  B4a: [
+    bitmap_B4a,
+    blueprints_B,
+    styles_B
+  ],
 
-  B4b: {
-    bitmap: bitmap_B4b,
-    blueprints: blueprints_B,
-    styles: styles_B
-  },
+  B4b: [
+    bitmap_B4b,
+    blueprints_B,
+    styles_B
+  ],
 
-  C1a: {
-    bitmap: bitmap_C1a,
-    blueprints: blueprints_C,
-    styles: styles_C
-  },
+  C1a: [
+    bitmap_C1a,
+    blueprints_C,
+    styles_C
+  ],
 
-  C1b: {
-    bitmap: bitmap_C1b,
-    blueprints: blueprints_C,
-    styles: styles_C
-  },
+  C1b: [
+    bitmap_C1b,
+    blueprints_C,
+    styles_C
+  ],
 
-  C2a: {
-    bitmap: bitmap_C2a,
-    blueprints: blueprints_C,
-    styles: styles_C
-  },
+  C2a: [
+    bitmap_C2a,
+    blueprints_C,
+    styles_C
+  ],
 
-  C2b: {
-    bitmap: bitmap_C2b,
-    blueprints: blueprints_C,
-    styles: styles_C
-  },
+  C2b: [
+    bitmap_C2b,
+    blueprints_C,
+    styles_C
+  ],
 
-  D1a: {
-    bitmap: bitmap_D1a,
-    blueprints: blueprints_D,
-    styles: styles_D,
-    symmetrical: true
-  },
+  D1a: [
+    bitmap_D1a,
+    blueprints_D,
+    styles_D,
+    true
+  ],
 
-  D1b: {
-    bitmap: bitmap_D1b,
-    blueprints: blueprints_D,
-    styles: styles_D,
-    symmetrical: true
-  },
+  D1b: [
+    bitmap_D1b,
+    blueprints_D,
+    styles_D,
+    true
+  ],
 
-  D2a: {
-    bitmap: bitmap_D2a,
-    blueprints: blueprints_D,
-    styles: styles_D,
-    symmetrical: true
-  },
+  D2a: [
+    bitmap_D2a,
+    blueprints_D,
+    styles_D,
+    true
+  ],
 
-  D2b: {
-    bitmap: bitmap_D2b,
-    blueprints: blueprints_D,
-    styles: styles_D,
-    symmetrical: true
-  },
+  D2b: [
+    bitmap_D2b,
+    blueprints_D,
+    styles_D,
+    true
+  ],
 
-  E1a: {
-    bitmap: bitmap_E1a,
-    blueprints: blueprints_E,
-    styles: styles_E,
-    symmetrical: true
-  },
+  E1a: [
+    bitmap_E1a,
+    blueprints_E,
+    styles_E,
+    true
+  ],
 
-  E1b: {
-    bitmap: bitmap_E1b,
-    blueprints: blueprints_E,
-    styles: styles_E,
-    symmetrical: true
-  },
+  E1b: [
+    bitmap_E1b,
+    blueprints_E,
+    styles_E,
+    true
+  ],
 
-  F1a: {
-    bitmap: bitmap_F1a,
-    blueprints: blueprints_F,
-    styles: styles_F,
-    symmetrical: true
-  },
+  F1a: [
+    bitmap_F1a,
+    blueprints_F,
+    styles_F,
+    true
+  ],
 
-  F1b: {
-    bitmap: bitmap_F1b,
-    blueprints: blueprints_F,
-    styles: styles_F,
-    symmetrical: true
-  },
+  F1b: [
+    bitmap_F1b,
+    blueprints_F,
+    styles_F,
+    true
+  ],
 
-  G1a: {
-    bitmap: bitmap_G1a,
-    blueprints: blueprints_G,
-    styles: styles_G,
-    symmetrical: true
-  },
+  G1a: [
+    bitmap_G1a,
+    blueprints_G,
+    styles_G,
+    true
+  ],
 
-  G1b: {
-    bitmap: bitmap_G1b,
-    blueprints: blueprints_G,
-    styles: styles_G,
-    symmetrical: true
-  },
+  G1b: [
+    bitmap_G1b,
+    blueprints_G,
+    styles_G,
+    true
+  ],
 
-  G2a: {
-    bitmap: bitmap_G2a,
-    blueprints: blueprints_G,
-    styles: styles_G,
-    symmetrical: true
-  },
+  G2a: [
+    bitmap_G2a,
+    blueprints_G,
+    styles_G,
+    true
+  ],
 
-  G2b: {
-    bitmap: bitmap_G2b,
-    blueprints: blueprints_G,
-    styles: styles_G,
-    symmetrical: true
-  },
+  G2b: [
+    bitmap_G2b,
+    blueprints_G,
+    styles_G,
+    true
+  ],
 
-  H1a: {
-    bitmap: bitmap_H1a,
-    blueprints: blueprints_H,
-    styles: styles_H
-  },
+  H1a: [
+    bitmap_H1a,
+    blueprints_H,
+    styles_H
+  ],
 
-  H1b: {
-    bitmap: bitmap_H1b,
-    blueprints: blueprints_H,
-    styles: styles_H
-  },
+  H1b: [
+    bitmap_H1b,
+    blueprints_H,
+    styles_H
+  ],
 
-  H2a: {
-    bitmap: bitmap_H2a,
-    blueprints: blueprints_H,
-    styles: styles_H
-  },
+  H2a: [
+    bitmap_H2a,
+    blueprints_H,
+    styles_H
+  ],
 
-  H2b: {
-    bitmap: bitmap_H2b,
-    blueprints: blueprints_H,
-    styles: styles_H
-  },
+  H2b: [
+    bitmap_H2b,
+    blueprints_H,
+    styles_H
+  ],
 
-  H3a: {
-    bitmap: bitmap_H3a,
-    blueprints: blueprints_H,
-    styles: styles_H
-  },
+  H3a: [
+    bitmap_H3a,
+    blueprints_H,
+    styles_H
+  ],
 
-  H3b: {
-    bitmap: bitmap_H3b,
-    blueprints: blueprints_H,
-    styles: styles_H
-  },
+  H3b: [
+    bitmap_H3b,
+    blueprints_H,
+    styles_H
+  ],
 
-  I1a: {
-    bitmap: bitmap_I1a,
-    blueprints: blueprints_I,
-    styles: styles_I,
-    symmetrical: true
-  },
+  I1a: [
+    bitmap_I1a,
+    blueprints_I,
+    styles_I,
+    true
+  ],
 
-  I1b: {
-    bitmap: bitmap_I1b,
-    blueprints: blueprints_I,
-    styles: {
+  I1b: [
+    bitmap_I1b,
+    blueprints_I,
+    {
       0: {left: -55, top: -26},
       60: {left: 84, top: 51},
       120: {left: 88, top: 3},
@@ -562,138 +578,138 @@ export const pieceList = {
       240: {left: 81, top: 61},
       300: {left: 78, top: 5}
     },
-    symmetrical: true
-  },
+    true
+  ],
 
-  I2a: {
-    bitmap: bitmap_I2a,
-    blueprints: blueprints_I,
-    styles: styles_I,
-    symmetrical: true
-  },
+  I2a: [
+    bitmap_I2a,
+    blueprints_I,
+    styles_I,
+    true
+  ],
 
-  I2b: {
-    bitmap: bitmap_I2b,
-    blueprints: blueprints_I,
-    styles: styles_I,
-    symmetrical: true
-  },
+  I2b: [
+    bitmap_I2b,
+    blueprints_I,
+    styles_I,
+    true
+  ],
 
-  J1a: {
-    bitmap: bitmap_J1a,
-    blueprints: blueprints_Ja,
-    styles: styles_Ja
-  },
+  J1a: [
+    bitmap_J1a,
+    blueprints_Ja,
+    styles_Ja
+  ],
 
-  J1b: {
-    bitmap: bitmap_J1b,
-    blueprints: blueprints_Jb,
-    styles: styles_Jb
-  },
+  J1b: [
+    bitmap_J1b,
+    blueprints_Jb,
+    styles_Jb
+  ],
 
-  J2a: {
-    bitmap: bitmap_J2a,
-    blueprints: blueprints_Ja,
-    styles: styles_Ja
-  },
+  J2a: [
+    bitmap_J2a,
+    blueprints_Ja,
+    styles_Ja
+  ],
 
-  J2b: {
-    bitmap: bitmap_J2b,
-    blueprints: blueprints_Jb,
-    styles: styles_Jb
-  },
+  J2b: [
+    bitmap_J2b,
+    blueprints_Jb,
+    styles_Jb
+  ],
 
-  K1a: {
-    bitmap: bitmap_K1a,
-    blueprints: blueprints_K,
-    styles: styles_K
-  },
+  K1a: [
+    bitmap_K1a,
+    blueprints_K,
+    styles_K
+  ],
 
-  K1b: {
-    bitmap: bitmap_K1b,
-    blueprints: blueprints_K,
-    styles: styles_K
-  },
+  K1b: [
+    bitmap_K1b,
+    blueprints_K,
+    styles_K
+  ],
 
-  K2a: {
-    bitmap: bitmap_K2a,
-    blueprints: blueprints_K,
-    styles: styles_K
-  },
+  K2a: [
+    bitmap_K2a,
+    blueprints_K,
+    styles_K
+  ],
 
-  K2b: {
-    bitmap: bitmap_K2b,
-    blueprints: blueprints_K,
-    styles: styles_K
-  },
+  K2b: [
+    bitmap_K2b,
+    blueprints_K,
+    styles_K
+  ],
 
-  L1a: {
-    bitmap: bitmap_L1a,
-    blueprints: blueprints_L,
-    styles: styles_L,
-    symmetrical: true
-  },
+  L1a: [
+    bitmap_L1a,
+    blueprints_L,
+    styles_L,
+    true
+  ],
 
-  L1b: {
-    bitmap: bitmap_L1b,
-    blueprints: blueprints_L,
-    styles: styles_L,
-    symmetrical: true
-  },
+  L1b: [
+    bitmap_L1b,
+    blueprints_L,
+    styles_L,
+    true
+  ],
 
-  L2a: {
-    bitmap: bitmap_L2a,
-    blueprints: blueprints_L,
-    styles: styles_L,
-    symmetrical: true
-  },
+  L2a: [
+    bitmap_L2a,
+    blueprints_L,
+    styles_L,
+    true
+  ],
 
-  L2b: {
-    bitmap: bitmap_L2b,
-    blueprints: blueprints_L,
-    styles: styles_L,
-    symmetrical: true
-  },
+  L2b: [
+    bitmap_L2b,
+    blueprints_L,
+    styles_L,
+    true
+  ],
 
-  L3a: {
-    bitmap: bitmap_L3a,
-    blueprints: blueprints_L,
-    styles: styles_L,
-    symmetrical: true
-  },
+  L3a: [
+    bitmap_L3a,
+    blueprints_L,
+    styles_L,
+    true
+  ],
 
-  L3b: {
-    bitmap: bitmap_L3b,
-    blueprints: blueprints_L,
-    styles: styles_L,
-    symmetrical: true
-  },
+  L3b: [
+    bitmap_L3b,
+    blueprints_L,
+    styles_L,
+    true
+  ],
 
-  M1a: {
-    bitmap: bitmap_M1a,
-    blueprints: blueprints_M,
-    styles: styles_M,
-    symmetrical: true
-  },
+  M1a: [
+    bitmap_M1a,
+    blueprints_M,
+    styles_M,
+    true
+  ],
 
-  M1b: {
-    bitmap: bitmap_M1b,
-    blueprints: blueprints_M,
-    styles: styles_M,
-    symmetrical: true
-  },
+  M1b: [
+    bitmap_M1b,
+    blueprints_M,
+    styles_M,
+    true
+  ],
 
-  N1a: {
-    bitmap: bitmap_N1a,
-    blueprints: blueprints_N,
-    styles: styles_N,
-    symmetrical: true
-  },
+  N1a: [
+    bitmap_N1a,
+    blueprints_N,
+    styles_N,
+    true
+  ],
 
-  N1b: {
-    bitmap: bitmap_N1b,
-    blueprints: blueprints_N,
-    styles: styles_N,
-    symmetrical: true
-  }
+  N1b: [
+    bitmap_N1b,
+    blueprints_N,
+    styles_N,
+    true
+  ]
 }

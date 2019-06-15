@@ -1,15 +1,15 @@
 import {
   board,
   cornersCoordinates
-}      from './board'
+}                  from './board'
 import {
   addPoint,
   getGridPxSize,
   gridGet,
   rectangle,
   toPoint
-}                   from '../lib/hexUtils'
-import {pieceList}  from './board.pieces'
+}                  from '../lib/hexUtils'
+import {pieceList} from './board.pieces'
 
 
 export const createPiece = (x, y, pieceKey, angle = 0) => {
@@ -23,13 +23,13 @@ export const createPiece = (x, y, pieceKey, angle = 0) => {
   let stringSplit
   let useAngle
 
-  if (angle >= 180 && pieceFromList.symmetrical) {
+  if (angle >= 180 && pieceFromList[3] === true) {
     useAngle = angle - 180
   } else {
     useAngle = angle
   }
 
-  stringSplit = pieceFromList.blueprints[useAngle].split('.')
+  stringSplit = pieceFromList[1][useAngle].split('.')
 
   const hexString = stringSplit[0]
   const thinwallString = stringSplit[1]
@@ -55,17 +55,17 @@ export const createPiece = (x, y, pieceKey, angle = 0) => {
   }
 
   const isSingleTile = pieceHexes.length === 1
+  const isUnique = pieceHexes.length > 2
   const id = pieceKey + Date.now()
 
   pieceElement.dataset['id'] = id
-  pieceElement.dataset['singleTile'] = isSingleTile
   pieceElement.classList.add('map-tile', 'img-loading')
   pieceElement.style.height = `${pxSizeY}px`
   pieceElement.style.left = `${x}px`
   pieceElement.style.top = `${y}px`
   pieceElement.style.width = `${pxSizeX}px`
 
-  if (pieceFromList.bitmap) {
+  if (pieceFromList[0]) {
     const img = document.createElement('img')
     img.onload = () => pieceElement.classList.remove('img-loading')
     img.onerror = () => {
@@ -92,18 +92,18 @@ export const createPiece = (x, y, pieceKey, angle = 0) => {
         }
       })
     }
-    img.src = pieceFromList.bitmap
+    img.src = pieceFromList[0]
     if (angle > 0) {
       img.style.transform = `rotate(${angle}deg)`
     }
-    if (pieceFromList.styles) {
-      if (pieceFromList.styles[angle]) {
-        Object.entries(pieceFromList.styles[angle]).forEach(keyValue => {
+    if (pieceFromList[2]) {
+      if (pieceFromList[2][angle]) {
+        Object.entries(pieceFromList[2][angle]).forEach(keyValue => {
           img.style[keyValue[0]] = keyValue[1] * .75 + 'px'
         })
       }
-      else if (pieceFromList.styles[useAngle]) {
-        Object.entries(pieceFromList.styles[useAngle]).forEach(keyValue => {
+      else if (pieceFromList[2][useAngle]) {
+        Object.entries(pieceFromList[2][useAngle]).forEach(keyValue => {
           img.style[keyValue[0]] = keyValue[1] * .75 + 'px'
         })
       }
@@ -116,6 +116,7 @@ export const createPiece = (x, y, pieceKey, angle = 0) => {
     grid: pieceGrid,
     h: gridSize.height,
     id,
+    isUnique,
     name: pieceKey,
     isSingleTile,
     pieceHexes,
@@ -185,6 +186,7 @@ export const generatePiecesFromLayoutString = layoutString => {
   let y
   let r
   let t
+  let k
 
   const piecesToCreate = []
 
@@ -195,17 +197,21 @@ export const generatePiecesFromLayoutString = layoutString => {
     y = parseInt(fromChar(layoutString.substr(i + ii, 1)), 10)
     r = 0
     ++ii
-    if (layoutString.substr(i + ii, 1) === '0') {
+    k = layoutString.substr(i + ii, 1)
+    if (k === '0') {
       n = 'door'
+      ++ii
+    } else if (k === '1') {
+      n = 'corridor'
       ++ii
     } else {
       n = layoutString.substr(i + ii, 3)
       ii += 3
-      t = layoutString.substr(i + ii, 1)
-      if (t && !t.match(/\d/)) {
-        r = parseInt(fromChar(layoutString.substr(i + ii, 1)), 10) * 60
-        ++ii
-      }
+    }
+    t = layoutString.substr(i + ii, 1)
+    if (t && !t.match(/\d/)) {
+      r = parseInt(fromChar(layoutString.substr(i + ii, 1)), 10) * 60
+      ++ii
     }
     i += ii
     piecesToCreate.push({x, y, n, r})
@@ -244,12 +250,41 @@ const hexSort = (a, b) => {
 
 export const getDataFromBoardPieces = () => {
   const hexesFromAllPieces = []
-  const thinWallsFromAllPieces = []
+  let thinWallsFromAllPieces = []
+  const antiThinWallsFromAllPieces = []
 
   let x
   let y
+  let a
 
   board.pieces.forEach(piece => {
+    if (piece.name === 'corridor') {
+      a = piece.ch.x % 2 === 0 ? 0 : 1
+      switch (piece.rotation) {
+        case 0:
+        case 180:
+          antiThinWallsFromAllPieces.push(
+            {x: piece.ch.x,     y: piece.ch.y,      s: 1},
+            {x: piece.ch.x,     y: piece.ch.y + 1,  s: 4}
+          )
+          break
+        case 60:
+        case 240:
+          antiThinWallsFromAllPieces.push(
+            {x: piece.ch.x + 1, y: piece.ch.y + a,  s: 2},
+            {x: piece.ch.x,     y: piece.ch.y + 1,  s: 5}
+          )
+          break
+        case 120:
+        case 300:
+          antiThinWallsFromAllPieces.push(
+            {x: piece.ch.x,     y: piece.ch.y,      s: 0},
+            {x: piece.ch.x + 1, y: piece.ch.y + a,  s: 3}
+          )
+          break
+      }
+    }
+
     piece.pieceHexes.forEach(hex => {
       x = hex.x + piece.ch.x
       y = hex.y + piece.ch.y
@@ -281,6 +316,13 @@ export const getDataFromBoardPieces = () => {
 
   hexesFromAllPieces.sort(hexSort)
   thinWallsFromAllPieces.sort(hexSort)
+  thinWallsFromAllPieces = thinWallsFromAllPieces.filter(tw =>
+    !antiThinWallsFromAllPieces.find(atw =>
+      tw.x === atw.x &&
+      tw.y === atw.y &&
+      tw.s === atw.s
+    )
+  )
 
   return {
     hexes: hexesFromAllPieces,

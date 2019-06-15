@@ -16,7 +16,10 @@ module.exports = {
         test: /\.(jpg|png|webp|svg)$/,
         use: [
           {
-            loader: 'file-loader'
+            loader: 'file-loader',
+            options: {
+              name: '[sha512:hash:base64:6].[ext]'
+            }
           }
         ]
       },
