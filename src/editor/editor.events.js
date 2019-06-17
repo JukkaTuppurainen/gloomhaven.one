@@ -9,6 +9,7 @@ import {board}      from '../board/board'
 import {boardClick} from '../board/board.events'
 import {findSnap}   from '../board/board.functions'
 import {render}     from '../index'
+import {pointToHex} from '../lib/hexUtils'
 
 
 let mouseDownCoords = false
@@ -29,16 +30,25 @@ export const editorDocumentMousedown = event => {
     editor.dragging === false
   ) {
     editor.hoverPiece = false
-    board.pieces.forEach((piece, i) => {
+    const hexFromPoint = pointToHex(event.pageX, event.pageY)
+
+    for (
+      let i = board.pieces.length - 1;
+      i >= 0 && editor.hoverPiece === false;
+      --i
+    ) {
+      let piece = board.pieces[i]
       if (
-        event.pageX >= piece.x &&
-        event.pageX <= piece.x + piece.pxW &&
-        event.pageY >= piece.y &&
-        event.pageY <= piece.y + piece.pxH
+        piece.pieceHexes.find(pieceHex => (
+          hexFromPoint.x === pieceHex.x + piece.ch.x &&
+          hexFromPoint.y === pieceHex.y + piece.ch.y + (
+            piece.ch.x % 2 === 1 && pieceHex.x % 2 === 1 ? 1 : 0
+          )
+        ))
       ) {
         editor.hoverPiece = i
       }
-    })
+    }
 
     if (editor.hoverPiece !== false) {
       mouseDownCoords = {
