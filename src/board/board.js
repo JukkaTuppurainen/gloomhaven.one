@@ -66,8 +66,8 @@ export const board = {
 
     scenarioInit()
 
-    if (scenario.layout) {
-      generatePiecesFromLayoutString(scenario.layout)
+    if (scenario[1]) {
+      generatePiecesFromLayoutString(scenario[1])
     }
 
     scenarioLoad(scenario)

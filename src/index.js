@@ -16,7 +16,7 @@ const scenarioSelectElement = document.getElementById('scenario')
 for (let [id, scenario] of Object.entries(scenarioList)) {
   const option = document.createElement('option')
   option.value = id
-  option.innerText = scenario.name
+  option.innerText = (id !== 'editor' ? `${id}. ` : '') + scenario[0]
   scenarioSelectElement.appendChild(option)
 }
 
