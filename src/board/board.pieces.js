@@ -1,65 +1,64 @@
-import bitmap_corridor from '../assets/corridor.webp'
-import bitmap_door from '../assets/door.webp'
-import bitmap_A1a  from '../assets/A1a.webp'
-import bitmap_A1b  from '../assets/A1b.webp'
-import bitmap_A2a  from '../assets/A2a.webp'
-import bitmap_A2b  from '../assets/A2b.webp'
-import bitmap_A3a  from '../assets/A3a.webp'
-import bitmap_A3b  from '../assets/A3b.webp'
-import bitmap_A4a  from '../assets/A4a.webp'
-import bitmap_A4b  from '../assets/A4b.webp'
-import bitmap_B1a  from '../assets/B1a.webp'
-import bitmap_B1b  from '../assets/B1b.webp'
-import bitmap_B2a  from '../assets/B2a.webp'
-import bitmap_B2b  from '../assets/B2b.webp'
-import bitmap_B3a  from '../assets/B3a.webp'
-import bitmap_B3b  from '../assets/B3b.webp'
-import bitmap_B4a  from '../assets/B4a.webp'
-import bitmap_B4b  from '../assets/B4b.webp'
-import bitmap_C1a  from '../assets/C1a.webp'
-import bitmap_C1b  from '../assets/C1b.webp'
-import bitmap_C2a  from '../assets/C2a.webp'
-import bitmap_C2b  from '../assets/C2b.webp'
-import bitmap_D1a  from '../assets/D1a.webp'
-import bitmap_D1b  from '../assets/D1b.webp'
-import bitmap_D2a  from '../assets/D2a.webp'
-import bitmap_D2b  from '../assets/D2b.webp'
-import bitmap_E1a  from '../assets/E1a.webp'
-import bitmap_E1b  from '../assets/E1b.webp'
-import bitmap_F1a  from '../assets/F1a.webp'
-import bitmap_F1b  from '../assets/F1b.webp'
-import bitmap_G1a  from '../assets/G1a.webp'
-import bitmap_G1b  from '../assets/G1b.webp'
-import bitmap_G2a  from '../assets/G2a.webp'
-import bitmap_G2b  from '../assets/G2b.webp'
-import bitmap_H1a  from '../assets/H1a.webp'
-import bitmap_H1b  from '../assets/H1b.webp'
-import bitmap_H2a  from '../assets/H2a.webp'
-import bitmap_H2b  from '../assets/H2b.webp'
-import bitmap_H3a  from '../assets/H3a.webp'
-import bitmap_H3b  from '../assets/H3b.webp'
-import bitmap_I1a  from '../assets/I1a.webp'
-import bitmap_I1b  from '../assets/I1b.webp'
-import bitmap_I2a  from '../assets/I2a.webp'
-import bitmap_I2b  from '../assets/I2b.webp'
-import bitmap_J1a  from '../assets/J1a.webp'
-import bitmap_J1b  from '../assets/J1b.webp'
-import bitmap_J2a  from '../assets/J2a.webp'
-import bitmap_J2b  from '../assets/J2b.webp'
-import bitmap_K1a  from '../assets/K1a.webp'
-import bitmap_K1b  from '../assets/K1b.webp'
-import bitmap_K2a  from '../assets/K2a.webp'
-import bitmap_K2b  from '../assets/K2b.webp'
-import bitmap_L1a  from '../assets/L1a.webp'
-import bitmap_L1b  from '../assets/L1b.webp'
-import bitmap_L2a  from '../assets/L2a.webp'
-import bitmap_L2b  from '../assets/L2b.webp'
-import bitmap_L3a  from '../assets/L3a.webp'
-import bitmap_L3b  from '../assets/L3b.webp'
-import bitmap_M1a  from '../assets/M1a.webp'
-import bitmap_M1b  from '../assets/M1b.webp'
-import bitmap_N1a  from '../assets/N1a.webp'
-import bitmap_N1b  from '../assets/N1b.webp'
+import bitmap_tiles from '../assets/tiles.webp'
+import bitmap_A1a from '../assets/A1a.webp'
+import bitmap_A1b from '../assets/A1b.webp'
+import bitmap_A2a from '../assets/A2a.webp'
+import bitmap_A2b from '../assets/A2b.webp'
+import bitmap_A3a from '../assets/A3a.webp'
+import bitmap_A3b from '../assets/A3b.webp'
+import bitmap_A4a from '../assets/A4a.webp'
+import bitmap_A4b from '../assets/A4b.webp'
+import bitmap_B1a from '../assets/B1a.webp'
+import bitmap_B1b from '../assets/B1b.webp'
+import bitmap_B2a from '../assets/B2a.webp'
+import bitmap_B2b from '../assets/B2b.webp'
+import bitmap_B3a from '../assets/B3a.webp'
+import bitmap_B3b from '../assets/B3b.webp'
+import bitmap_B4a from '../assets/B4a.webp'
+import bitmap_B4b from '../assets/B4b.webp'
+import bitmap_C1a from '../assets/C1a.webp'
+import bitmap_C1b from '../assets/C1b.webp'
+import bitmap_C2a from '../assets/C2a.webp'
+import bitmap_C2b from '../assets/C2b.webp'
+import bitmap_D1a from '../assets/D1a.webp'
+import bitmap_D1b from '../assets/D1b.webp'
+import bitmap_D2a from '../assets/D2a.webp'
+import bitmap_D2b from '../assets/D2b.webp'
+import bitmap_E1a from '../assets/E1a.webp'
+import bitmap_E1b from '../assets/E1b.webp'
+import bitmap_F1a from '../assets/F1a.webp'
+import bitmap_F1b from '../assets/F1b.webp'
+import bitmap_G1a from '../assets/G1a.webp'
+import bitmap_G1b from '../assets/G1b.webp'
+import bitmap_G2a from '../assets/G2a.webp'
+import bitmap_G2b from '../assets/G2b.webp'
+import bitmap_H1a from '../assets/H1a.webp'
+import bitmap_H1b from '../assets/H1b.webp'
+import bitmap_H2a from '../assets/H2a.webp'
+import bitmap_H2b from '../assets/H2b.webp'
+import bitmap_H3a from '../assets/H3a.webp'
+import bitmap_H3b from '../assets/H3b.webp'
+import bitmap_I1a from '../assets/I1a.webp'
+import bitmap_I1b from '../assets/I1b.webp'
+import bitmap_I2a from '../assets/I2a.webp'
+import bitmap_I2b from '../assets/I2b.webp'
+import bitmap_J1a from '../assets/J1a.webp'
+import bitmap_J1b from '../assets/J1b.webp'
+import bitmap_J2a from '../assets/J2a.webp'
+import bitmap_J2b from '../assets/J2b.webp'
+import bitmap_K1a from '../assets/K1a.webp'
+import bitmap_K1b from '../assets/K1b.webp'
+import bitmap_K2a from '../assets/K2a.webp'
+import bitmap_K2b from '../assets/K2b.webp'
+import bitmap_L1a from '../assets/L1a.webp'
+import bitmap_L1b from '../assets/L1b.webp'
+import bitmap_L2a from '../assets/L2a.webp'
+import bitmap_L2b from '../assets/L2b.webp'
+import bitmap_L3a from '../assets/L3a.webp'
+import bitmap_L3b from '../assets/L3b.webp'
+import bitmap_M1a from '../assets/M1a.webp'
+import bitmap_M1b from '../assets/M1b.webp'
+import bitmap_N1a from '../assets/N1a.webp'
+import bitmap_N1b from '../assets/N1b.webp'
 
 
 const blueprints_A = {
@@ -295,7 +294,7 @@ const styles_N = {
 
 export const pieceList = {
   corridor: [
-    bitmap_corridor,
+    bitmap_tiles,
     {
       0: 'ab',
       60: 'bbaa',
@@ -306,144 +305,167 @@ export const pieceList = {
       60: {left: 45, top: 26},
       120: {left: 45, top: -26},
     },
+    0,
     true
   ],
 
   door: [
-    bitmap_door,
+    bitmap_tiles,
     {
       0: 'aa'
     },
     {
       0: {left: 1, top: -1}
     },
+    0,
     true
   ],
 
   A1a: [
     bitmap_A1a,
     blueprints_A,
-    styles_A
+    styles_A,
+    0
   ],
 
   A1b: [
     bitmap_A1b,
     blueprints_A,
-    styles_A
+    styles_A,
+    1
   ],
 
   A2a: [
     bitmap_A2a,
     blueprints_A,
-    styles_A
+    styles_A,
+    0
   ],
 
   A2b: [
     bitmap_A2b,
     blueprints_A,
-    styles_A
+    styles_A,
+    2
   ],
 
   A3a: [
     bitmap_A3a,
     blueprints_A,
-    styles_A
+    styles_A,
+    2
   ],
 
   A3b: [
     bitmap_A3b,
     blueprints_A,
-    styles_A
+    styles_A,
+    0
   ],
 
   A4a: [
     bitmap_A4a,
     blueprints_A,
-    styles_A
+    styles_A,
+    3
   ],
 
   A4b: [
     bitmap_A4b,
     blueprints_A,
-    styles_A
+    styles_A,
+    0
   ],
 
   B1a: [
     bitmap_B1a,
     blueprints_B,
-    styles_B
+    styles_B,
+    1
   ],
 
   B1b: [
     bitmap_B1b,
     blueprints_B,
-    styles_B
+    styles_B,
+    3
   ],
 
   B2a: [
     bitmap_B2a,
     blueprints_B,
-    styles_B
+    styles_B,
+    1
   ],
 
   B2b: [
     bitmap_B2b,
     blueprints_B,
-    styles_B
+    styles_B,
+    0
   ],
 
   B3a: [
     bitmap_B3a,
     blueprints_B,
-    styles_B
+    styles_B,
+    1
   ],
 
   B3b: [
     bitmap_B3b,
     blueprints_B,
-    styles_B
+    styles_B,
+    0
   ],
 
   B4a: [
     bitmap_B4a,
     blueprints_B,
-    styles_B
+    styles_B,
+    1
   ],
 
   B4b: [
     bitmap_B4b,
     blueprints_B,
-    styles_B
+    styles_B,
+    2
   ],
 
   C1a: [
     bitmap_C1a,
     blueprints_C,
-    styles_C
+    styles_C,
+    0
   ],
 
   C1b: [
     bitmap_C1b,
     blueprints_C,
-    styles_C
+    styles_C,
+    1
   ],
 
   C2a: [
     bitmap_C2a,
     blueprints_C,
-    styles_C
+    styles_C,
+    3
   ],
 
   C2b: [
     bitmap_C2b,
     blueprints_C,
-    styles_C
+    styles_C,
+    0
   ],
 
   D1a: [
     bitmap_D1a,
     blueprints_D,
     styles_D,
+    0,
     true
   ],
 
@@ -451,6 +473,7 @@ export const pieceList = {
     bitmap_D1b,
     blueprints_D,
     styles_D,
+    3,
     true
   ],
 
@@ -458,6 +481,7 @@ export const pieceList = {
     bitmap_D2a,
     blueprints_D,
     styles_D,
+    0,
     true
   ],
 
@@ -465,6 +489,7 @@ export const pieceList = {
     bitmap_D2b,
     blueprints_D,
     styles_D,
+    2,
     true
   ],
 
@@ -472,6 +497,7 @@ export const pieceList = {
     bitmap_E1a,
     blueprints_E,
     styles_E,
+    0,
     true
   ],
 
@@ -479,6 +505,7 @@ export const pieceList = {
     bitmap_E1b,
     blueprints_E,
     styles_E,
+    2,
     true
   ],
 
@@ -486,6 +513,7 @@ export const pieceList = {
     bitmap_F1a,
     blueprints_F,
     styles_F,
+    0,
     true
   ],
 
@@ -493,6 +521,7 @@ export const pieceList = {
     bitmap_F1b,
     blueprints_F,
     styles_F,
+    3,
     true
   ],
 
@@ -500,6 +529,7 @@ export const pieceList = {
     bitmap_G1a,
     blueprints_G,
     styles_G,
+    3,
     true
   ],
 
@@ -507,6 +537,7 @@ export const pieceList = {
     bitmap_G1b,
     blueprints_G,
     styles_G,
+    0,
     true
   ],
 
@@ -514,6 +545,7 @@ export const pieceList = {
     bitmap_G2a,
     blueprints_G,
     styles_G,
+    2,
     true
   ],
 
@@ -521,49 +553,57 @@ export const pieceList = {
     bitmap_G2b,
     blueprints_G,
     styles_G,
+    1,
     true
   ],
 
   H1a: [
     bitmap_H1a,
     blueprints_H,
-    styles_H
+    styles_H,
+    2
   ],
 
   H1b: [
     bitmap_H1b,
     blueprints_H,
-    styles_H
+    styles_H,
+    0
   ],
 
   H2a: [
     bitmap_H2a,
     blueprints_H,
-    styles_H
+    styles_H,
+    2
   ],
 
   H2b: [
     bitmap_H2b,
     blueprints_H,
-    styles_H
+    styles_H,
+    3
   ],
 
   H3a: [
     bitmap_H3a,
     blueprints_H,
-    styles_H
+    styles_H,
+    1
   ],
 
   H3b: [
     bitmap_H3b,
     blueprints_H,
-    styles_H
+    styles_H,
+    0
   ],
 
   I1a: [
     bitmap_I1a,
     blueprints_I,
     styles_I,
+    1,
     true
   ],
 
@@ -578,6 +618,7 @@ export const pieceList = {
       240: {left: 81, top: 61},
       300: {left: 78, top: 5}
     },
+    0,
     true
   ],
 
@@ -585,6 +626,7 @@ export const pieceList = {
     bitmap_I2a,
     blueprints_I,
     styles_I,
+    2,
     true
   ],
 
@@ -592,61 +634,71 @@ export const pieceList = {
     bitmap_I2b,
     blueprints_I,
     styles_I,
+    1,
     true
   ],
 
   J1a: [
     bitmap_J1a,
     blueprints_Ja,
-    styles_Ja
+    styles_Ja,
+    0
   ],
 
   J1b: [
     bitmap_J1b,
     blueprints_Jb,
-    styles_Jb
+    styles_Jb,
+    2
   ],
 
   J2a: [
     bitmap_J2a,
     blueprints_Ja,
-    styles_Ja
+    styles_Ja,
+    0
   ],
 
   J2b: [
     bitmap_J2b,
     blueprints_Jb,
-    styles_Jb
+    styles_Jb,
+    2
   ],
 
   K1a: [
     bitmap_K1a,
     blueprints_K,
-    styles_K
+    styles_K,
+    0
   ],
 
   K1b: [
     bitmap_K1b,
     blueprints_K,
-    styles_K
+    styles_K,
+    2
   ],
 
   K2a: [
     bitmap_K2a,
     blueprints_K,
-    styles_K
+    styles_K,
+    2
   ],
 
   K2b: [
     bitmap_K2b,
     blueprints_K,
-    styles_K
+    styles_K,
+    0
   ],
 
   L1a: [
     bitmap_L1a,
     blueprints_L,
     styles_L,
+    0,
     true
   ],
 
@@ -654,6 +706,7 @@ export const pieceList = {
     bitmap_L1b,
     blueprints_L,
     styles_L,
+    3,
     true
   ],
 
@@ -661,6 +714,7 @@ export const pieceList = {
     bitmap_L2a,
     blueprints_L,
     styles_L,
+    2,
     true
   ],
 
@@ -668,6 +722,7 @@ export const pieceList = {
     bitmap_L2b,
     blueprints_L,
     styles_L,
+    0,
     true
   ],
 
@@ -675,6 +730,7 @@ export const pieceList = {
     bitmap_L3a,
     blueprints_L,
     styles_L,
+    3,
     true
   ],
 
@@ -682,6 +738,7 @@ export const pieceList = {
     bitmap_L3b,
     blueprints_L,
     styles_L,
+    2,
     true
   ],
 
@@ -689,6 +746,7 @@ export const pieceList = {
     bitmap_M1a,
     blueprints_M,
     styles_M,
+    0,
     true
   ],
 
@@ -696,6 +754,7 @@ export const pieceList = {
     bitmap_M1b,
     blueprints_M,
     styles_M,
+    3,
     true
   ],
 
@@ -703,6 +762,7 @@ export const pieceList = {
     bitmap_N1a,
     blueprints_N,
     styles_N,
+    2,
     true
   ],
 
@@ -710,6 +770,7 @@ export const pieceList = {
     bitmap_N1b,
     blueprints_N,
     styles_N,
+    0,
     true
   ]
 }

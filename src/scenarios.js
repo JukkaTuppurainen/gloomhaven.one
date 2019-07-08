@@ -9,7 +9,7 @@ export const scenarioList = {
   ],
   3: [
     'Inox Encampment',
-    '15fB1a15kB2a2fB3ac2kB4ac8aE1bc7fL1b7kL3a7j19j111j113j110f06h014h06m014m08k010k012k0'
+    '15fB1a15kB2a2fB3ac2kB4ac8aE1bc7fL1b7kL3a7j79j711j713j710f26h114h16m114m18k310k312k3'
   ],
   4: [
     'Crypt of the Damned',
@@ -25,11 +25,11 @@ export const scenarioList = {
   ],
   7: [
     'Vibrant Grotto',
-    '2hB4bc11kC2aa11aD2be1cF1b7fG2a13eM1bb8f010d06j015e014l010m0'
+    '2hB4bc11kC2aa11aD2be1cF1b7fG2a13eM1bb8f210d36j215e314l310m2'
   ],
   8: [
     'Gloomhaven Warehouse',
-    '1aG2bc11bI1a5bI2b4e010e0'
+    '1aG2bc11bI1a5bI2b4e110e1'
   ],
   // 29: [
   //   'Sanctuary of Gloom',

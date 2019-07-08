@@ -12,7 +12,7 @@ import {
 import {pieceList} from './board.pieces'
 
 
-export const createPiece = (x, y, pieceKey, angle = 0) => {
+export const createPiece = (x, y, pieceKey, angle = 0, color = null) => {
   const gridSize = {
     height: 0,
     width: 0
@@ -23,7 +23,7 @@ export const createPiece = (x, y, pieceKey, angle = 0) => {
   let stringSplit
   let useAngle
 
-  if (angle >= 180 && pieceFromList[3] === true) {
+  if (angle >= 180 && pieceFromList[4] === true) {
     useAngle = angle - 180
   } else {
     useAngle = angle
@@ -60,12 +60,18 @@ export const createPiece = (x, y, pieceKey, angle = 0) => {
 
   pieceElement.dataset['id'] = id
   pieceElement.classList.add('map-tile', 'img-loading')
+  if (pieceKey === 'corridor' || pieceKey === 'door') {
+    pieceElement.dataset['color'] = color
+    pieceElement.classList.add(pieceKey + '-tile')
+  }
   pieceElement.style.height = `${pxSizeY}px`
   pieceElement.style.left = `${x}px`
   pieceElement.style.top = `${y}px`
   pieceElement.style.width = `${pxSizeX}px`
 
   if (pieceFromList[0]) {
+    const imgWrap = document.createElement('div')
+    imgWrap.classList.add('img-wrap')
     const img = document.createElement('img')
     img.onload = () => pieceElement.classList.remove('img-loading')
     img.onerror = () => {
@@ -94,24 +100,26 @@ export const createPiece = (x, y, pieceKey, angle = 0) => {
     }
     img.src = pieceFromList[0]
     if (angle > 0) {
-      img.style.transform = `rotate(${angle}deg)`
+      imgWrap.style.transform = `rotate(${angle}deg)`
     }
     if (pieceFromList[2]) {
       if (pieceFromList[2][angle]) {
         Object.entries(pieceFromList[2][angle]).forEach(keyValue => {
-          img.style[keyValue[0]] = keyValue[1] * .75 + 'px'
+          imgWrap.style[keyValue[0]] = keyValue[1] * .75 + 'px'
         })
       }
       else if (pieceFromList[2][useAngle]) {
         Object.entries(pieceFromList[2][useAngle]).forEach(keyValue => {
-          img.style[keyValue[0]] = keyValue[1] * .75 + 'px'
+          imgWrap.style[keyValue[0]] = keyValue[1] * .75 + 'px'
         })
       }
     }
-    pieceElement.appendChild(img)
+    imgWrap.appendChild(img)
+    pieceElement.appendChild(imgWrap)
   }
 
   const piece = {
+    color: color || pieceFromList[3],
     element: pieceElement,
     grid: pieceGrid,
     h: gridSize.height,
@@ -178,6 +186,7 @@ export const fromChar = c => {
 }
 
 export const generatePiecesFromLayoutString = layoutString => {
+  let c
   let i = 0
   let ii = 0
   let m
@@ -198,13 +207,12 @@ export const generatePiecesFromLayoutString = layoutString => {
     r = 0
     ++ii
     k = layoutString.substr(i + ii, 1)
-    if (k === '0') {
-      n = 'door'
-      ++ii
-    } else if (k === '1') {
-      n = 'corridor'
+    if (k.match(/\d/)) {
+      c = parseInt(k, 10)
+      n = c < 4 ? 'door' : 'corridor'
       ++ii
     } else {
+      c = null
       n = layoutString.substr(i + ii, 3)
       ii += 3
     }
@@ -214,7 +222,7 @@ export const generatePiecesFromLayoutString = layoutString => {
       ++ii
     }
     i += ii
-    piecesToCreate.push({x, y, n, r})
+    piecesToCreate.push({x, y, n, r, c})
   }
 
   const boardElement = document.getElementById('board')
@@ -225,7 +233,8 @@ export const generatePiecesFromLayoutString = layoutString => {
       point.x,
       point.y,
       pieceToCreate.n,
-      pieceToCreate.r
+      pieceToCreate.r,
+      pieceToCreate.c
     )
     board.pieces.push(piece)
     boardElement.appendChild(piece.element)

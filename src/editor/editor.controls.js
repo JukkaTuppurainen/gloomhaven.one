@@ -59,7 +59,7 @@ const rotatePiece = (index, angle) => {
     document.querySelectorAll('.map-tile')[index]
   )
 
-  const newPiece = createPiece(piece.x, piece.y, name, angle)
+  const newPiece = createPiece(piece.x, piece.y, name, angle, piece.color)
   board.pieces.splice(index, 1)
   board.pieces.push(newPiece)
   board.pieces.sort(pieceSort)
@@ -118,29 +118,38 @@ export const tileSelectChange = event => {
 
 export const updatePieceControlPositions = () => {
   board.pieces.forEach((piece, i) => {
-    const image = piece.element.children[0]
+    const imageWrap = piece.element.children[0]
     const pieceControlWrap = document.querySelectorAll('.control-wrap')[i]
 
-    if (image.style.transform) {
-      const m = image.style.transform.match(/rotate\((\d+)/)
+    if (imageWrap.style.transform) {
+      const m = imageWrap.style.transform.match(/rotate\((\d+)/)
       if (m[1]) {
+        const image = imageWrap.children[0]
+
         if (image.width === 0) {
           let prevOnLoad
           if (image.onload) {
             prevOnLoad = image.onload
           }
 
-          pieceControlWrap.style.display = 'none'
+          pieceControlWrap.classList.add('hidden')
 
           image.onload = () => {
-            pieceControlWrap.style.display = 'block'
-            pieceControlWrap.style.transformOrigin = `${image.width / 2}px ${image.height / 2}px`
+            pieceControlWrap.classList.remove('hidden')
+            const style = window.getComputedStyle(imageWrap)
+            const height = parseFloat(style.height)
+            const width = parseFloat(style.width)
+            pieceControlWrap.style.transformOrigin = `${width / 2}px ${height / 2}px`
             prevOnLoad()
           }
         }
 
+        const style = window.getComputedStyle(imageWrap)
+        const height = parseFloat(style.height)
+        const width = parseFloat(style.width)
+
         pieceControlWrap.style.transform = `rotate(${parseInt(m[1])}deg)`
-        pieceControlWrap.style.transformOrigin = `${image.width / 2}px ${image.height / 2}px`
+        pieceControlWrap.style.transformOrigin = `${width / 2}px ${height / 2}px`
       }
     } else {
       pieceControlWrap.style.transform = ''
@@ -148,12 +157,12 @@ export const updatePieceControlPositions = () => {
 
     pieceControlWrap.style.left =
       parseFloat(piece.element.style.left, 10) +
-      (parseFloat(image.style.left, 10) || -38) +
+      (parseFloat(imageWrap.style.left, 10) || 0) +
       'px'
 
     pieceControlWrap.style.top =
       parseFloat(piece.element.style.top, 10) +
-      (parseFloat(image.style.top, 10) || -16) +
+      (parseFloat(imageWrap.style.top, 10) || 0) +
       'px'
   })
 }

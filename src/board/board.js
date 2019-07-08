@@ -57,7 +57,10 @@ export const board = {
     if (id === 'editor') {
       scenario = editor
     } else {
-      scenario = scenarioList[id]
+      scenario = {
+        name: scenarioList[id][0],
+        layout: scenarioList[id][1]
+      }
     }
 
     if (scenario.load) {
@@ -66,8 +69,8 @@ export const board = {
 
     scenarioInit()
 
-    if (scenario[1]) {
-      generatePiecesFromLayoutString(scenario[1])
+    if (scenario.layout) {
+      generatePiecesFromLayoutString(scenario.layout)
     }
 
     scenarioLoad(scenario)

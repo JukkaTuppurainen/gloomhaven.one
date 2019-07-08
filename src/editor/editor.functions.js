@@ -34,10 +34,8 @@ const generateBoardLayoutString = () => {
   board.pieces.forEach(piece => {
     switch (piece.name) {
       case 'corridor':
-        k = '1'
-        break
       case 'door':
-        k = '0'
+        k = piece.color
         break
       default:
         k = piece.name

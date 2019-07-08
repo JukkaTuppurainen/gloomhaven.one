@@ -76,6 +76,10 @@ button.active {
   background: #33ff;
 }
 
+.hidden {
+  display: none !important;
+}
+
 /* board */
 
 #board {
@@ -94,6 +98,47 @@ button.active {
   top: 0;
   width: 300px;
   z-index: 1;
+}
+
+.corridor-tile .img-wrap {
+  height: 156px;
+  overflow: hidden;
+  width: 90px;
+}
+
+.door-tile .img-wrap {
+  height: 78px;
+  overflow: hidden;
+  width: 90px;
+}
+
+.corridor-tile img,
+.door-tile img {
+  position: absolute;
+}
+
+.door-tile[data-color="1"] img {
+  left: -190px;
+}
+
+.door-tile[data-color="2"] img {
+  left: -96px;
+}
+
+.door-tile[data-color="3"] img {
+  left: -285px;
+}
+
+.corridor-tile[data-color="5"] img {
+  left: -190px;
+}
+
+.corridor-tile[data-color="6"] img {
+  left: -96px;
+}
+
+.corridor-tile[data-color="7"] img {
+  left: -285px;
 }
 
 .map-tile.img-loading,
@@ -149,7 +194,7 @@ button.active {
   z-index: 3;
 }
 
-.map-tile img {
+.map-tile .img-wrap {
   left: -38px;
   pointer-events: none;
   position: absolute;
@@ -207,7 +252,7 @@ button.active {
   z-index: 50;
 }
 
-.editor-on:not(.editor-dragging) img {
+.editor-on:not(.editor-dragging) .img-wrap {
   outline: 4px dotted #fff;
 }
 

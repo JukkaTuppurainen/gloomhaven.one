@@ -13,7 +13,7 @@ import {pointToHex} from '../lib/hexUtils'
 
 
 let mouseDownCoords = false
-const minMouseMoveDeltaToConsiderClickAsDragging = 20
+const minMouseMoveDeltaToConsiderClickAsDragging = 10
 
 export const editorDocumentClick = event => {
   mouseDownCoords = false
@@ -24,6 +24,24 @@ export const editorDocumentClick = event => {
   }
 }
 
+const getPieceIndexFromBoard = (hex, ignore) => {
+  for (let i = board.pieces.length - 1; i >= 0; --i) {
+    let piece = board.pieces[i]
+    if (
+      piece.pieceHexes.find(pieceHex => (
+        i !== ignore &&
+        hex.x === pieceHex.x + piece.ch.x &&
+        hex.y === pieceHex.y + piece.ch.y + (
+          piece.ch.x % 2 === 1 && pieceHex.x % 2 === 1 ? 1 : 0
+        )
+      ))
+    ) {
+      return i
+    }
+  }
+  return -1
+}
+
 export const editorDocumentMousedown = event => {
   if (
     editor.on &&
@@ -32,22 +50,9 @@ export const editorDocumentMousedown = event => {
     editor.hoverPiece = false
     const hexFromPoint = pointToHex(event.pageX, event.pageY)
 
-    for (
-      let i = board.pieces.length - 1;
-      i >= 0 && editor.hoverPiece === false;
-      --i
-    ) {
-      let piece = board.pieces[i]
-      if (
-        piece.pieceHexes.find(pieceHex => (
-          hexFromPoint.x === pieceHex.x + piece.ch.x &&
-          hexFromPoint.y === pieceHex.y + piece.ch.y + (
-            piece.ch.x % 2 === 1 && pieceHex.x % 2 === 1 ? 1 : 0
-          )
-        ))
-      ) {
-        editor.hoverPiece = i
-      }
+    const boardHoverPiece = getPieceIndexFromBoard(hexFromPoint)
+    if (boardHoverPiece >= 0) {
+      editor.hoverPiece = boardHoverPiece
     }
 
     if (editor.hoverPiece !== false) {
@@ -80,9 +85,22 @@ export const editorDocumentMousemove = event => {
       )
     }
   }
+
   if (editor.dragging) {
-    board.pieces[editor.hoverPiece].x = event.pageX - editor.dragging.x
-    board.pieces[editor.hoverPiece].y = event.pageY - editor.dragging.y
+    const piece = board.pieces[editor.hoverPiece]
+    piece.x = event.pageX - editor.dragging.x
+    piece.y = event.pageY - editor.dragging.y
+
+    if (piece.name === 'corridor' || piece.name === 'door') {
+      const boardIndex = getPieceIndexFromBoard(pointToHex(event.pageX, event.pageY), editor.hoverPiece)
+
+      if (board.pieces[boardIndex]) {
+        piece.color = piece.element.dataset['color'] = (
+          board.pieces[boardIndex].color + (piece.name === 'corridor' ? 4 : 0)
+        )
+      }
+    }
+
     renderDOM()
     updateDragShadow(event.pageX, event.pageY)
   }
