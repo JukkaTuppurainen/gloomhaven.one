@@ -10,9 +10,9 @@ const canvas = document.getElementById('c')
 export const render = () => requestAnimationFrame(renderer)
 export const stopPropagation = event => event.stopPropagation()
 
-document.getElementsByTagName('footer')[0].addEventListener('mousedown', stopPropagation)
+document.getElementsByTagName('header')[0].addEventListener('mousedown', stopPropagation)
 
-const scenarioSelectElement = document.getElementById('scenario')
+const scenarioSelectElement = document.getElementById('s')
 for (let [id, scenario] of Object.entries(scenarioList)) {
   const option = document.createElement('option')
   option.value = id
@@ -69,7 +69,11 @@ canvas.addEventListener('mouseup', event => board.events('mouseup', event))
 
 let keyboardInteraction = false
 
-document.addEventListener('keydown', () => {
+document.addEventListener('keydown', event => {
+  if (modalOpen && event.key === 'Escape') {
+    closeModal()
+  }
+
   if (!keyboardInteraction) {
     document.body.classList.add('keyboard')
   }
@@ -82,6 +86,38 @@ document.addEventListener('mousedown', () => {
   }
   keyboardInteraction = false
 }, {capture: true})
+
+document.getElementById('i').addEventListener('click', event => {
+  event.preventDefault()
+  openModal()
+})
+
+document.getElementById('n').addEventListener('click', event => {
+  event.preventDefault()
+  if (
+    event.target.id === 'n' ||
+    event.target.id === 'mc'
+  ) {
+    closeModal()
+  }
+})
+
+let modalOpen = false
+let disableOnModalOpen = '#s, #i, #editor-toggle, #tile-select, .control-button'
+
+const openModal = () => {
+  document.body.classList.add('modal-open')
+  document.querySelectorAll(disableOnModalOpen).forEach(n => n.setAttribute('tabIndex', -1))
+  modalOpen = true
+}
+
+const closeModal = () => {
+  document.body.classList.remove('modal-open')
+  document.querySelectorAll(disableOnModalOpen).forEach(n => n.removeAttribute('tabIndex'))
+  modalOpen = false
+}
+
+document.getElementById('co').innerText = `Contact: jukka${String.fromCharCode(64)}tuppurainen.net`
 
 // document.getElementById('los-mode').addEventListener('change', event => {
 //   board.losMode = event.target.value === '1'

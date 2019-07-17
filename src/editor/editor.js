@@ -28,10 +28,8 @@ export const editor = {
     board.editor = true
 
     // Add controls for editor
-    const editorControls = document.createElement('div')
-    editorControls.id = 'editor-controls-wrap'
+    const editorControls = document.getElementById('e')
     editorControls.innerHTML = editorControlsHTML
-    document.body.appendChild(editorControls)
 
     // Tile creation select
     const tileSelect = document.getElementById('tile-select')
@@ -67,7 +65,10 @@ export const editor = {
   unload: () => {
     board.editor = false
     setEditorOff()
-    document.body.removeChild(document.getElementById('editor-controls-wrap'))
+    const editorControls = document.getElementById('e')
+    editorControls.innerHTML = ''
+    editorControls.removeEventListener('click', stopPropagation)
+    editorControls.removeEventListener('mousedown', stopPropagation)
     document.removeEventListener('mousedown', editorDocumentMousedown)
     document.removeEventListener('mousemove', editorDocumentMousemove)
     document.removeEventListener('mouseup', editorDocumentMouseup)
