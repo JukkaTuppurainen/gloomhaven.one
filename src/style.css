@@ -168,6 +168,11 @@ select {
   display: inline-block;
 }
 
+select {
+  height: 25px;
+  margin-top: -2px;
+}
+
 button {
   margin: 0 5px 5px 0;
 }
