@@ -42,13 +42,19 @@ toggleElement.appendChild(radioButtons)
 
 const scenarioSelect = document.getElementById('s')
 
-const updateRadioButtons = () => {
-  const currentOptions = options.filter(o => {
+let currentOptions
+
+const updateCurrentOptions = () => {
+  currentOptions = options.filter(o => {
     if (o.name === 'Editor') {
       return scenarioSelect.value === 'editor'
     }
     return true
   })
+}
+
+const updateRadioButtons = () => {
+  updateCurrentOptions()
 
   radioButtons.innerHTML = ''
   toggleVisual.style.backgroundColor = options[0].color
@@ -79,3 +85,23 @@ toggleContainer.appendChild(toggleTitle)
 toggleContainer.appendChild(toggleElement)
 
 scenarioSelect.addEventListener('change', updateRadioButtons)
+
+document.addEventListener('keydown', event => {
+  updateCurrentOptions()
+
+  let key = parseInt(event.key, 10)
+
+  if (!isNaN(key)) {
+    --key
+
+    const currentMode = document.querySelector('[name=tr_]:checked').value
+    const currentModeIndex = options.findIndex(o => o.name === currentMode)
+
+    if (key >= 0 && key < currentOptions.length && key !== currentModeIndex) {
+      const radioButton = document.getElementById(`tr_${key}`)
+      radioButton.checked = true
+      radioButton.focus()
+      radioButton.dispatchEvent(new Event('change', {bubbles: true}))
+    }
+  }
+})
