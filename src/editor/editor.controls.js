@@ -242,9 +242,9 @@ export const setEditorOff = () => {
 }
 
 export const editorToggleChange = event => {
-  if (event.target.checked) {
+  if (event.target.value === 'Editor') {
     setEditorOn()
-  } else {
+  } else if (editor.on) {
     setEditorOff()
   }
 }

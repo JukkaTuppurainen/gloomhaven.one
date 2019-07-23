@@ -42,7 +42,7 @@ export const editor = {
       tileSelect.appendChild(option)
     })
 
-    document.getElementById('editor-toggle').addEventListener('change', editorToggleChange)
+    document.getElementById('tr').addEventListener('change', editorToggleChange)
 
     editorControls.addEventListener('click', stopPropagation)
     editorControls.addEventListener('mousedown', stopPropagation)

@@ -1,4 +1,5 @@
 import {board}        from './board/board'
+import                     './components/toggle'
 import {renderer}     from './lib/renderer'
 import                     './lib/testWebp'
 import {scenarioList} from './scenarios'
@@ -103,7 +104,7 @@ document.getElementById('n').addEventListener('click', event => {
 })
 
 let modalOpen = false
-let disableOnModalOpen = '#s, #i, #editor-toggle, #tile-select, .control-button'
+let disableOnModalOpen = '#s, #i, #tr>input, #tile-select, .control-button'
 
 const openModal = () => {
   document.body.classList.add('modal-open')
