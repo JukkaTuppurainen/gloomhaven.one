@@ -4,6 +4,7 @@ import {renderer}     from './lib/renderer'
 import                     './lib/testWebp'
 import {scenarioList} from './scenarios'
 import                     './style.css'
+import                     './monsters/monsters'
 
 
 const canvas = document.getElementById('c')

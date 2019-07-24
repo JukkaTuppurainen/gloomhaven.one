@@ -202,7 +202,8 @@ button.active {
 
 /* board */
 
-#board {
+#board,
+#items {
   pointer-events: none;
   position: absolute;
   top: 0;
@@ -440,4 +441,11 @@ ol li {
 
 li.flex {
   align-items: center;
+}
+
+/* items */
+
+.item-tile .img-wrap {
+  left: 0;
+  top: 0;
 }

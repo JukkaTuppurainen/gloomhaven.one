@@ -3,15 +3,15 @@ import './toggle.css'
 
 const options = [
   {
-    color: '#ec8989',
+    color: 'orange',
     name: 'Play'
   },
-  // {
-  //   color: '#74dc6d',
-  //   name: 'Monsters'
-  // },
   {
     color: '#74dc6d',
+    name: 'Monsters'
+  },
+  {
+    color: '#aaf',
     name: 'Editor'
   }
 ]
@@ -20,7 +20,7 @@ const toggleContainer = document.getElementById('q')
 
 const toggleTitle = document.createElement('div')
 toggleTitle.classList.add('tt')
-toggleTitle.innerText = 'Editor'
+toggleTitle.innerText = 'Mode'
 
 const toggleElement = document.createElement('div')
 toggleElement.classList.add('t')
