@@ -1,5 +1,6 @@
 import {itemSelectChange} from './monsters.controls'
 import                         './monsters.css'
+import {itemsList}        from './monsters.items'
 import {
   monstersDocumentClick,
   monstersDocumentMousedown,
@@ -10,54 +11,7 @@ import {board}            from '../board/board'
 import {render}           from '../index'
 
 
-const itemsElement = document.getElementById('items')
-
-// const monsterKeydown = event => {
-//   let type
-//
-//   switch (event.key) {
-//     case 'q':
-//       type = 'obstacle'
-//       break
-//     case 'w':
-//       type = 'trap'
-//       break
-//     case 'e':
-//       type = ''
-//       break
-//     case 'r':
-//       type = ''
-//       break
-//   }
-//
-//   if (type) {
-//     const hex = board.scenario.hexes.find(hex => (
-//       hex.x === board.mouseHex.x && hex.y === board.mouseHex.y
-//     ))
-//
-//     if (hex) {
-//       const prevItemIndex = board.items.findIndex(i => i.x === hex.x && i.y === hex.y)
-//
-//       console.log(prevItemIndex)
-//
-//       let prevType
-//       if (prevItemIndex > -1) {
-//         prevType = board.items[prevItemIndex].type
-//         board.items.splice(prevItemIndex, 1)
-//         itemsElement.removeChild(
-//           itemsElement.children[prevItemIndex]
-//         )
-//       }
-//
-//       if (type !== prevType) {
-//         const item = createItem(hex.x, hex.y, type)
-//         board.items.push(item)
-//         itemsElement.appendChild(item.element)
-//       }
-//     }
-//   }
-// }
-
+board.items = []
 
 export const monsters = {
   on: false,
@@ -73,11 +27,20 @@ export const monsters = {
       mouseup: monstersDocumentMouseup
     }
 
-    board.items = []
     monsters.on = true
-    // document.addEventListener('keydown', monsterKeydown)
 
-    document.getElementById('h').innerHTML = '<div id="hh"><section id="ha">Add item: <select id="hs"><option value=""></option><option value="1">Obstacle</option><option value="2">Trap</option></select></section></div>'
+    document.getElementById('h').innerHTML = '<div id="hh"><section id="ha">Add item: <select id="hs"><option value=""></option></select></section></div>'
+
+    const itemSelect = document.getElementById('hs')
+    let option
+
+    Object.entries(itemsList).forEach(item => {
+      option = document.createElement('option')
+      option.value = item[0]
+      option.innerText = item[1].name
+      itemSelect.appendChild(option)
+    })
+
     document.getElementById('hs').addEventListener('change', itemSelectChange)
     render()
   },
@@ -85,11 +48,8 @@ export const monsters = {
     board.scenario.events = board.scenario._events
     delete board.scenario._events
 
-    delete board.items
-    itemsElement.innerHTML = ''
     monsters.on = false
     monsters.dragging = false
-    // document.removeEventListener('keydown', monsterKeydown)
 
     document.getElementById('h').innerHTML = ''
   }

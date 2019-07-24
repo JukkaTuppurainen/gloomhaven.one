@@ -449,3 +449,8 @@ li.flex {
   left: 0;
   top: 0;
 }
+
+.item-active {
+  filter: brightness(1.25) drop-shadow(0 0 8px red) drop-shadow(0 0 5px #f40);
+  z-index: 9;
+}

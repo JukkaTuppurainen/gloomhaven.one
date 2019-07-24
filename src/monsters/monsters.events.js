@@ -14,10 +14,31 @@ const itemsElement = document.getElementById('items')
 const minMouseMoveDeltaToConsiderClickAsDragging = 20
 let mouseDownCoords = false
 
-export const monstersDocumentClick = () => {
+export const monstersDocumentClick = event => {
   mouseDownCoords = false
   if (monsters.dragging) {
     stopDragging()
+  } else {
+    const clickHex = pointToHex(event.pageX, event.pageY)
+    const clickItem = board.items.find(item => (
+      item.ch.x === clickHex.x && item.ch.y === clickHex.y
+    ))
+
+    if (clickItem && clickItem.type === 'monster') {
+      if (clickItem.active) {
+        clickItem.active = false
+        clickItem.element.classList.remove('item-active')
+      } else {
+        const prevActiveItem = board.items.find(item => item.active)
+        if (prevActiveItem) {
+          prevActiveItem.active = false
+          prevActiveItem.element.classList.remove('item-active')
+        }
+
+        clickItem.active = true
+        clickItem.element.classList.add('item-active')
+      }
+    }
   }
 }
 
@@ -44,7 +65,6 @@ export const monstersDocumentMousedown = event => {
     }
   }
 }
-
 
 export const monstersDocumentMousemove = event => {
   if (mouseDownCoords) {

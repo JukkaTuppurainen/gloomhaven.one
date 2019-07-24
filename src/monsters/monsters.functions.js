@@ -1,6 +1,5 @@
 import {monsters}     from './monsters'
-import bitmap_boulder from '../assets/boulder.webp'
-import trap_boulder   from '../assets/trap.webp'
+import {itemsList}    from './monsters.items'
 import {
   board,
   hexHeight,
@@ -15,7 +14,7 @@ import {
 }                     from '../editor/editor.functions'
 
 
-export const createItem = (x, y, t) => {
+export const createItem = (x, y, type) => {
   const itemElement = document.createElement('div')
   itemElement.classList.add('img-loading', 'item-tile', 'map-tile')
 
@@ -29,19 +28,7 @@ export const createItem = (x, y, t) => {
     itemElement.classList.remove('img-loading')
     itemElement.classList.add('img-error')
   }
-
-  let type
-
-  switch (t) {
-    case '1':
-      img.src = bitmap_boulder
-      type = 'obstacle'
-      break
-    case '2':
-      img.src = trap_boulder
-      type = 'trap'
-      break
-  }
+  img.src = itemsList[type].bitmap
 
   const ch = pointToHex(x, y)
 
