@@ -1,6 +1,7 @@
 import {editor}     from './editor'
 import {
   generateEditorBoard,
+  getPieceIndexFromBoard,
   startDragging,
   stopDragging,
   updateDragShadow
@@ -24,23 +25,6 @@ export const editorDocumentClick = event => {
   }
 }
 
-const getPieceIndexFromBoard = (hex, ignore) => {
-  for (let i = board.pieces.length - 1; i >= 0; --i) {
-    let piece = board.pieces[i]
-    if (
-      piece.pieceHexes.find(pieceHex => (
-        i !== ignore &&
-        hex.x === pieceHex.x + piece.ch.x &&
-        hex.y === pieceHex.y + piece.ch.y + (
-          piece.ch.x % 2 === 1 && pieceHex.x % 2 === 1 ? 1 : 0
-        )
-      ))
-    ) {
-      return i
-    }
-  }
-  return -1
-}
 
 export const editorDocumentMousedown = event => {
   if (
@@ -68,8 +52,9 @@ export const editorDocumentMousedown = event => {
 
 export const editorDocumentMousemove = event => {
   if (mouseDownCoords) {
-    let deltaX = event.pageX - mouseDownCoords.x
-    let deltaY = event.pageY - mouseDownCoords.y
+    const deltaX = event.pageX - mouseDownCoords.x
+    const deltaY = event.pageY - mouseDownCoords.y
+
     if (
       !editor.dragging &&
       editor.hoverPiece !== false && (
@@ -102,7 +87,11 @@ export const editorDocumentMousemove = event => {
     }
 
     renderDOM()
-    updateDragShadow(event.pageX, event.pageY)
+    updateDragShadow(
+      event.pageX - editor.dragging.x,
+      event.pageY - editor.dragging.y,
+      piece
+    )
   }
 }
 

@@ -51,6 +51,24 @@ const generateBoardLayoutString = () => {
   window.location.hash = ':' + layoutString
 }
 
+export const getPieceIndexFromBoard = (hex, ignore) => {
+  for (let i = board.pieces.length - 1; i >= 0; --i) {
+    let piece = board.pieces[i]
+    if (
+      piece.pieceHexes.find(pieceHex => (
+        i !== ignore &&
+        hex.x === pieceHex.x + piece.ch.x &&
+        hex.y === pieceHex.y + piece.ch.y + (
+          piece.ch.x % 2 === 1 && pieceHex.x % 2 === 1 ? 1 : 0
+        )
+      ))
+    ) {
+      return i
+    }
+  }
+  return -1
+}
+
 export const startDragging = (x, y) => {
   delete board.playerHex
   resolveLOS()
@@ -58,11 +76,14 @@ export const startDragging = (x, y) => {
   document.getElementById('editor-controls').style.display = 'none'
   editor.dragging = {x, y}
   render()
-  const hoverPiece = board.pieces[editor.hoverPiece]
+  createDragShadow(board.pieces[editor.hoverPiece])
+}
+
+export const createDragShadow = pieceOrItem => {
   const dragShadowElement = document.createElement('canvas')
   dragShadowElement.id = 'drag-shadow'
-  dragShadowElement.height = hoverPiece.pxH
-  dragShadowElement.width = hoverPiece.pxW
+  dragShadowElement.height = pieceOrItem.pxH
+  dragShadowElement.width = pieceOrItem.pxW
 
   const dragShadowCtx = dragShadowElement.getContext('2d')
   dragShadowCtx.fillStyle = '#f006'
@@ -78,7 +99,7 @@ export const startDragging = (x, y) => {
   dragShadowCtx.setLineDash([5, 5]);
   dragShadowCtx.strokeStyle = '#fff'
 
-  hoverPiece.pieceHexes.forEach(hex => {
+  pieceOrItem.pieceHexes.forEach(hex => {
     const corners = addPoint(cornersCoordinates, toPoint(hex))
 
     for (let i = 0; i < 6; ++i) {
@@ -125,13 +146,8 @@ export const stopDragging = () => {
   updatePieceControlPositions()
 }
 
-export const updateDragShadow = (x, y) => {
-  const piece = board.pieces[editor.hoverPiece]
-  const {closestPoint} = findSnap(
-    piece,
-    x - editor.dragging.x,
-    y - editor.dragging.y
-  )
+export const updateDragShadow = (x, y, pieceOrItem) => {
+  const {closestPoint} = findSnap(pieceOrItem, x, y)
   const dragShadow = document.getElementById('drag-shadow')
 
   if (closestPoint) {

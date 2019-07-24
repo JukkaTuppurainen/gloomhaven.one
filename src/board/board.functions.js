@@ -143,9 +143,8 @@ export const createPiece = (x, y, pieceKey, angle = 0, color = null) => {
 }
 
 export const findSnap = (piece, eventX, eventY) => {
-  const dragPoint = toPoint(piece.grid[0])
-  let dragPxX = eventX + cornersCoordinates[0].x + dragPoint.x
-  let dragPxY = eventY + cornersCoordinates[0].y + dragPoint.y
+  const dragPxX = eventX + cornersCoordinates[0].x
+  const dragPxY = eventY + cornersCoordinates[0].y
 
   let distance
   let shortestDistance = 999
