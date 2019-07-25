@@ -1,4 +1,8 @@
-import {board}    from '../board/board'
+import {
+  board,
+  hexHeight,
+  hexWidth
+}                 from '../board/board'
 import {monsters} from './monsters'
 import {
   createItem,
@@ -14,7 +18,7 @@ export const itemSelectChange = event => {
   board.items.push(item)
   monsters.hoverItem = board.items.length - 1
 
-  startDraggingItem(0, 0)
+  startDraggingItem(hexWidth / 2, hexHeight / 2)
 
   event.target.value = ''
 }

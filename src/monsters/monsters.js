@@ -29,7 +29,7 @@ export const monsters = {
 
     monsters.on = true
 
-    document.getElementById('h').innerHTML = '<div id="hh"><section id="ha">Add item: <select id="hs"><option value=""></option></select></section></div>'
+    document.getElementById('h').innerHTML = '<div id="hh"><section id="ha">Add item: <select id="hs"><option value=""></option></select></section></div><div id="ic"></div>'
 
     const itemSelect = document.getElementById('hs')
     let option
@@ -57,10 +57,8 @@ export const monsters = {
 
 document.getElementById('tr').addEventListener('change', event => {
   if (event.target.value === 'Monsters') {
-    console.log('monsters.load()')
     monsters.activate()
   } else if (monsters.on) {
-    console.log('monsters.unload()')
     monsters.deactivate()
   }
 })

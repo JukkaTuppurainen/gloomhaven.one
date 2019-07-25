@@ -1,3 +1,10 @@
+@font-face {
+  font-family: 'Pirata One';
+  font-style: normal;
+  font-weight: normal;
+  src: url(./assets/PirataOne-Gloomhaven.ttf) format('truetype');
+}
+
 *,
 *:after,
 *:before {
@@ -365,7 +372,7 @@ button.active {
 
 /* PIECE CONTROLS */
 
-#piece-controls {
+#ic, #piece-controls {
   left: 0;
   position: absolute;
   top: 0;
@@ -453,4 +460,39 @@ li.flex {
 .item-active {
   filter: brightness(1.25) drop-shadow(0 0 8px red) drop-shadow(0 0 5px #f40);
   z-index: 9;
+}
+
+.in {
+  bottom: 7px;
+  font-family: 'Pirata One', sans-serif;
+  font-size: 28px;
+  line-height: 28px;
+  position: absolute;
+  text-align: center;
+  text-shadow: 0 0 3px #000, 0 0 5px #000;
+  width: 100%;
+  z-index: 2;
+}
+
+.icw {
+  position: absolute;
+  width: 100px;
+}
+
+.icw button {
+  background: #406ace url('data:image/svg+xml;utf8,<?xml version="1.0" encoding="UTF-8"?><svg width="56" height="28" version="1.1" viewBox="0 0 56 28" xmlns="http://www.w3.org/2000/svg"><g fill="none" stroke="%23fff" stroke-width="4"><path d="m5 14h18"/><path d="m33 14h18"/><path d="m42 5v18"/></g></svg>');
+  box-shadow: 0 0 5px #000;
+  font-size: 30px;
+  height: 30px;
+  left: 0;
+  line-height: 0;
+  margin: 0;
+  position: absolute;
+  width: 30px;
+}
+
+#ici {
+  background-position: -28px 0;
+  left: auto;
+  right: 0;
 }

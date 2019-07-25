@@ -13,6 +13,7 @@ import {updateDragShadow} from '../editor/editor.functions'
 const itemsElement = document.getElementById('items')
 const minMouseMoveDeltaToConsiderClickAsDragging = 20
 let mouseDownCoords = false
+let mouseHover = {}
 
 export const monstersDocumentClick = event => {
   mouseDownCoords = false
@@ -80,6 +81,7 @@ export const monstersDocumentMousemove = event => {
         deltaY < -minMouseMoveDeltaToConsiderClickAsDragging
       )
     ) {
+      clearPlayerControl()
       startDraggingItem(
         event.pageX - board.items[monsters.hoverItem].x,
         event.pageY - board.items[monsters.hoverItem].y
@@ -99,6 +101,65 @@ export const monstersDocumentMousemove = event => {
       item
     )
   }
+
+  if (!mouseDownCoords && !monsters.dragging) {
+    const hex = pointToHex(event.pageX, event.pageY)
+    if (
+      hex.x !== mouseHover.x ||
+      hex.y !== mouseHover.y
+    ) {
+      mouseHover.x = hex.x
+      mouseHover.y = hex.y
+
+      const item = board.items.find(i => hex.x === i.ch.x && hex.y === i.ch.y)
+      if (!item) {
+        if (mouseHover.item) {
+          mouseHover.item = false
+          clearPlayerControl()
+        }
+      } else if (item !== mouseHover.item) {
+        mouseHover.item = item
+        clearPlayerControl()
+        if (item.type === 'player') {
+          createPlayerControl(item)
+        }
+      }
+    }
+  }
+}
+
+const clearPlayerControl = () => {
+  document.getElementById('ic').innerHTML = ''
+}
+
+const updateInitiative = value => {
+  if (!mouseHover.item === false) {
+    let newInitiative = mouseHover.item.initiative + value
+    if (newInitiative < 1) {
+      newInitiative = 1
+    }
+    if (newInitiative > 99) {
+      newInitiative = 99
+    }
+    mouseHover.item.initiative = newInitiative
+    mouseHover.item.element.children[1].innerText = mouseHover.item.initiative
+  }
+}
+
+const createPlayerControl = item => {
+  const playerControl = document.createElement('div')
+  playerControl.className = 'icw'
+  playerControl.innerHTML = '<button id="icd"></button><button id="ici"></button>'
+  playerControl.style.left = item.x - 5 + 'px'
+  playerControl.style.top = item.y + 41 + 'px'
+  document.getElementById('ic').appendChild(playerControl)
+
+  document.getElementById('icd').addEventListener('click', () => {
+    updateInitiative(-(Math.random() * 10 + 5 | 0))
+  })
+  document.getElementById('ici').addEventListener('click', () => {
+    updateInitiative(Math.random() * 10 + 5 | 0)
+  })
 }
 
 export const monstersDocumentMouseup = event => {

@@ -40,7 +40,7 @@ export const createItem = (x, y, type) => {
   imgWrap.appendChild(img)
   itemElement.appendChild(imgWrap)
 
-  return {
+  const item = {
     ch,
     element: itemElement,
     grid: itemGrid,
@@ -53,6 +53,16 @@ export const createItem = (x, y, type) => {
     x,
     y
   }
+
+  if (type === 'player') {
+    item.initiative = Math.random() * 90 + 1 | 0
+    const initiativeNumber = document.createElement('div')
+    initiativeNumber.className = 'in'
+    initiativeNumber.innerText = item.initiative
+    itemElement.appendChild(initiativeNumber)
+  }
+
+  return item
 }
 
 export const startDraggingItem = (x, y) => {
