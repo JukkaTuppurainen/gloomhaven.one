@@ -27,20 +27,26 @@ export const monstersDocumentClick = event => {
 
     if (clickItem && clickItem.type === 'monster') {
       if (clickItem.active) {
-        clickItem.active = false
-        clickItem.element.classList.remove('item-active')
+        deactivateMonster(clickItem)
       } else {
         const prevActiveItem = board.items.find(item => item.active)
         if (prevActiveItem) {
-          prevActiveItem.active = false
-          prevActiveItem.element.classList.remove('item-active')
+          deactivateMonster(prevActiveItem)
         }
-
-        clickItem.active = true
-        clickItem.element.classList.add('item-active')
+        activateMonster(clickItem)
       }
     }
   }
+}
+
+const activateMonster = monster => {
+  monster.active = true
+  monster.element.classList.add('item-active')
+}
+
+const deactivateMonster = monster => {
+  monster.active = false
+  monster.element.classList.remove('item-active')
 }
 
 export const monstersDocumentMousedown = event => {
@@ -149,7 +155,7 @@ const updateInitiative = value => {
 const createPlayerControl = item => {
   const playerControl = document.createElement('div')
   playerControl.className = 'icw'
-  playerControl.innerHTML = '<button id="icd"></button><button id="ici"></button>'
+  playerControl.innerHTML = '<button id="icd" class="pm"></button><button id="ici"  class="pm"></button>'
   playerControl.style.left = item.x - 5 + 'px'
   playerControl.style.top = item.y + 41 + 'px'
   document.getElementById('ic').appendChild(playerControl)

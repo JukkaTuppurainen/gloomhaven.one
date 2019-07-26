@@ -372,7 +372,7 @@ button.active {
 
 /* PIECE CONTROLS */
 
-#ic, #piece-controls {
+#aw, #ic, #piece-controls {
   left: 0;
   position: absolute;
   top: 0;
@@ -453,8 +453,15 @@ li.flex {
 /* items */
 
 .item-tile .img-wrap {
+  height: 78px;
   left: 0;
+  overflow: hidden;
   top: 0;
+  width: 90px;
+}
+
+.item-tile img {
+  position: absolute;
 }
 
 .item-active {
@@ -466,6 +473,7 @@ li.flex {
   bottom: 7px;
   font-family: 'Pirata One', sans-serif;
   font-size: 28px;
+  letter-spacing: 1px;
   line-height: 28px;
   position: absolute;
   text-align: center;
@@ -479,8 +487,13 @@ li.flex {
   width: 100px;
 }
 
+/* Plus and minus buttons */
+.pm {
+  background: url('data:image/svg+xml;utf8,<?xml version="1.0" encoding="UTF-8"?><svg width="56" height="28" version="1.1" viewBox="0 0 56 28" xmlns="http://www.w3.org/2000/svg"><g fill="none" stroke="%23fff" stroke-width="4"><path d="m5 14h18"/><path d="m33 14h18"/><path d="m42 5v18"/></g></svg>');
+}
+
 .icw button {
-  background: #406ace url('data:image/svg+xml;utf8,<?xml version="1.0" encoding="UTF-8"?><svg width="56" height="28" version="1.1" viewBox="0 0 56 28" xmlns="http://www.w3.org/2000/svg"><g fill="none" stroke="%23fff" stroke-width="4"><path d="m5 14h18"/><path d="m33 14h18"/><path d="m42 5v18"/></g></svg>');
+  background-color: #406ace;
   box-shadow: 0 0 5px #000;
   font-size: 30px;
   height: 30px;
@@ -495,4 +508,126 @@ li.flex {
   background-position: -28px 0;
   left: auto;
   right: 0;
+}
+
+#ac {
+  background: #741a1a url(./assets/monsterAbilityCard.webp) 0 0 / cover;
+  border-radius: 16px;
+  box-shadow: 1px 1px 12px #000;
+  height: 184px;
+  left: 40px;
+  position: absolute;
+  top: 70px;
+  width: 270px;
+}
+
+#act, #ai {
+  font-family: 'Pirata One', sans-serif;
+  text-shadow: 1px 1px 2px #000;
+}
+
+#act {
+  font-size: 23px;
+  letter-spacing: .5px;
+  line-height: 38px;
+  text-align: center;
+}
+
+#ai {
+  font-size: 30px;
+  left: 10px;
+  letter-spacing: 2px;
+  position: absolute;
+  text-align: center;
+  top: 43px;
+  width: 32px;
+}
+
+#acc {
+  font-family: sans-serif;
+  font-size: 16px;
+  letter-spacing: 1px;
+  line-height: 30px;
+  margin: 14px 0;
+  text-align: center;
+}
+
+#acc>div {
+  margin: auto;
+  position: relative;
+  width: 150px;
+}
+
+#acc button {
+  background-color: #000;
+  background-size: 36px;
+  height: 20px;
+  left: 0;
+  margin: 0;
+  position: absolute;
+  top: 5px;
+  width: 20px
+}
+
+#acc button:last-child {
+  background-position: -18px 0;
+  left: auto;
+  right: 0;
+}
+
+.ic-a,
+.ic-m {
+  background: 0 0 / cover;
+  display: inline-block;
+  height: 22px;
+  margin: 0 6px;
+  position: relative;
+  top: 5px;
+  width: 22px;
+}
+
+.ic-a {
+  background-image: url('data:image/svg+xml;utf8,<?xml version="1.0" encoding="UTF-8"?><svg width="128" height="128" version="1.1" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg"><defs><clipPath id="a"><path d="m0 300h300v-300h-300z"/></clipPath></defs><g transform="translate(0 -263)"><g transform="matrix(.55 0 0 -.55 -17 409)"><g transform="translate(102 54)"><path d="m0 0-6.9-4.9-51 47 4.4 7.3 14-13 87 95 30 6.8-4.4-30-87-95z" fill="%23fefefe"/></g><g clip-path="url(%23a)"><g transform="translate(72 62)"><path d="m0 0-26-28s-4.4-.64-9 3.6c-4.5 4.2-4.3 8.6-4.3 8.6l26 28z" fill="%23fff"/></g><g transform="translate(97 153)"><path d="m0 0 10 6.2-19 23 38 4.2 1.7 34 22-14 35 17 4.7-40 27-6.7-22-13 16-28-31 .94-2.7-39-24 19-5.5-10 42-63 6.4 77 63-22-39 61 46 21-57 19-3.4 66-55-39-46 33 2.6-54-75-3.2z" fill="%23fff"/></g></g></g></g></svg>');
+}
+
+.ic-m {
+  background-image: url('data:image/svg+xml;utf8,<?xml version="1.0" encoding="UTF-8"?><svg width="128" height="128" version="1.1" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg"><defs><clipPath id="a"><path d="m0 300h300v-300h-300v300z"/></clipPath></defs><g transform="matrix(.52 0 0 -.52 -15 140)"><g clip-path="url(%23a)"><g transform="translate(32 249)"><path d="m0 0c8.3-7.6 36-30 75-35 .6-.068 1.1-.55 1.1-1.1 1.6-21 5.2-54 29-98 .35-.66 1.2-.87 1.8-.45 2.8 1.9 5.6 4 7 5 .5.37.66 1 .37 1.6-2.7 5-15 29-20 52-.13.55.13 1.1.63 1.4 12 6.6 56 27 65 31 .83.38 1.8-.22 1.8-1.1v-78c0-.32-.12-.63-.35-.86l-37-39c-.24-.25-.36-.58-.35-.92l1.6-35c.034-.71-.54-1.3-1.3-1.3h-60c-.89 0-1.5.9-1.2 1.7l13 32c.061.15.092.31.092.47v26c0 .48-.27.91-.69 1.1-2 .99-7.4 4.4-5.8 12 .15.71-.35 1.4-1.1 1.5-11 1.3-26 5.5-33 14-.71.89-.006 2.2 1.1 2 7.7-.89 16 .78 21 1.9 1.2.28 1.3 1.9.19 2.4-9.3 3.9-34 16-41 39-.3 1.1.82 2 1.8 1.4 13-6.8 24-8.9 30-9.5 1.3-.14 1.9 1.6.8 2.3-12 7.8-47 33-53 70-.18 1.2 1.2 1.9 2.1 1.1" fill="%23fff"/></g><g transform="translate(177 50)"><path d="m0 0h92c.84 0 1.5.68 1.5 1.5-.069 9.3-3.5 58-67 59-.42.003-.83-.17-1.1-.48-4.6-4.9-24-25-28-29-.3-.3-.45-.72-.42-1.1l1.7-28c.049-.79.7-1.4 1.5-1.4" fill="%23fff"/></g></g></g></svg>');
+}
+
+.item-monster img {
+  left: -188px;
+}
+
+.item-obstacle img {
+  left: -94px;
+}
+
+.item-trap img {
+  left: -94px;
+  top: -82px;
+}
+
+.item-difficult img {
+  left: -94px;
+  top: -164px;
+}
+
+.item-player-1 img {
+  top: -82px
+}
+
+.item-player-2 img {
+  top: -164px
+}
+
+.item-player-3 img {
+  top: -246px
+}
+
+.item-player-4 img {
+  top: -328px
+}
+
+.item-player-5 img {
+  top: -410px
 }

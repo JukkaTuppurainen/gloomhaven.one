@@ -1,14 +1,20 @@
-import {itemSelectChange} from './monsters.controls'
-import                         './monsters.css'
-import {itemsList}        from './monsters.items'
+import abilityCardHTML  from './monsters.abilitycard.html'
+import {
+  abilityCardClick,
+  itemSelectChange,
+  renderAbilityCard
+}                       from './monsters.controls'
+import controlsHTML     from './monsters.controls.html'
+import                       './monsters.css'
+import {itemsList}      from './monsters.items'
 import {
   monstersDocumentClick,
   monstersDocumentMousedown,
   monstersDocumentMousemove,
   monstersDocumentMouseup
-}                         from './monsters.events'
-import {board}            from '../board/board'
-import {render}           from '../index'
+}                       from './monsters.events'
+import {board}          from '../board/board'
+import {render}         from '../index'
 
 
 board.items = []
@@ -29,7 +35,7 @@ export const monsters = {
 
     monsters.on = true
 
-    document.getElementById('h').innerHTML = '<div id="hh"><section id="ha">Add item: <select id="hs"><option value=""></option></select></section></div><div id="ic"></div>'
+    document.getElementById('h').innerHTML = controlsHTML
 
     const itemSelect = document.getElementById('hs')
     let option
@@ -42,6 +48,14 @@ export const monsters = {
     })
 
     document.getElementById('hs').addEventListener('change', itemSelectChange)
+
+    const abilityCard = document.createElement('div')
+    abilityCard.id = 'ac'
+    abilityCard.innerHTML = abilityCardHTML
+    abilityCard.addEventListener('click', abilityCardClick)
+    document.getElementById('aw').appendChild(abilityCard)
+    renderAbilityCard()
+
     render()
   },
   deactivate: () => {
