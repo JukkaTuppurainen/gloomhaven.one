@@ -11,7 +11,8 @@ import {
   monstersDocumentClick,
   monstersDocumentMousedown,
   monstersDocumentMousemove,
-  monstersDocumentMouseup
+  monstersDocumentMouseup,
+  monstersDocumentKeydown
 }                           from './monsters.events'
 import {board}              from '../board/board'
 import {render}             from '../index'
@@ -65,6 +66,8 @@ export const monsters = {
     abilityCard.innerHTML = abilityCardHTML
     abilityCard.addEventListener('click', abilityCardClick)
     document.getElementById('aw').appendChild(abilityCard)
+
+    document.addEventListener('keydown', monstersDocumentKeydown)
     renderAbilityCard()
     resolveLOS()
     render()
@@ -82,6 +85,7 @@ export const monsters = {
     })
 
     document.getElementById('h').innerHTML = ''
+    document.removeEventListener('keydown', monstersDocumentKeydown)
   }
 }
 

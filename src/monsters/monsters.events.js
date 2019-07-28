@@ -2,6 +2,7 @@ import {monsters}         from './monsters'
 import {
   activateMonster,
   clearPlayerControl,
+  createItem,
   createPlayerControl,
   deactivateMonster,
   startDraggingItem,
@@ -11,7 +12,10 @@ import {board}            from '../board/board'
 import {findSnap}         from '../board/board.functions'
 import {updateDragShadow} from '../editor/editor.functions'
 import {render}           from '../index'
-import {pointToHex}       from '../lib/hexUtils'
+import {
+  pointToHex,
+  toPoint
+}                         from '../lib/hexUtils'
 
 
 const itemsElement = document.getElementById('items')
@@ -152,16 +156,80 @@ export const monstersDocumentMouseup = event => {
         item.ch = closest.closestHex
         renderDOM()
 
-        const prevItemIndex = board.items.findIndex(i => (
-          i !== item && i.ch.x === item.ch.x && i.ch.y === item.ch.y
-        ))
+        placeItem(item)
+      }
+    }
+  }
+}
 
-        if (prevItemIndex > -1) {
-          board.items.splice(prevItemIndex, 1)
-          itemsElement.removeChild(
-            itemsElement.children[prevItemIndex]
-          )
-        }
+const placeItem = item => {
+  const prevItemIndex = board.items.findIndex(i => (
+    i !== item && i.ch.x === item.ch.x && i.ch.y === item.ch.y
+  ))
+
+  if (prevItemIndex > -1) {
+    board.items.splice(prevItemIndex, 1)
+    itemsElement.removeChild(
+      itemsElement.children[prevItemIndex]
+    )
+  }
+}
+
+export const monstersDocumentKeydown = event => {
+  if (
+    !mouseDownCoords &&
+    !monsters.dragging &&
+    monsters.mouseHover.x &&
+    monsters.mouseHover.y &&
+    board.scenario.hexes.find(hex => (
+      hex.x === monsters.mouseHover.x && hex.y === monsters.mouseHover.y
+    ))
+  ) {
+    let itemName
+
+    switch (event.key) {
+      case 'q':
+        itemName = 'obstacle'
+        break
+      case 'w':
+        itemName = 'player'
+        break
+      case 'e':
+        itemName = 'difficult'
+        break
+      case 'r':
+        itemName = 'monster'
+        break
+      case 't':
+        itemName = 'trap'
+        break
+    }
+
+    if (itemName) {
+      const prevItemIndex = board.items.findIndex(boardItem => (
+        boardItem.ch.x === monsters.mouseHover.x && boardItem.ch.y === monsters.mouseHover.y
+      ))
+
+      if (
+        prevItemIndex > -1 &&
+        board.items[prevItemIndex].type === itemName
+      ) {
+        board.items.splice(prevItemIndex, 1)
+        itemsElement.removeChild(
+          itemsElement.children[prevItemIndex]
+        )
+      } else {
+        const point = toPoint(monsters.mouseHover)
+        const item = createItem(point.x, point.y, itemName)
+        const closest = findSnap(item, item.x, item.y)
+
+        item.ch = closest.closestHex
+
+        const boardItems = document.getElementById('items')
+        boardItems.appendChild(item.element)
+        board.items.push(item)
+
+        placeItem(item)
       }
     }
   }
