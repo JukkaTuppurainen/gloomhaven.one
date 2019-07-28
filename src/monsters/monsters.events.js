@@ -1,19 +1,22 @@
 import {monsters}         from './monsters'
 import {
+  activateMonster,
+  clearPlayerControl,
+  createPlayerControl,
+  deactivateMonster,
   startDraggingItem,
   stopDragging
 }                         from './monsters.functions'
 import {board}            from '../board/board'
 import {findSnap}         from '../board/board.functions'
+import {updateDragShadow} from '../editor/editor.functions'
 import {render}           from '../index'
 import {pointToHex}       from '../lib/hexUtils'
-import {updateDragShadow} from '../editor/editor.functions'
 
 
 const itemsElement = document.getElementById('items')
 const minMouseMoveDeltaToConsiderClickAsDragging = 20
 let mouseDownCoords = false
-let mouseHover = {}
 
 export const monstersDocumentClick = event => {
   mouseDownCoords = false
@@ -37,16 +40,6 @@ export const monstersDocumentClick = event => {
       }
     }
   }
-}
-
-const activateMonster = monster => {
-  monster.active = true
-  monster.element.classList.add('item-active')
-}
-
-const deactivateMonster = monster => {
-  monster.active = false
-  monster.element.classList.remove('item-active')
 }
 
 export const monstersDocumentMousedown = event => {
@@ -111,20 +104,20 @@ export const monstersDocumentMousemove = event => {
   if (!mouseDownCoords && !monsters.dragging) {
     const hex = pointToHex(event.pageX, event.pageY)
     if (
-      hex.x !== mouseHover.x ||
-      hex.y !== mouseHover.y
+      hex.x !== monsters.mouseHover.x ||
+      hex.y !== monsters.mouseHover.y
     ) {
-      mouseHover.x = hex.x
-      mouseHover.y = hex.y
+      monsters.mouseHover.x = hex.x
+      monsters.mouseHover.y = hex.y
 
       const item = board.items.find(i => hex.x === i.ch.x && hex.y === i.ch.y)
       if (!item) {
-        if (mouseHover.item) {
-          mouseHover.item = false
+        if (monsters.mouseHover.item) {
+          monsters.mouseHover.item = false
           clearPlayerControl()
         }
-      } else if (item !== mouseHover.item) {
-        mouseHover.item = item
+      } else if (item !== monsters.mouseHover.item) {
+        monsters.mouseHover.item = item
         clearPlayerControl()
         if (item.type === 'player') {
           createPlayerControl(item)
@@ -132,40 +125,6 @@ export const monstersDocumentMousemove = event => {
       }
     }
   }
-}
-
-const clearPlayerControl = () => {
-  document.getElementById('ic').innerHTML = ''
-}
-
-const updateInitiative = value => {
-  if (!mouseHover.item === false) {
-    let newInitiative = mouseHover.item.initiative + value
-    if (newInitiative < 1) {
-      newInitiative = 1
-    }
-    if (newInitiative > 99) {
-      newInitiative = 99
-    }
-    mouseHover.item.initiative = newInitiative
-    mouseHover.item.element.children[1].innerText = mouseHover.item.initiative
-  }
-}
-
-const createPlayerControl = item => {
-  const playerControl = document.createElement('div')
-  playerControl.className = 'icw'
-  playerControl.innerHTML = '<button id="icd" class="pm"></button><button id="ici"  class="pm"></button>'
-  playerControl.style.left = item.x - 5 + 'px'
-  playerControl.style.top = item.y + 41 + 'px'
-  document.getElementById('ic').appendChild(playerControl)
-
-  document.getElementById('icd').addEventListener('click', () => {
-    updateInitiative(-(Math.random() * 10 + 5 | 0))
-  })
-  document.getElementById('ici').addEventListener('click', () => {
-    updateInitiative(Math.random() * 10 + 5 | 0)
-  })
 }
 
 export const monstersDocumentMouseup = event => {

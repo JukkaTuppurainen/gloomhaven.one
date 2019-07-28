@@ -1,17 +1,17 @@
 export const itemsList = {
-  monster: {
-    name: 'Monster',
-  },
   obstacle: {
     name: 'Obstacle'
   },
-  trap: {
-    name: 'Trap'
+  player: {
+    name: 'Player character'
   },
   difficult: {
     name: 'Difficult terrain'
   },
-  player: {
-    name: 'Player character'
-  }
+  monster: {
+    name: 'Monster',
+  },
+  trap: {
+    name: 'Trap'
+  },
 }

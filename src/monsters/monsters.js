@@ -1,20 +1,22 @@
-import abilityCardHTML  from './monsters.abilitycard.html'
+import abilityCardHTML      from './monsters.abilitycard.html'
 import {
   abilityCardClick,
   itemSelectChange,
   renderAbilityCard
-}                       from './monsters.controls'
-import controlsHTML     from './monsters.controls.html'
-import                       './monsters.css'
-import {itemsList}      from './monsters.items'
+}                           from './monsters.controls'
+import controlsHTML         from './monsters.controls.html'
+import                           './monsters.css'
+import {itemsList}          from './monsters.items'
 import {
   monstersDocumentClick,
   monstersDocumentMousedown,
   monstersDocumentMousemove,
   monstersDocumentMouseup
-}                       from './monsters.events'
-import {board}          from '../board/board'
-import {render}         from '../index'
+}                           from './monsters.events'
+import {board}              from '../board/board'
+import {render}             from '../index'
+import {resolveLOS}         from '../lib/resolveLOS'
+import {deactivateMonster}  from './monsters.functions'
 
 
 board.items = []
@@ -22,8 +24,17 @@ board.items = []
 export const monsters = {
   on: false,
   dragging: false,
+  mouseHover: {
+    x: null,
+    y: null
+  },
   activate: () => {
-    delete board.mouseHex
+    board.mouseHex = {
+      x: null,
+      y: null
+    }
+    delete board.playerHex
+    delete board.linesToHover
 
     board.scenario._events = board.scenario.events
     board.scenario.events  = {
@@ -55,7 +66,7 @@ export const monsters = {
     abilityCard.addEventListener('click', abilityCardClick)
     document.getElementById('aw').appendChild(abilityCard)
     renderAbilityCard()
-
+    resolveLOS()
     render()
   },
   deactivate: () => {
@@ -64,6 +75,11 @@ export const monsters = {
 
     monsters.on = false
     monsters.dragging = false
+    board.items.forEach(i => {
+      if (i.active) {
+        deactivateMonster(i)
+      }
+    })
 
     document.getElementById('h').innerHTML = ''
   }

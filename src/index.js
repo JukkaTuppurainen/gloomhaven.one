@@ -66,7 +66,10 @@ canvas.addEventListener('click', event => board.events('click', event))
 canvas.addEventListener('mousedown', event => board.events('mousedown', event))
 canvas.addEventListener('mouseleave', event => board.events('mouseleave', event))
 canvas.addEventListener('mousemove', event => board.events('mousemove', event))
-canvas.addEventListener('mouseout', event => board.events('mouseup', event))
+canvas.addEventListener('mouseout', event => {
+  board.events('mouseup', event)
+  board.events('click', event)
+})
 canvas.addEventListener('mouseup', event => board.events('mouseup', event))
 
 let keyboardInteraction = false

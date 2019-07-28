@@ -14,9 +14,18 @@ import {
 }                       from '../editor/editor.functions'
 
 
+export const activateMonster = monster => {
+  monster.active = true
+  monster.element.classList.add('item-active')
+}
+
+export const clearPlayerControl = () => {
+  document.getElementById('ic').innerHTML = ''
+}
+
 export const createItem = (x, y, type) => {
   const itemElement = document.createElement('div')
-  itemElement.className = `img-loading item-tile item-${type} map-tile`
+  itemElement.className = `img-loading item-tile item-${type}`
 
   const itemGrid = rectangle({height: 1, width: 1})
 
@@ -77,6 +86,27 @@ export const createItem = (x, y, type) => {
   return item
 }
 
+export const createPlayerControl = item => {
+  const playerControl = document.createElement('div')
+  playerControl.className = 'icw'
+  playerControl.innerHTML = '<button id="icd" class="pm"></button><button id="ici" class="pm"></button>'
+  playerControl.style.left = item.x - 5 + 'px'
+  playerControl.style.top = item.y + 41 + 'px'
+  document.getElementById('ic').appendChild(playerControl)
+
+  document.getElementById('icd').addEventListener('click', () => {
+    updateInitiative(-(Math.random() * 10 + 5 | 0))
+  })
+  document.getElementById('ici').addEventListener('click', () => {
+    updateInitiative(Math.random() * 10 + 5 | 0)
+  })
+}
+
+export const deactivateMonster = monster => {
+  monster.active = false
+  monster.element.classList.remove('item-active')
+}
+
 export const startDraggingItem = (x, y) => {
   monsters.dragging = {x, y}
   createDragShadow(board.items[monsters.hoverItem])
@@ -87,5 +117,19 @@ export const stopDragging = () => {
   const dragShadowElement = document.getElementById('drag-shadow')
   if (dragShadowElement) {
     document.body.removeChild(dragShadowElement)
+  }
+}
+
+const updateInitiative = value => {
+  if (!monsters.mouseHover.item === false) {
+    let newInitiative = monsters.mouseHover.item.initiative + value
+    if (newInitiative < 1) {
+      newInitiative = 1
+    }
+    if (newInitiative > 99) {
+      newInitiative = 99
+    }
+    monsters.mouseHover.item.initiative = newInitiative
+    monsters.mouseHover.item.element.children[1].innerText = monsters.mouseHover.item.initiative
   }
 }

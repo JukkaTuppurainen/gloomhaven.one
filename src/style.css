@@ -218,13 +218,11 @@ button.active {
   z-index: 5;
 }
 
+.item-tile,
 .map-tile {
-  cursor: pointer;
-  height: 200px;
   left: 0;
   position: absolute;
   top: 0;
-  width: 300px;
   z-index: 1;
 }
 
@@ -379,7 +377,7 @@ button.active {
   z-index: 50;
 }
 
-.editor-on:not(.editor-dragging) .img-wrap {
+.editor-on:not(.editor-dragging) .map-tile .img-wrap {
   outline: 4px dotted #fff;
 }
 

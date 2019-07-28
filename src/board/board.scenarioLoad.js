@@ -65,8 +65,8 @@ export const scenarioLoad = scenario => {
     const {pxSizeX, pxSizeY} = getGridPxSize(board.grid)
     const canvas = document.getElementById('c')
 
-    canvas.height = pxSizeY
-    canvas.width = pxSizeX
+    canvas.height = Math.max(pxSizeY, window.innerHeight - 12)
+    canvas.width = Math.max(pxSizeX, window.innerWidth - 12)
   }
 
   // Make thinWalls
