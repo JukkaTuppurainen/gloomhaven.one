@@ -1,4 +1,5 @@
 import {monsters}       from './monsters'
+import {findFocus}      from './monsters.focus'
 import bitmap_itemsheet from '../assets/itemSheet.webp'
 import {
   board,
@@ -12,11 +13,15 @@ import {
 import {
   createDragShadow
 }                       from '../editor/editor.functions'
+import {render}         from '../index'
 
 
 export const activateMonster = monster => {
   monster.active = true
   monster.element.classList.add('item-active')
+  const focus = findFocus(monster)
+  render()
+  focus.messages.forEach(message => console.log(message))
 }
 
 export const clearPlayerControl = () => {
@@ -110,6 +115,14 @@ export const deactivateMonster = monster => {
 export const startDraggingItem = (x, y) => {
   monsters.dragging = {x, y}
   createDragShadow(board.items[monsters.hoverItem])
+  const activeMonster = board.items.find(item => (
+    item.active === true &&
+    item.type === 'monster'
+  ))
+
+  if (activeMonster) {
+    deactivateMonster(activeMonster)
+  }
 }
 
 export const stopDragging = () => {

@@ -39,18 +39,24 @@ const heuristic = hex => {
   return Math.sqrt(((hexCenter.x - endHexCenter.x) ** 2) + ((hexCenter.y - endHexCenter.y) ** 2)) / 100
 }
 
-const realNeighbors = hex => {
-    let hexCorners = addPoint(cornersCoordinates, toPoint(hex)).map(c => {
-      return {
-        x: ((c.x * 1000) | 0) / 1000,
-        y: ((c.y * 1000) | 0) / 1000
-      }
-    })
+export const realNeighbors = (hex, filterItemTypes = []) => {
+  let hexCorners = addPoint(cornersCoordinates, toPoint(hex)).map(c => {
+    return {
+      x: ((c.x * 1000) | 0) / 1000,
+      y: ((c.y * 1000) | 0) / 1000
+    }
+  })
 
   return neighborsOf(hex, board.gridSize)
     .filter(neighborHex => board.scenario.hexes.find(findHex => (
       neighborHex.x === findHex.x && neighborHex.y === findHex.y
     )))
+    .filter(neighborHex =>
+      !board.items.find(findItem =>
+        filterItemTypes.includes(findItem.type) &&
+        findItem.ch.x === neighborHex.x &&
+        findItem.ch.y === neighborHex.y
+      ))
     .filter(neighborHex => {
       let neighborCorners = addPoint(cornersCoordinates, toPoint(neighborHex)).map(c => {
         return {
@@ -64,7 +70,7 @@ const realNeighbors = hex => {
       )))
 
       if (commonCorners.length !== 2) {
-        throw Error('Rounding error: two adjecent hexes does not have two common corners')
+        throw Error('Rounding error: two adjacent hexes does not have two common corners')
       }
 
       return !board.scenario.thinWalls.find(thin => {
@@ -76,8 +82,15 @@ const realNeighbors = hex => {
         }
 
         return (
-          (commonCorners[0].x === t.x1 && commonCorners[0].y === t.y1 && commonCorners[1].x === t.x2 && commonCorners[1].y === t.y2) ||
-          (commonCorners[1].x === t.x1 && commonCorners[1].y === t.y1 && commonCorners[0].x === t.x2 && commonCorners[0].y === t.y2)
+          commonCorners[0].x === t.x1 &&
+          commonCorners[0].y === t.y1 &&
+          commonCorners[1].x === t.x2 &&
+          commonCorners[1].y === t.y2
+        ) || (
+          commonCorners[1].x === t.x1 &&
+          commonCorners[1].y === t.y1 &&
+          commonCorners[0].x === t.x2 &&
+          commonCorners[0].y === t.y2
         )
       })
 
@@ -86,7 +99,7 @@ const realNeighbors = hex => {
 
 const loopAbort = 200
 
-export const getPath = (board, startCoords, endCoords) => {
+export const getPath = (startCoords, endCoords, filter = []) => {
   let loopIteration = 0
 
   initHexes(board.scenario.hexes)
@@ -132,6 +145,8 @@ export const getPath = (board, startCoords, endCoords) => {
         current = current.parent
       }
 
+      r.pathLength = r[0].g
+
       return r.reverse()
     }
 
@@ -139,7 +154,7 @@ export const getPath = (board, startCoords, endCoords) => {
 
     closedList.push(currentNode)
 
-    let neighbors = realNeighbors(currentNode)
+    let neighbors = realNeighbors(currentNode, filter)
 
     for (i = 0; i < neighbors.length; ++i) {
       let neighbor = board.scenario.hexes.find(h => h.x === neighbors[i].x && h.y === neighbors[i].y)
@@ -171,19 +186,3 @@ export const getPath = (board, startCoords, endCoords) => {
 
   return []
 }
-
-// window.getPath = (startX, startY, endX, endY) => {
-//   performance.mark('A* start')
-//   console.log(
-//     getPath(board, {x: startX, y: startY}, {x: endX, y: endY})
-//   )
-//   performance.mark('A* end')
-//   performance.measure('A*', 'A* start', 'A* end')
-//   console.log(`A* took %c${performance.getEntriesByName('A*').pop().duration}%cms`, 'color:#9980ff', 'color:#d5d5d5')
-//
-//   render()
-// }
-//
-// window.realNeighbors = (x, y) => {
-//   console.log('Neighbors', realNeighbors({x, y}))
-// }

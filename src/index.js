@@ -1,10 +1,10 @@
 import {board}        from './board/board'
 import                     './components/toggle'
-import {renderer}     from './lib/renderer'
 import                     './lib/testWebp'
+import                     './monsters/monsters'
+import {renderer}     from './renderer/renderer'
 import {scenarioList} from './scenarios'
 import                     './style.css'
-import                     './monsters/monsters'
 
 
 const canvas = document.getElementById('c')
