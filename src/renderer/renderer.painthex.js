@@ -29,3 +29,17 @@ export const paintPlayer = ctx => {
     board.linesToHover = isInSight(board.playerHex, board.mouseHex, true)
   }
 }
+
+export const paintFocusHexes = ctx => {
+  if (
+    board.focusInfo &&
+    board.focusInfo.focusHexesVisible
+  ) {
+    ctx.fillStyle = '#ff04'
+
+    board.focusInfo.focusHexes.forEach(hex => {
+      drawHex(hex)
+      ctx.fill()
+    })
+  }
+}

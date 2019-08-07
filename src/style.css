@@ -370,7 +370,10 @@ button.active {
 
 /* PIECE CONTROLS */
 
-#aw, #ic, #piece-controls {
+#aw,
+#fw,
+#ic,
+#piece-controls {
   left: 0;
   position: absolute;
   top: 0;

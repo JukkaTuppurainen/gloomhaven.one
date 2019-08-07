@@ -4,10 +4,11 @@ import {
   shadeWallhexes
 }                   from './renderer.los'
 import {
+  paintFocusHexes,
   paintMouseHex,
   paintPlayer
 }                   from './renderer.painthex'
-// import {drawPath}   from './renderer.path'
+import {drawPath}   from './renderer.path'
 // import {
 //   paintPathingDebug,
 //   writeHexNumbers
@@ -23,13 +24,14 @@ renderFunctions.push(
   // drawNoHexes,
   shadeWallhexes,
   shadeHexesNotInSight,
+  paintFocusHexes,
   paintMouseHex,
   paintPlayer,
   // paintPathingDebug,
   // writeHexNumbers,
   // drawWalls,
-  drawHoverLines
-  // drawPath
+  drawHoverLines,
+  drawPath
 )
 
 export const renderer = () => {

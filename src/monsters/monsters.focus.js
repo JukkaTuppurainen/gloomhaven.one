@@ -22,14 +22,12 @@ export const findFocus = monster => {
   ))
 
   if (adjacentTargets.length) {
-    const playerWithSmallestInitiative = adjacentTargets.reduce((previousValue, currentValue) => (
+    focus.player = adjacentTargets.reduce((previousValue, currentValue) => (
       !previousValue || currentValue.initiative < previousValue.initiative
         ? currentValue
         : previousValue
     ), false)
-
-    focus.player = playerWithSmallestInitiative
-    focus.messages.push('The focus is ' + playerNames[playerWithSmallestInitiative.color])
+    focus.messages.push(`The focus is the ${playerNames[focus.player.color]}.`)
 
     return focus
   }
@@ -53,12 +51,21 @@ export const findFocus = monster => {
     })
   })
 
+  board.focusInfo = {
+    focusHexes: [],
+    focusHexesVisible: false,
+    paths: false,
+    pathsVisible: false,
+    pathStart: monster.ch
+  }
+
   let path
   adjacentHexesToTargets.forEach(adjHex => {
     path = getPath(monster.ch, adjHex, ['obstacle', 'player'])
     if (path.length) {
       path.targets = adjHex.targets
       paths.push(path)
+      board.focusInfo.focusHexes.push(adjHex)
     }
   })
 
@@ -67,11 +74,11 @@ export const findFocus = monster => {
     return focus
   }
 
-  focus.messages.push(`I have path to ${
+  focus.messages.push(`I have path to <a href="#" id="fih">${
     paths.length === 1
       ? 'a single hex'
       : `${paths.length} hexes`
-  } where I could make an attack.`)
+  }</a> where I could make an attack.`)
 
   if (paths.length > 1) {
     const shortestDistance = paths.reduce(((previousValue, currentPathArray) => (
@@ -83,11 +90,13 @@ export const findFocus = monster => {
     const allPathsLengt = paths.length
 
     paths = paths.filter(p => p.pathLength === shortestDistance)
+    board.focusInfo.paths = paths
+    board.focusInfo.pathStart = monster.ch
 
     if (allPathsLengt === paths.length) {
-      focus.messages.push('All of these paths takes same amount of movement points.')
+      focus.messages.push('<a href="#" id="fip">All of these paths</a> takes same amount of movement points.')
     } else {
-      focus.messages.push(`The shortest ${paths.length === 1 ? 'path' : `${paths.length} paths`} requires ${shortestDistance} movement points.`)
+      focus.messages.push(`<a href="#" id="fip">The shortest ${paths.length === 1 ? 'path' : `${paths.length} paths`}</a> requires ${shortestDistance}&nbsp;movement points.`)
     }
   }
 
@@ -100,7 +109,7 @@ export const findFocus = monster => {
 
   if (pathTargets.size === 1) {
     focus.player = paths[0].targets[0]
-    focus.messages.push(`The focus is the ${playerNames[focus.player.color]}`)
+    focus.messages.push(`The focus is the ${playerNames[focus.player.color]}.`)
     return focus
   }
 
@@ -118,6 +127,7 @@ export const findFocus = monster => {
     }
     ++i
   })
+  textString += '.'
   focus.messages.push(textString)
 
   let proximities = []
@@ -181,6 +191,8 @@ export const findFocus = monster => {
       textString += (i < proximities.length - 2) ? ', ' : ' & '
     }
   })
+
+  textString += '.'
 
   focus.messages.push(textString)
   return focus

@@ -21,7 +21,50 @@ export const activateMonster = monster => {
   monster.element.classList.add('item-active')
   const focus = findFocus(monster)
   render()
-  focus.messages.forEach(message => console.log(message))
+
+  const f = document.createElement('div')
+  f.id = 'f'
+  f.innerHTML = focus.messages
+    .map(message => `<p>${message}</p>`)
+    .join('')
+
+  document.getElementById('fw').appendChild(f)
+  const focusInformationHexes = document.getElementById('fih')
+  const focusInformationPath = document.getElementById('fip')
+
+  if (focusInformationHexes) {
+    focusInformationHexes.addEventListener('focus', showFocusHexes)
+    focusInformationHexes.addEventListener('mouseover', showFocusHexes)
+    focusInformationHexes.addEventListener('blur', hideFocusHexes)
+    focusInformationHexes.addEventListener('mouseout', hideFocusHexes)
+  }
+
+  if (focusInformationPath) {
+    focusInformationPath.addEventListener('focus', showFocusPath)
+    focusInformationPath.addEventListener('mouseover', showFocusPath)
+    focusInformationPath.addEventListener('blur', hideFocusPath)
+    focusInformationPath.addEventListener('mouseout', hideFocusPath)
+  }
+}
+
+const showFocusHexes = () => {
+  board.focusInfo.focusHexesVisible = true
+  render()
+}
+
+const hideFocusHexes = () => {
+  board.focusInfo.focusHexesVisible = false
+  render()
+}
+
+const showFocusPath = () => {
+  board.focusInfo.pathsVisible = true
+  render()
+}
+
+const hideFocusPath = () => {
+  board.focusInfo.pathsVisible = false
+  render()
 }
 
 export const clearPlayerControl = () => {
@@ -107,22 +150,27 @@ export const createPlayerControl = item => {
   })
 }
 
-export const deactivateMonster = monster => {
-  monster.active = false
-  monster.element.classList.remove('item-active')
+export const deactivateMonster = (monster = null) => {
+  if (monster === null) {
+    monster = board.items.find(item => (
+      item.active === true &&
+      item.type === 'monster'
+    ))
+  }
+
+  if (monster) {
+    monster.active = false
+    monster.element.classList.remove('item-active')
+    document.getElementById('fw').innerHTML = ''
+    delete board.focusInfo
+    render()
+  }
 }
 
 export const startDraggingItem = (x, y) => {
   monsters.dragging = {x, y}
   createDragShadow(board.items[monsters.hoverItem])
-  const activeMonster = board.items.find(item => (
-    item.active === true &&
-    item.type === 'monster'
-  ))
-
-  if (activeMonster) {
-    deactivateMonster(activeMonster)
-  }
+  deactivateMonster()
 }
 
 export const stopDragging = () => {
@@ -145,4 +193,5 @@ const updateInitiative = value => {
     monsters.mouseHover.item.initiative = newInitiative
     monsters.mouseHover.item.element.children[1].innerText = monsters.mouseHover.item.initiative
   }
+  deactivateMonster()
 }

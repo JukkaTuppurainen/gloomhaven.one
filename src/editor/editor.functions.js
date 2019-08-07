@@ -96,7 +96,7 @@ export const createDragShadow = pieceOrItem => {
   let prevLength
 
   dragShadowCtx.lineWidth = 2
-  dragShadowCtx.setLineDash([5, 5]);
+  dragShadowCtx.setLineDash([5, 5])
   dragShadowCtx.strokeStyle = '#fff'
 
   pieceOrItem.pieceHexes.forEach(hex => {

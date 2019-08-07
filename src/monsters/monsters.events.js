@@ -230,6 +230,7 @@ export const monstersDocumentKeydown = event => {
         board.items.push(item)
 
         placeItem(item)
+        deactivateMonster()
       }
     }
   }
