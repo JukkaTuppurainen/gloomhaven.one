@@ -78,7 +78,6 @@ body.modal-open #n {
 #m {
   border: 70px solid #fff;
   border-image-source: url('data:image/svg+xml;utf8,<?xml version="1.0" encoding="UTF-8"?><svg width="360" height="360" version="1.1" viewBox="70 -70 360 360" xmlns="http://www.w3.org/2000/svg"><defs><filter id="a" color-interpolation-filters="sRGB"><feFlood flood-color="rgb(0,0,0)" result="flood"/><feComposite in="flood" in2="SourceGraphic" operator="in" result="composite1"/><feGaussianBlur in="composite1" result="blur" stdDeviation="12"/><feOffset dx="0" dy="0" result="offset"/><feComposite in="SourceGraphic" in2="offset" result="composite2"/></filter><filter color-interpolation-filters="sRGB"><feFlood flood-color="rgb(0,0,0)" result="flood"/><feComposite in="flood" in2="SourceGraphic" operator="in" result="composite1"/><feGaussianBlur in="composite1" result="blur" stdDeviation="16"/><feOffset dx="0" dy="0" result="offset"/><feComposite in="offset" in2="SourceGraphic" operator="out" result="composite2"/></filter></defs><g transform="translate(0 -762.5)"><g fill-rule="evenodd" filter="url(%23a)" stroke="%23fff" stroke-width="2"><path d="m102 724.5h260.9v23.37l17.46 7.31 4.573-5.386 3.895 6.615 9.218-10.48v255.1l-18.63 19.45h-259l-18.41-18.05z"/><path d="m398 1021v-11.06l-11.06 11.06z" fill="%23fff" stroke-linecap="round" stroke-linejoin="round"/><path d="m102 1021h11.06l-11.06-11.06z" fill="%23fff" stroke-linecap="round" stroke-linejoin="round"/></g></g></svg>');
-
   border-image-slice: 20%;
   border-image-repeat: round;
   font-family: sans-serif;
@@ -184,7 +183,7 @@ select {
 }
 
 select {
-  height: 25px;
+  height: 26px;
   margin-top: -2px;
 }
 
@@ -406,12 +405,14 @@ button.active {
   width: 40px;
 }
 
+button:focus,
 input:focus,
 select:focus,
 .control-button:focus {
   outline: none;
 }
 
+.keyboard button:focus,
 .keyboard input:focus,
 .keyboard select:focus,
 .keyboard .control-button:focus {
@@ -516,9 +517,9 @@ li.flex {
   border-radius: 16px;
   box-shadow: 1px 1px 12px #000;
   height: 184px;
-  left: 40px;
+  left: 20px;
   position: absolute;
-  top: 70px;
+  top: 60px;
   width: 270px;
 }
 

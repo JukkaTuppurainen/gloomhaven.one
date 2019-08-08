@@ -1,13 +1,14 @@
+import {monsters} from './monsters'
+import {
+  createItem,
+  deactivateMonster,
+  startDraggingItem
+}                 from './monsters.functions'
 import {
   board,
   hexHeight,
   hexWidth
 }                 from '../board/board'
-import {monsters} from './monsters'
-import {
-  createItem,
-  startDraggingItem
-}                 from './monsters.functions'
 
 
 const monsterValues = {
@@ -30,6 +31,12 @@ export const abilityCardClick = event => {
       break
   }
   renderAbilityCard()
+}
+
+export const deleteAllItemsClick = () => {
+  deactivateMonster()
+  board.items = []
+  document.getElementById('items').innerHTML = ''
 }
 
 export const itemSelectChange = event => {

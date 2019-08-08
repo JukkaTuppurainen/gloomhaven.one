@@ -1,6 +1,7 @@
 import abilityCardHTML      from './monsters.abilitycard.html'
 import {
   abilityCardClick,
+  deleteAllItemsClick,
   itemSelectChange,
   renderAbilityCard
 }                           from './monsters.controls'
@@ -59,6 +60,7 @@ export const monsters = {
       itemSelect.appendChild(option)
     })
 
+    document.getElementById('di').addEventListener('click', deleteAllItemsClick)
     document.getElementById('hs').addEventListener('change', itemSelectChange)
 
     const abilityCard = document.createElement('div')
