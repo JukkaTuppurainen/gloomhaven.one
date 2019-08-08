@@ -14,10 +14,10 @@ export const stopPropagation = event => event.stopPropagation()
 document.getElementsByTagName('header')[0].addEventListener('mousedown', stopPropagation)
 
 const scenarioSelectElement = document.getElementById('s')
-for (let [id, scenario] of Object.entries(scenarioList)) {
+for (let [id] of Object.entries(scenarioList)) {
   const option = document.createElement('option')
   option.value = id
-  option.innerText = (id !== 'editor' ? `${id}. ` : '') + scenario[0]
+  option.innerText = id
   scenarioSelectElement.appendChild(option)
 }
 

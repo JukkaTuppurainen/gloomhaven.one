@@ -31,11 +31,56 @@ export const scenarioList = {
     'Gloomhaven Warehouse',
     '1aG2bc11bI1a5bI2b4e110e1'
   ],
+  9: [
+    'Diamond Mine',
+    '1bI2a7aN1a6e2'
+  ],
+  10: [
+    'Plane of Elemental Power',
+    '4aD1bb10bG1ac2gL1b2lL3a2k74k76k78k79b39h33k35k37k3'
+  ],
+  11: [
+    'Gloomhaven Square A',
+    '12mD1aa9aE1ac4kH1b1fL1a1aL2b1e43e45e47e48c04k011n02f44f46f4'
+  ],
+  12: [
+    'Gloomhaven Square B',
+    '12mD1aa9aE1ac4kH1b1fL1a1aL2b1e43e45e47e48c04k011n02f44f46f4'
+  ],
+  13: [
+    'Temple of the Seer',
+    '1iM1a1aN1bc4i0'
+  ],
+  14: [
+    'Frozen Hollow',
+    '8aI2ac6jK1bc1bK2a7c26j2'
+  ],
+  15: [
+    'Shrine of Strength',
+    '15hC1aa9hD1ae12mH1bd12aH3bb1hL1a8j08k012h014j014k012m0'
+  ],
+  16: [
+    'Mountain Pass',
+    '8hA2bc7lB4bc8aI2ac1bK2a8l69l27c27h2'
+  ],
+  17: [
+    'Lost Island',
+    '3kB3a8lB4a13kC1ba1fL1bc1aL3ac1e73e75e77e72f34f36f34k17m112n1'
+  ],
+  18: [
+    'Abandoned Sewers',
+    '9aH1bc9hH3bc1iM1ac15h08l0'
+  ],
+  19: [
+    'Forgotten Crypt',
+    '7dC1ad4aC2bd1dD1aa4iD2a12dI1b11f05d07d05h0'
+  ],
+  20: [
+    'Necromancer’s Sanctum',
+    '4kC1ac16iD1aa1aJ1ac9fK1ac8h08m015j0'
+  ],
   // 29: [
   //   'Sanctuary of Gloom',
   //   '1fD1ad13fD2ac7eE1a4aJ1ae6i09e012i0'
-  // ],
-  editor: [
-    'Editor'
-  ]
+  // ]
 }
