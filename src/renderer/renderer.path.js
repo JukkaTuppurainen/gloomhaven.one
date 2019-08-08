@@ -30,12 +30,15 @@ export const drawPath = ctx => {
           let playerPoint = toPoint(focusInfo.pathStart)
           playerPoint.x += hexWidth / 2
           playerPoint.y += hexHeight / 2
-
-          ctx.moveTo(
-            (playerPoint.x + point.x) / 2,
-            (playerPoint.y + point.y) / 2
-          )
           first = false
+          if (path.length > 1) {
+            ctx.moveTo(
+              (playerPoint.x + point.x) / 2,
+              (playerPoint.y + point.y) / 2
+            )
+          } else {
+            prevPoint = playerPoint
+          }
         }
 
         if (i < path.length - 1) {
