@@ -96,7 +96,13 @@ export const findFocus = monster => {
     if (allPathsLengt === paths.length) {
       focus.messages.push('<a href="#" id="fip">All of these paths</a> takes same amount of movement points.')
     } else {
-      focus.messages.push(`<a href="#" id="fip">The shortest ${paths.length === 1 ? 'path' : `${paths.length} paths`}</a> requires ${shortestDistance}&nbsp;movement points.`)
+      focus.messages.push(
+        `<a href="#" id="fip">The shortest ${
+          paths.length === 1
+            ? 'path'
+            : `${paths.length} paths`
+        }</a> requires ${shortestDistance}&nbsp;movement points.`
+      )
     }
   }
 

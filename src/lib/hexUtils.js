@@ -5,8 +5,8 @@ import {
 
 
 export const addPoint = (corners, point) => Object.entries(corners).map(c => ({
-  x: c[1].x + point.x,
-  y: c[1].y + point.y
+  x: ((c[1].x + point.x) * 1000 | 0) / 1000,
+  y: ((c[1].y + point.y) * 1000 | 0) / 1000
 }))
 
 export const toPoint = hex => {

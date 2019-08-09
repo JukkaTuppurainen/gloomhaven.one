@@ -77,3 +77,25 @@
 //     ctx.fillText(str, point.x + hW - 1, point.y + 19)
 //   })
 // }
+//
+// const rangeColors = {
+//   0: '#f00',
+//   1: '#f80',
+//   2: '#cf0',
+//   3: '#0e0',
+//   4: '#0ff',
+//   5: '#08f',
+//   6: '#00f',
+//   7: '#70f',
+//   8: '#f0f'
+// }
+//
+// export const paintRange = ctx => {
+//   if (board.temprange) {
+//     board.temprange.forEach(hex => {
+//       drawHex(hex)
+//       ctx.fillStyle = rangeColors[hex.r] + '8'
+//       ctx.fill()
+//     })
+//   }
+// }

@@ -1,24 +1,26 @@
-import abilityCardHTML      from './monsters.abilitycard.html'
+import abilityCardHTML  from './monsters.abilitycard.html'
 import {
   abilityCardClick,
-  deleteAllItemsClick,
   itemSelectChange,
   renderAbilityCard
-}                           from './monsters.controls'
-import controlsHTML         from './monsters.controls.html'
-import                           './monsters.css'
-import {itemsList}          from './monsters.items'
+}                       from './monsters.controls'
+import controlsHTML     from './monsters.controls.html'
+import                       './monsters.css'
+import {itemsList}      from './monsters.items'
 import {
   monstersDocumentClick,
   monstersDocumentMousedown,
   monstersDocumentMousemove,
   monstersDocumentMouseup,
   monstersDocumentKeydown
-}                           from './monsters.events'
-import {board}              from '../board/board'
-import {render}             from '../index'
-import {resolveLOS}         from '../lib/resolveLOS'
-import {deactivateMonster}  from './monsters.functions'
+}                       from './monsters.events'
+import {
+  deactivateMonster,
+  deleteAllItems
+}                       from './monsters.functions'
+import {board}          from '../board/board'
+import {render}         from '../index'
+import {resolveLOS}     from '../lib/resolveLOS'
 
 
 board.items = []
@@ -60,7 +62,7 @@ export const monsters = {
       itemSelect.appendChild(option)
     })
 
-    document.getElementById('di').addEventListener('click', deleteAllItemsClick)
+    document.getElementById('di').addEventListener('click', deleteAllItems)
     document.getElementById('hs').addEventListener('change', itemSelectChange)
 
     const abilityCard = document.createElement('div')
@@ -97,4 +99,9 @@ document.getElementById('tr').addEventListener('change', event => {
   } else if (monsters.on) {
     monsters.deactivate()
   }
+})
+
+document.getElementById('s').addEventListener('change', () => {
+  deleteAllItems()
+  monsters.deactivate()
 })

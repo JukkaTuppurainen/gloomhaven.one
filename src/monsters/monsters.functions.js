@@ -167,6 +167,12 @@ export const deactivateMonster = (monster = null) => {
   }
 }
 
+export const deleteAllItems = () => {
+  deactivateMonster()
+  board.items = []
+  document.getElementById('items').innerHTML = ''
+}
+
 export const startDraggingItem = (x, y) => {
   monsters.dragging = {x, y}
   createDragShadow(board.items[monsters.hoverItem])

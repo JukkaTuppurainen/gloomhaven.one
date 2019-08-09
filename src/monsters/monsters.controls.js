@@ -33,12 +33,6 @@ export const abilityCardClick = event => {
   renderAbilityCard()
 }
 
-export const deleteAllItemsClick = () => {
-  deactivateMonster()
-  board.items = []
-  document.getElementById('items').innerHTML = ''
-}
-
 export const itemSelectChange = event => {
   const item = createItem(event.pageX, event.pageY, event.target.value)
   const boardItems = document.getElementById('items')

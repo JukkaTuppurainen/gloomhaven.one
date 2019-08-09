@@ -1,14 +1,15 @@
+import {findThinWall} from './findThinWall'
 import {
   addPoint,
   neighborsOf,
   toPoint
-} from './hexUtils'
+}                     from './hexUtils'
 import {
   board,
   cornersCoordinates,
   hexHeight,
   hexWidth
-} from '../board/board'
+}                     from '../board/board'
 
 
 let endHex
@@ -40,12 +41,7 @@ const heuristic = hex => {
 }
 
 export const realNeighbors = (hex, filterItemTypes = []) => {
-  let hexCorners = addPoint(cornersCoordinates, toPoint(hex)).map(c => {
-    return {
-      x: ((c.x * 1000) | 0) / 1000,
-      y: ((c.y * 1000) | 0) / 1000
-    }
-  })
+  const hexCorners = addPoint(cornersCoordinates, toPoint(hex))
 
   return neighborsOf(hex, board.gridSize)
     .filter(neighborHex => board.scenario.hexes.find(findHex => (
@@ -58,42 +54,12 @@ export const realNeighbors = (hex, filterItemTypes = []) => {
         findItem.ch.y === neighborHex.y
       ))
     .filter(neighborHex => {
-      let neighborCorners = addPoint(cornersCoordinates, toPoint(neighborHex)).map(c => {
-        return {
-          x: ((c.x * 1000) | 0) / 1000,
-          y: ((c.y * 1000) | 0) / 1000
-        }
-      })
-
-      let commonCorners = hexCorners.filter(c1 => neighborCorners.find(c2 => (
+      const neighborCorners = addPoint(cornersCoordinates, toPoint(neighborHex))
+      const commonCorners = hexCorners.filter(c1 => neighborCorners.find(c2 => (
         c1.x === c2.x && c1.y === c2.y
       )))
 
-      if (commonCorners.length !== 2) {
-        throw Error('Rounding error: two adjacent hexes does not have two common corners')
-      }
-
-      return !board.scenario.thinWalls.find(thin => {
-        const t = {
-          x1: ((thin.x1 * 1000) | 0) / 1000,
-          y1: ((thin.y1 * 1000) | 0) / 1000,
-          x2: ((thin.x2 * 1000) | 0) / 1000,
-          y2: ((thin.y2 * 1000) | 0) / 1000
-        }
-
-        return (
-          commonCorners[0].x === t.x1 &&
-          commonCorners[0].y === t.y1 &&
-          commonCorners[1].x === t.x2 &&
-          commonCorners[1].y === t.y2
-        ) || (
-          commonCorners[1].x === t.x1 &&
-          commonCorners[1].y === t.y1 &&
-          commonCorners[0].x === t.x2 &&
-          commonCorners[0].y === t.y2
-        )
-      })
-
+      return !findThinWall(commonCorners[0], commonCorners[1])
     })
 }
 
