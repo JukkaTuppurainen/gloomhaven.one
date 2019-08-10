@@ -1,7 +1,6 @@
 import {monsters} from './monsters'
 import {
   createItem,
-  deactivateMonster,
   startDraggingItem
 }                 from './monsters.functions'
 import {
@@ -20,15 +19,45 @@ const monsterValues = {
 
 export const abilityCardClick = event => {
   switch (event.target.id) {
-    case 'accdm':
+    case 'Adm':
       --monsterValues.valueMove
       if (monsterValues.valueMove < 0) {
         monsterValues.valueMove = 0
       }
       break
-    case 'accim':
+    case 'Aim':
       ++monsterValues.valueMove
       break
+    // case 'Aar':
+    //   document.getElementById('Awr').style.display = 'none'
+    //   document.getElementById('Asr').style.display = 'block'
+    //   monsterValues.valueRange = 2
+    //   break
+    // case 'Adr':
+    //   --monsterValues.valueRange
+    //   if (monsterValues.valueRange < 1) {
+    //     document.getElementById('Awr').style.display = 'block'
+    //     document.getElementById('Asr').style.display = 'none'
+    //   }
+    //   break
+    // case 'Air':
+    //   ++monsterValues.valueRange
+    //   break
+    // case 'Aat':
+    //   document.getElementById('Awt').style.display = 'none'
+    //   document.getElementById('Ast').style.display = 'block'
+    //   monsterValues.valueTarget = 2
+    //   break
+    // case 'Adt':
+    //   --monsterValues.valueTarget
+    //   if (monsterValues.valueTarget < 2) {
+    //     document.getElementById('Awt').style.display = 'block'
+    //     document.getElementById('Ast').style.display = 'none'
+    //   }
+    //   break
+    // case 'Ait':
+    //   ++monsterValues.valueTarget
+    //   break
   }
   renderAbilityCard()
 }
@@ -48,5 +77,7 @@ export const itemSelectChange = event => {
 
 export const renderAbilityCard = () => {
   document.getElementById('ai').innerText = monsterValues.initiative.toString().padStart(2, '0')
-  document.getElementById('acv-m').innerText = monsterValues.valueMove
+  document.getElementById('Avm').innerText = monsterValues.valueMove
+  // document.getElementById('Avr').innerText = monsterValues.valueRange
+  // document.getElementById('Avt').innerText = monsterValues.valueTarget
 }
