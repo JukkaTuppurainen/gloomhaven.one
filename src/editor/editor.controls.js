@@ -1,5 +1,6 @@
 import {editor}       from './editor'
 import {
+  deletePiece,
   generateEditorBoard,
   startDragging
 }                     from './editor.functions'
@@ -28,22 +29,6 @@ const elementSort = (a, b) => {
     return -1
   }
   return a.dataset['id'] > b.dataset['id'] ? 1 : -1
-}
-
-const deletePiece = index => {
-  board.pieces.splice(index, 1)
-
-  document.getElementById('board').removeChild(
-    document.querySelectorAll('.map-tile')[index]
-  )
-
-  document.getElementById('piece-controls').removeChild(
-    document.querySelectorAll('.control-wrap')[index]
-  )
-
-  generateEditorBoard()
-  updateTileSelectOptions()
-  createPieceControls()
 }
 
 const rotatePiece = (index, angle) => {
@@ -178,7 +163,7 @@ const pieceControlFocus = i => {
   document.getElementById('board').children[i].classList.add('map-tile-focus')
 }
 
-const createPieceControls = () => {
+export const createPieceControls = () => {
   const pieceControls = document.getElementById('piece-controls')
   pieceControls.innerHTML = ''
 

@@ -70,7 +70,7 @@ body.modal-open #n {
 
 #m {
   border: 70px solid #fff;
-  border-image-source: url('data:image/svg+xml;utf8,<?xml version="1.0" encoding="UTF-8"?><svg width="360" height="360" version="1.1" viewBox="70 -70 360 360" xmlns="http://www.w3.org/2000/svg"><defs><filter id="a" color-interpolation-filters="sRGB"><feFlood flood-color="rgb(0,0,0)" result="flood"/><feComposite in="flood" in2="SourceGraphic" operator="in" result="composite1"/><feGaussianBlur in="composite1" result="blur" stdDeviation="12"/><feOffset dx="0" dy="0" result="offset"/><feComposite in="SourceGraphic" in2="offset" result="composite2"/></filter><filter color-interpolation-filters="sRGB"><feFlood flood-color="rgb(0,0,0)" result="flood"/><feComposite in="flood" in2="SourceGraphic" operator="in" result="composite1"/><feGaussianBlur in="composite1" result="blur" stdDeviation="16"/><feOffset dx="0" dy="0" result="offset"/><feComposite in="offset" in2="SourceGraphic" operator="out" result="composite2"/></filter></defs><g transform="translate(0 -762.5)"><g fill-rule="evenodd" filter="url(%23a)" stroke="%23fff" stroke-width="2"><path d="m102 724.5h260.9v23.37l17.46 7.31 4.573-5.386 3.895 6.615 9.218-10.48v255.1l-18.63 19.45h-259l-18.41-18.05z"/><path d="m398 1021v-11.06l-11.06 11.06z" fill="%23fff" stroke-linecap="round" stroke-linejoin="round"/><path d="m102 1021h11.06l-11.06-11.06z" fill="%23fff" stroke-linecap="round" stroke-linejoin="round"/></g></g></svg>');
+  border-image-source: url('data:image/svg+xml;utf8,<?xml version="1.0" encoding="UTF-8"?><svg width="360" height="360" version="1.1" viewBox="70 -70 360 360" xmlns="http://www.w3.org/2000/svg"><defs><filter id="a" color-interpolation-filters="sRGB"><feFlood flood-color="rgb(0,0,0)" result="flood"/><feComposite in="flood" in2="SourceGraphic" operator="in" result="composite1"/><feGaussianBlur in="composite1" result="blur" stdDeviation="12"/><feOffset dx="0" dy="0" result="offset"/><feComposite in="SourceGraphic" in2="offset" result="composite2"/></filter><filter color-interpolation-filters="sRGB"><feFlood flood-color="rgb(0,0,0)" result="flood"/><feComposite in="flood" in2="SourceGraphic" operator="in" result="composite1"/><feGaussianBlur in="composite1" result="blur" stdDeviation="16"/><feOffset dx="0" dy="0" result="offset"/><feComposite in="offset" in2="SourceGraphic" operator="out" result="composite2"/></filter></defs><g transform="translate(0 -762.5)"><g fill-rule="evenodd" filter="url(%23a)" stroke="%23fff" stroke-width="2"><path d="m102 724.5h260.9v23.37l17.46 7.31 4.573-5.386 3.895 6.615 9.218-10.48v255.1l-18.63 19.45h-259l-18.41-18.05z"/><path d="m398 1021v-11.06l-11.06 11.06z" fill="%23fff"/><path d="m102 1021h11.06l-11.06-11.06z" fill="%23fff"/></g></g></svg>');
 
   border-image-slice: 20%;
   border-image-repeat: round;
@@ -101,7 +101,7 @@ body.modal-open #n {
 }
 
 #mc {
-  background: url('data:image/svg+xml;utf8,<?xml version="1.0" encoding="UTF-8"?><svg width="19" height="19" version="1.1" viewBox="0 0 19 19" xmlns="http://www.w3.org/2000/svg"><g transform="translate(-16 -9.1)" display="none"><path d="m20 35-13-7.6-4e-7-15 13-7.6 13 7.6v15z" fill="%23fff" style="paint-order:normal"/></g><path d="m6.4 10-4.5-5.3c2.9-2.1 4.3-2.5 5.5-2l2.7 3.2 4.5-4.8c1.4-1.4 3.2.76 3.6 1.4l-5.7 6.3 4.5 5.3c-1.1.88-4 3.2-5.6 1.9l-2.5-3-4.4 4.7c-1.2 1.2-3-.0014-3.8-1.3z" fill="%23e26868" fill-rule="evenodd" stroke="%23000" stroke-width="1.2"/></svg>') no-repeat 0 0 / 26px;
+  background: url('data:image/svg+xml;utf8,<?xml version="1.0" encoding="UTF-8"?><svg width="19" height="19" version="1.1" viewBox="0 0 19 19" xmlns="http://www.w3.org/2000/svg"><g transform="translate(-16 -9.1)" display="none"><path d="m20 35-13-7.6-4e-7-15 13-7.6 13 7.6v15z" fill="%23fff"/></g><path d="m6.4 10-4.5-5.3c2.9-2.1 4.3-2.5 5.5-2l2.7 3.2 4.5-4.8c1.4-1.4 3.2.76 3.6 1.4l-5.7 6.3 4.5 5.3c-1.1.88-4 3.2-5.6 1.9l-2.5-3-4.4 4.7c-1.2 1.2-3-.0014-3.8-1.3z" fill="%23e26868" fill-rule="evenodd" stroke="%23000" stroke-width="1.2"/></svg>') no-repeat 0 0 / 26px;
   border: none;
   display: block;
   height: 26px;
@@ -145,7 +145,7 @@ header {
 }
 
 #i {
-  background: url('data:image/svg+xml;utf8,<?xml version="1.0" encoding="UTF-8"?><svg width="32" height="32" version="1.1" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><g aria-label="i"><path d="m18 13 .0043 9.5c.00049 1.1.93 1.9 1.7 2.1v.61l-3.4 1.6c-.41-.17-.8-.44-1.2-.81-.35-.39-.52-.74-.52-1.1l-.0085-9.5c-.00095-1.1-1-1.9-1.8-2.1l-.0043-.79 3.5-1.5c.41.17.8.45 1.2.83.35.37.52.72.52 1.1zm-3.8-5.3v-1.6c0-.056.39-.22 1.2-.5.78-.3 1.2-.45 1.4-.45.13 0 .3.16.52.48.24.32.36.64.36.97v2c0 .056-.36.23-1.1.52-.71.28-1.2.42-1.4.42-.19 0-.39-.16-.58-.48-.21-.34-.31-.76-.31-1.3z" fill="%23fff"/><circle cx="16" cy="16" r="15" fill="none" stroke="%23fff" stroke-linecap="round" stroke-width="2" style="paint-order:normal"/></g></svg>') no-repeat 0 0 / 24px;
+  background: url('data:image/svg+xml;utf8,<?xml version="1.0" encoding="UTF-8"?><svg width="32" height="32" version="1.1" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><g aria-label="i"><path d="m18 13 .0043 9.5c.00049 1.1.93 1.9 1.7 2.1v.61l-3.4 1.6c-.41-.17-.8-.44-1.2-.81-.35-.39-.52-.74-.52-1.1l-.0085-9.5c-.00095-1.1-1-1.9-1.8-2.1l-.0043-.79 3.5-1.5c.41.17.8.45 1.2.83.35.37.52.72.52 1.1zm-3.8-5.3v-1.6c0-.056.39-.22 1.2-.5.78-.3 1.2-.45 1.4-.45.13 0 .3.16.52.48.24.32.36.64.36.97v2c0 .056-.36.23-1.1.52-.71.28-1.2.42-1.4.42-.19 0-.39-.16-.58-.48-.21-.34-.31-.76-.31-1.3z" fill="%23fff"/><circle cx="16" cy="16" r="15" fill="none" stroke="%23fff" stroke-width="2"/></g></svg>') no-repeat 0 0 / 24px;
   border: none;
   display: inline-block;
   height: 24px;
@@ -360,6 +360,20 @@ button.active {
 
 .editor-on #tile-select-wrap {
   display: block;
+}
+
+#dt {
+  background: transparent url('data:image/svg+xml;utf8,<?xml version="1.0" encoding="UTF-8"?><svg width="38" height="32" version="1.1" viewBox="0 0 38 32" xmlns="http://www.w3.org/2000/svg"><g><rect x=".5" y=".5" width="29" height="31" stroke="%23fff"/><path d="m5 4.5h16l3.7 4.4v.58l-5.2 6.1c3.1 4 4 2.7 5.2 2.1v9.3h-20z" fill="%23fff"/><g fill="none" stroke="%23000" stroke-width="1.2"><path d="m11 3.1 3.5 6.1-3.5 6.1h-7"/><path d="m4.3 15h7l3.5 6.1-3.5 6.1"/><path d="m25 15-3.5 6.1h-7l-3.5-6.1 3.5-6.1h7z"/></g><path d="m21 21 3.5 6.1"/></g><path d="m25 10-4.6-5.5c2.9-2.1 4.4-2.4 5.7-1.8l2.7 3.2 4.5-4.8c1.4-1.4 3.2.76 3.6 1.4l-5.7 6.3 4.5 5.3c-1.1.88-4 3.2-5.6 1.9l-2.5-3-4.4 4.7c-1.2 1.2-3-.0014-3.8-1.3z" fill="%23e26868" fill-rule="evenodd" stroke="%23000" stroke-width="1.2"/></svg>');
+  border: none;
+  display: none;
+  height: 32px;
+  margin: -5px 0 0 0;
+  vertical-align: top;
+  width: 38px;
+}
+
+.editor-on #dt {
+  display: initial;
 }
 
 /* PIECE CONTROLS */

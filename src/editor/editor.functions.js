@@ -1,6 +1,8 @@
 import {editor}     from './editor'
 import {
-  updatePieceControlPositions
+  createPieceControls,
+  updatePieceControlPositions,
+  updateTileSelectOptions
 }                   from './editor.controls'
 import {
   board,
@@ -20,6 +22,31 @@ import {resolveLOS} from '../lib/resolveLOS'
 
 
 const toChar = n => String.fromCharCode(n + (n < 27 ? 96 : 38))
+
+export const deleteAllPieces = () => {
+  board.pieces.length = 0
+  document.getElementById('board').innerHTML = ''
+  document.getElementById('piece-controls').innerHTML = ''
+
+  generateEditorBoard()
+  updateTileSelectOptions()
+}
+
+export const deletePiece = index => {
+  board.pieces.splice(index, 1)
+
+  document.getElementById('board').removeChild(
+    document.querySelectorAll('.map-tile')[index]
+  )
+
+  document.getElementById('piece-controls').removeChild(
+    document.querySelectorAll('.control-wrap')[index]
+  )
+
+  generateEditorBoard()
+  updateTileSelectOptions()
+  createPieceControls()
+}
 
 export const generateEditorBoard = () => {
   clearScenario()

@@ -5,6 +5,7 @@ import {
   tileSelectChange,
   updateTileSelectOptions
 }                         from './editor.controls'
+import {deleteAllPieces}  from './editor.functions'
 import {
   editorDocumentClick,
   editorDocumentMousedown,
@@ -42,6 +43,7 @@ export const editor = {
       tileSelect.appendChild(option)
     })
 
+    document.getElementById('dt').addEventListener('click', deleteAllPieces)
     document.getElementById('tr').addEventListener('change', editorToggleChange)
 
     editorControls.addEventListener('click', stopPropagation)
