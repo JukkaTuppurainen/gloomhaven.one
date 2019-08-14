@@ -61,7 +61,10 @@ module.exports = {
   plugins: [
     new HtmlWebpackPlugin({
       inject: true,
-      template: path.join(__dirname, '..', 'index.html'),
+      template: path.join(__dirname, '..', 'index.ejs'),
+      templateParameters: {
+        isProduction: true
+      },
       minify: {
         removeComments: true,
         collapseWhitespace: true,
