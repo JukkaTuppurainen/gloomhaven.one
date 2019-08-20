@@ -5,6 +5,19 @@ const path = require('path')
 const TerserPlugin = require('terser-webpack-plugin')
 const WebpackShellPlugin = require('webpack-shell-plugin')
 
+const minify = {
+  collapseWhitespace: true,
+  keepClosingSlash: true,
+  minifyCSS: true,
+  minifyJS: true,
+  minifyURLs: true,
+  removeComments: true,
+  removeEmptyAttributes: true,
+  removeRedundantAttributes: true,
+  removeStyleLinkTypeAttributes: true,
+  useShortDoctype: true
+}
+
 module.exports = {
   entry: [
     path.join(__dirname, '..', 'src', 'index.js')
@@ -60,23 +73,19 @@ module.exports = {
   },
   plugins: [
     new HtmlWebpackPlugin({
+      filename: 'index.html',
       inject: true,
       template: path.join(__dirname, '..', 'index.ejs'),
       templateParameters: {
         isProduction: true
       },
-      minify: {
-        removeComments: true,
-        collapseWhitespace: true,
-        removeRedundantAttributes: true,
-        useShortDoctype: true,
-        removeEmptyAttributes: true,
-        removeStyleLinkTypeAttributes: true,
-        keepClosingSlash: true,
-        minifyJS: true,
-        minifyCSS: true,
-        minifyURLs: true
-      }
+      minify
+    }),
+    new HtmlWebpackPlugin({
+      chunks: [],
+      filename: 'error.html',
+      template: path.join(__dirname, '..', 'error.html'),
+      minify
     }),
     new WebpackShellPlugin({
       onBuildStart: ['node scripts/build.js']
