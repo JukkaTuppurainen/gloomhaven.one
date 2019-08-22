@@ -1,13 +1,15 @@
 const fs = require('fs-extra');
+const path = require('path')
+
+const distPathName = path.join(__dirname, '..', 'dist')
 
 console.log(`
-Emptying dist '${__dirname}/../dist'
-`)
+Emptying dist '${distPathName}/'`)
 
-fs.emptyDirSync(__dirname + '/../dist')
+fs.emptyDirSync(distPathName)
 
 console.log(`
-Copying favicons to dist'
+Copying favicons to dist.
 `)
 
 fs.copyFile('favicon.svg', 'dist/favicon.svg')
