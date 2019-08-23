@@ -24,3 +24,12 @@ export const playerNames = {
   4: 'Mindthief',
   5: 'Tinkerer'
 }
+
+export const genders = {
+  0: 'he',
+  1: 'she',
+  2: 'she',
+  3: 'he',
+  4: 'he',
+  5: 'he',
+}

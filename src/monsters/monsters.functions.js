@@ -1,5 +1,5 @@
+import {findFocus}      from './focus/monsters.focus'
 import {monsters}       from './monsters'
-import {findFocus}      from './monsters.focus'
 import bitmap_itemsheet from '../assets/itemSheet.webp'
 import {
   board,

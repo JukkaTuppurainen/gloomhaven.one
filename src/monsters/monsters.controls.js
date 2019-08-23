@@ -10,53 +10,53 @@ import {
 }                 from '../board/board'
 
 
-const monsterValues = {
+export const monsterValues = {
   initiative: Math.random() * 90 + 1 | 0,
-  valueMove: 2,
-  valueRange: 0,
-  valueTarget: 1
+  move: 2,
+  range: 0,
+  targets: 1
 }
 
 export const abilityCardClick = event => {
   switch (event.target.id) {
     case 'Adm':
-      --monsterValues.valueMove
-      if (monsterValues.valueMove < 0) {
-        monsterValues.valueMove = 0
+      --monsterValues.move
+      if (monsterValues.move < 0) {
+        monsterValues.move = 0
       }
       break
     case 'Aim':
-      ++monsterValues.valueMove
+      ++monsterValues.move
       break
-    // case 'Aar':
-    //   document.getElementById('Awr').style.display = 'none'
-    //   document.getElementById('Asr').style.display = 'block'
-    //   monsterValues.valueRange = 2
-    //   break
-    // case 'Adr':
-    //   --monsterValues.valueRange
-    //   if (monsterValues.valueRange < 1) {
-    //     document.getElementById('Awr').style.display = 'block'
-    //     document.getElementById('Asr').style.display = 'none'
-    //   }
-    //   break
-    // case 'Air':
-    //   ++monsterValues.valueRange
-    //   break
+    case 'Aar':
+      document.getElementById('Awr').style.display = 'none'
+      document.getElementById('Asr').style.display = 'block'
+      monsterValues.range = 2
+      break
+    case 'Adr':
+      --monsterValues.range
+      if (monsterValues.range < 1) {
+        document.getElementById('Awr').style.display = 'block'
+        document.getElementById('Asr').style.display = 'none'
+      }
+      break
+    case 'Air':
+      ++monsterValues.range
+      break
     // case 'Aat':
     //   document.getElementById('Awt').style.display = 'none'
     //   document.getElementById('Ast').style.display = 'block'
-    //   monsterValues.valueTarget = 2
+    //   monsterValues.targets = 2
     //   break
     // case 'Adt':
-    //   --monsterValues.valueTarget
-    //   if (monsterValues.valueTarget < 2) {
+    //   --monsterValues.targets
+    //   if (monsterValues.targets < 2) {
     //     document.getElementById('Awt').style.display = 'block'
     //     document.getElementById('Ast').style.display = 'none'
     //   }
     //   break
     // case 'Ait':
-    //   ++monsterValues.valueTarget
+    //   ++monsterValues.targets
     //   break
   }
   renderAbilityCard()
@@ -77,7 +77,7 @@ export const itemSelectChange = event => {
 
 export const renderAbilityCard = () => {
   document.getElementById('ai').innerText = monsterValues.initiative.toString().padStart(2, '0')
-  document.getElementById('Avm').innerText = monsterValues.valueMove
-  // document.getElementById('Avr').innerText = monsterValues.valueRange
-  // document.getElementById('Avt').innerText = monsterValues.valueTarget
+  document.getElementById('Avm').innerText = monsterValues.move
+  document.getElementById('Avr').innerText = monsterValues.range
+  // document.getElementById('Avt').innerText = monsterValues.targets
 }
