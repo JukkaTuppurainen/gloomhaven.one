@@ -11,7 +11,6 @@ import {
 
 
 export const monsterValues = {
-  initiative: Math.random() * 90 + 1 | 0,
   move: 2,
   range: 0,
   targets: 1
@@ -29,31 +28,19 @@ export const abilityCardClick = event => {
       ++monsterValues.move
       break
     case 'Aar':
-      document.getElementById('Awr').style.display = 'none'
-      document.getElementById('Asr').style.display = 'block'
       monsterValues.range = 2
       break
     case 'Adr':
       --monsterValues.range
-      if (monsterValues.range < 1) {
-        document.getElementById('Awr').style.display = 'block'
-        document.getElementById('Asr').style.display = 'none'
-      }
       break
     case 'Air':
       ++monsterValues.range
       break
     // case 'Aat':
-    //   document.getElementById('Awt').style.display = 'none'
-    //   document.getElementById('Ast').style.display = 'block'
     //   monsterValues.targets = 2
     //   break
     // case 'Adt':
     //   --monsterValues.targets
-    //   if (monsterValues.targets < 2) {
-    //     document.getElementById('Awt').style.display = 'block'
-    //     document.getElementById('Ast').style.display = 'none'
-    //   }
     //   break
     // case 'Ait':
     //   ++monsterValues.targets
@@ -76,7 +63,10 @@ export const itemSelectChange = event => {
 }
 
 export const renderAbilityCard = () => {
-  document.getElementById('ai').innerText = monsterValues.initiative.toString().padStart(2, '0')
+  document.getElementById('Awr').style.display = monsterValues.range < 1 ? 'block' : 'none'
+  document.getElementById('Asr').style.display = monsterValues.range < 1 ? 'none' : 'block'
+  // document.getElementById('Awt').style.display = monsterValues.targets < 2 ? 'block' : 'none'
+  // document.getElementById('Ast').style.display = monsterValues.targets < 2 ? 'none' : 'block'
   document.getElementById('Avm').innerText = monsterValues.move
   document.getElementById('Avr').innerText = monsterValues.range
   // document.getElementById('Avt').innerText = monsterValues.targets

@@ -70,6 +70,9 @@ export const monsters = {
     abilityCard.innerHTML = abilityCardHTML
     abilityCard.addEventListener('click', abilityCardClick)
     document.getElementById('aw').appendChild(abilityCard)
+    document.getElementById('ai').innerText = (
+      Math.random() * 90 + 1 | 0
+    ).toString().padStart(2, '0')
 
     document.addEventListener('keydown', monstersDocumentKeydown)
     renderAbilityCard()
