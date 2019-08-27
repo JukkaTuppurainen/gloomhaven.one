@@ -5,6 +5,8 @@ import {
   createItem,
   createPlayerControl,
   deactivateMonster,
+  deleteItem,
+  placeItem,
   startDraggingItem,
   stopDragging
 }                         from './monsters.functions'
@@ -18,7 +20,6 @@ import {
 }                         from '../lib/hexUtils'
 
 
-const itemsElement = document.getElementById('items')
 const minMouseMoveDeltaToConsiderClickAsDragging = 20
 let mouseDownCoords = false
 
@@ -146,10 +147,7 @@ export const monstersDocumentMouseup = event => {
       ))
 
       if (!scenarioHex) {
-        board.items.splice(monsters.hoverItem, 1)
-        itemsElement.removeChild(
-          itemsElement.children[monsters.hoverItem]
-        )
+        deleteItem(monsters.hoverItem)
       } else {
         item.x = closest.closestPoint.x
         item.y = closest.closestPoint.y
@@ -159,19 +157,6 @@ export const monstersDocumentMouseup = event => {
         placeItem(item)
       }
     }
-  }
-}
-
-const placeItem = item => {
-  const prevItemIndex = board.items.findIndex(i => (
-    i !== item && i.ch.x === item.ch.x && i.ch.y === item.ch.y
-  ))
-
-  if (prevItemIndex > -1) {
-    board.items.splice(prevItemIndex, 1)
-    itemsElement.removeChild(
-      itemsElement.children[prevItemIndex]
-    )
   }
 }
 
@@ -187,7 +172,7 @@ export const monstersDocumentKeydown = event => {
   ) {
     let itemName
 
-    switch (event.key) {
+    switch (event.key.toLowerCase()) {
       case 'q':
         itemName = 'obstacle'
         break
@@ -214,10 +199,7 @@ export const monstersDocumentKeydown = event => {
         prevItemIndex > -1 &&
         board.items[prevItemIndex].type === itemName
       ) {
-        board.items.splice(prevItemIndex, 1)
-        itemsElement.removeChild(
-          itemsElement.children[prevItemIndex]
-        )
+        deleteItem(prevItemIndex)
       } else {
         const point = toPoint(monsters.mouseHover)
         const item = createItem(point.x, point.y, itemName)

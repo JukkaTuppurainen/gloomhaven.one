@@ -32,19 +32,19 @@ export const activateMonster = monster => {
   const focusInformationHexes = document.getElementById('fih')
   const focusInformationPath = document.getElementById('fip')
 
-  if (focusInformationHexes) {
-    focusInformationHexes.addEventListener('focus', showFocusHexes)
-    focusInformationHexes.addEventListener('mouseover', showFocusHexes)
-    focusInformationHexes.addEventListener('blur', hideFocusHexes)
-    focusInformationHexes.addEventListener('mouseout', hideFocusHexes)
-  }
+  const focusVisualisations = [
+    [focusInformationHexes, showFocusHexes, hideFocusHexes],
+    [focusInformationPath, showFocusPath, hideFocusPath]
+  ]
 
-  if (focusInformationPath) {
-    focusInformationPath.addEventListener('focus', showFocusPath)
-    focusInformationPath.addEventListener('mouseover', showFocusPath)
-    focusInformationPath.addEventListener('blur', hideFocusPath)
-    focusInformationPath.addEventListener('mouseout', hideFocusPath)
-  }
+  focusVisualisations.forEach(focusVisualisation => {
+    if (focusVisualisation[0]) {
+      focusVisualisation[0].addEventListener('focus', focusVisualisation[1])
+      focusVisualisation[0].addEventListener('mouseover', focusVisualisation[1])
+      focusVisualisation[0].addEventListener('blur', focusVisualisation[2])
+      focusVisualisation[0].addEventListener('mouseout', focusVisualisation[2])
+    }
+  })
 }
 
 const showFocusHexes = () => {
@@ -170,7 +170,31 @@ export const deactivateMonster = (monster = null) => {
 export const deleteAllItems = () => {
   deactivateMonster()
   board.items = []
+  const itemControls = document.getElementById('ic')
+  if (itemControls) {
+    itemControls.innerHTML = ''
+  }
   document.getElementById('items').innerHTML = ''
+}
+
+export const deleteItem = itemIndex => {
+  const itemsElement = document.getElementById('items')
+  board.items.splice(itemIndex, 1)
+  itemsElement.removeChild(
+    itemsElement.children[itemIndex]
+  )
+  document.getElementById('ic').innerHTML = ''
+  deactivateMonster()
+}
+
+export const placeItem = item => {
+  const prevItemIndex = board.items.findIndex(i => (
+    i !== item && i.ch.x === item.ch.x && i.ch.y === item.ch.y
+  ))
+
+  if (prevItemIndex > -1) {
+    deleteItem(prevItemIndex)
+  }
 }
 
 export const startDraggingItem = (x, y) => {
