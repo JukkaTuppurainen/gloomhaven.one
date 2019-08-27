@@ -213,6 +213,27 @@ export const stopDragging = () => {
 
 const updateInitiative = value => {
   if (!monsters.mouseHover.item === false) {
+    const direction = value > 0 ? 1 : -1
+    const initiatives = board.items
+      .filter(i => i.type === 'player')
+      .map(i => i.initiative)
+      .sort((a, b) => a > b ? direction : -direction)
+
+    const currentInitiative = monsters.mouseHover.item.initiative
+    let nextInitiative = false
+
+    initiatives.forEach(initiative => {
+      if (
+        !nextInitiative &&
+        (
+          (direction === 1 && initiative > currentInitiative) ||
+          (direction === -1 && initiative < currentInitiative)
+        )
+      ) {
+        nextInitiative = initiative
+      }
+    })
+
     let newInitiative = monsters.mouseHover.item.initiative + value
     if (newInitiative < 1) {
       newInitiative = 1
@@ -220,6 +241,13 @@ const updateInitiative = value => {
     if (newInitiative > 99) {
       newInitiative = 99
     }
+    if (direction === 1 && nextInitiative && newInitiative + 2 > nextInitiative) {
+      newInitiative = nextInitiative
+    }
+    if (direction === -1 && nextInitiative && newInitiative - 2 < nextInitiative) {
+      newInitiative = nextInitiative
+    }
+
     monsters.mouseHover.item.initiative = newInitiative
     monsters.mouseHover.item.element.children[1].innerText = monsters.mouseHover.item.initiative
   }
