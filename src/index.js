@@ -1,11 +1,14 @@
 import {board}        from './board/board'
 import                     './components/toggle'
 import                     './lib/testWebp'
-import                     './monsters/monsters'
 import {renderer}     from './renderer/renderer'
 import {scenarioList} from './scenarios'
 import                     './style.css'
 
+
+if (/* global ENV_TARGET */ ENV_TARGET === 'alpha' ) {
+  import(/* webpackMode: 'eager' */ './monsters/monsters')
+}
 
 const canvas = document.getElementById('c')
 

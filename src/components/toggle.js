@@ -1,20 +1,22 @@
 import './toggle.css'
 
 
-const options = [
-  {
-    color: 'orange',
-    name: 'Play'
-  },
-  {
+const options = [{
+  color: 'orange',
+  name: 'Play'
+}]
+
+if (/* global ENV_TARGET */ ENV_TARGET === 'alpha' ) {
+  options.push({
     color: '#74dc6d',
     name: 'Monsters'
-  },
-  {
-    color: '#aaf',
-    name: 'Editor'
-  }
-]
+  })
+}
+
+options.push({
+  color: '#aaf',
+  name: 'Editor'
+})
 
 const toggleContainer = document.getElementById('q')
 

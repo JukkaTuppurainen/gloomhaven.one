@@ -3,9 +3,10 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin')
 const path = require('path')
 const TerserPlugin = require('terser-webpack-plugin')
+const webpack = require('webpack')
 const WebpackShellPlugin = require('webpack-shell-plugin')
 
-module.exports = {
+module.exports = env => ({
   entry: [
     path.join(__dirname, '..', 'src', 'index.js')
   ],
@@ -59,6 +60,9 @@ module.exports = {
     path: path.resolve(__dirname, '..', 'dist')
   },
   plugins: [
+    new webpack.DefinePlugin({
+      ENV_TARGET: JSON.stringify((env && env.ENV_TARGET) || 'production')
+    }),
     new HtmlWebpackPlugin({
       inject: true,
       template: path.join(__dirname, '..', 'index.html'),
@@ -80,4 +84,4 @@ module.exports = {
     }),
     new MiniCssExtractPlugin({})
   ]
-}
+})
