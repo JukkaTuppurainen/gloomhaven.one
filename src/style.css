@@ -1,3 +1,10 @@
+@font-face {
+  font-family: 'Pirata One';
+  font-style: normal;
+  font-weight: normal;
+  src: url(./assets/PirataOne-Gloomhaven.ttf) format('truetype');
+}
+
 *,
 *:after,
 *:before {
@@ -71,7 +78,6 @@ body.modal-open #n {
 #m {
   border: 70px solid #fff;
   border-image-source: url('data:image/svg+xml;utf8,<?xml version="1.0" encoding="UTF-8"?><svg width="360" height="360" version="1.1" viewBox="70 -70 360 360" xmlns="http://www.w3.org/2000/svg"><defs><filter id="a" color-interpolation-filters="sRGB"><feFlood flood-color="rgb(0,0,0)" result="flood"/><feComposite in="flood" in2="SourceGraphic" operator="in" result="composite1"/><feGaussianBlur in="composite1" result="blur" stdDeviation="12"/><feOffset dx="0" dy="0" result="offset"/><feComposite in="SourceGraphic" in2="offset" result="composite2"/></filter><filter color-interpolation-filters="sRGB"><feFlood flood-color="rgb(0,0,0)" result="flood"/><feComposite in="flood" in2="SourceGraphic" operator="in" result="composite1"/><feGaussianBlur in="composite1" result="blur" stdDeviation="16"/><feOffset dx="0" dy="0" result="offset"/><feComposite in="offset" in2="SourceGraphic" operator="out" result="composite2"/></filter></defs><g transform="translate(0 -762.5)"><g fill-rule="evenodd" filter="url(%23a)" stroke="%23fff" stroke-width="2"><path d="m102 724.5h260.9v23.37l17.46 7.31 4.573-5.386 3.895 6.615 9.218-10.48v255.1l-18.63 19.45h-259l-18.41-18.05z"/><path d="m398 1021v-11.06l-11.06 11.06z" fill="%23fff"/><path d="m102 1021h11.06l-11.06-11.06z" fill="%23fff"/></g></g></svg>');
-
   border-image-slice: 20%;
   border-image-repeat: round;
   font-family: sans-serif;
@@ -177,7 +183,7 @@ select {
 }
 
 select {
-  height: 25px;
+  height: 26px;
   margin-top: -2px;
 }
 
@@ -202,7 +208,8 @@ button.active {
 
 /* board */
 
-#board {
+#board,
+#items {
   pointer-events: none;
   position: absolute;
   top: 0;
@@ -210,13 +217,11 @@ button.active {
   z-index: 5;
 }
 
+.item-tile,
 .map-tile {
-  cursor: pointer;
-  height: 200px;
   left: 0;
   position: absolute;
   top: 0;
-  width: 300px;
   z-index: 1;
 }
 
@@ -261,12 +266,12 @@ button.active {
   left: -285px;
 }
 
-.map-tile.img-loading,
-.map-tile.img-error {
+.img-loading,
+.img-error {
   background: #fff8;
 }
 
-.map-tile.img-error img {
+.img-error img {
   display: none;
 }
 
@@ -279,7 +284,7 @@ button.active {
   }
 }
 
-.map-tile.img-loading::after {
+.img-loading::after {
   animation: spin .6s infinite linear;
   border: 15px solid #fff;
   border-left-color: transparent;
@@ -293,7 +298,7 @@ button.active {
   width: 120px;
 }
 
-.map-tile.img-error::after {
+.img-error::after {
   color: #fff;
   content: "Image failed to load.";
   display: block;
@@ -378,6 +383,9 @@ button.active {
 
 /* PIECE CONTROLS */
 
+#aw,
+#fw,
+#ic,
 #piece-controls {
   left: 0;
   position: absolute;
@@ -385,7 +393,7 @@ button.active {
   z-index: 50;
 }
 
-.editor-on:not(.editor-dragging) .img-wrap {
+.editor-on:not(.editor-dragging) .map-tile .img-wrap {
   outline: 4px dotted #fff;
 }
 
@@ -411,12 +419,14 @@ button.active {
   width: 40px;
 }
 
+button:focus,
 input:focus,
 select:focus,
 .control-button:focus {
   outline: none;
 }
 
+.keyboard button:focus,
 .keyboard input:focus,
 .keyboard select:focus,
 .keyboard .control-button:focus {

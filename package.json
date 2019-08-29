@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "node_modules\\.bin\\webpack.cmd --config ./scripts/webpack.config.js",
-    "dev": "node_modules\\.bin\\webpack-dev-server.cmd --config ./scripts/webpack.config.dev.js"
+    "build-alpha": "node_modules\\.bin\\webpack.cmd --config ./scripts/webpack.config.js --env.ENV_TARGET=alpha",
+    "dev": "node_modules\\.bin\\webpack-dev-server.cmd --config ./scripts/webpack.config.dev.js --env.ENV_TARGET=alpha"
   },
   "author": "Jukka Tuppurainen",
   "license": "ISC",

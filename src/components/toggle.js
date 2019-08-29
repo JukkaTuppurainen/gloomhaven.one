@@ -1,26 +1,28 @@
 import './toggle.css'
 
 
-const options = [
-  {
-    color: '#ec8989',
-    name: 'Play'
-  },
-  // {
-  //   color: '#74dc6d',
-  //   name: 'Monsters'
-  // },
-  {
+const options = [{
+  color: 'orange',
+  name: 'Play'
+}]
+
+if (/* global ENV_TARGET */ ENV_TARGET === 'alpha' ) {
+  options.push({
     color: '#74dc6d',
-    name: 'Editor'
-  }
-]
+    name: 'Monsters'
+  })
+}
+
+options.push({
+  color: '#aaf',
+  name: 'Editor'
+})
 
 const toggleContainer = document.getElementById('q')
 
 const toggleTitle = document.createElement('div')
 toggleTitle.classList.add('tt')
-toggleTitle.innerText = 'Editor'
+toggleTitle.innerText = 'Mode'
 
 const toggleElement = document.createElement('div')
 toggleElement.classList.add('t')

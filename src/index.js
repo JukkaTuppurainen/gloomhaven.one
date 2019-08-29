@@ -1,10 +1,14 @@
 import {board}        from './board/board'
 import                     './components/toggle'
-import {renderer}     from './lib/renderer'
 import                     './lib/testWebp'
+import {renderer}     from './renderer/renderer'
 import {scenarioList} from './scenarios'
 import                     './style.css'
 
+
+if (/* global ENV_TARGET */ ENV_TARGET === 'alpha' ) {
+  import(/* webpackMode: 'eager' */ './monsters/monsters')
+}
 
 const canvas = document.getElementById('c')
 
@@ -65,7 +69,10 @@ canvas.addEventListener('click', event => board.events('click', event))
 canvas.addEventListener('mousedown', event => board.events('mousedown', event))
 canvas.addEventListener('mouseleave', event => board.events('mouseleave', event))
 canvas.addEventListener('mousemove', event => board.events('mousemove', event))
-canvas.addEventListener('mouseout', event => board.events('mouseup', event))
+canvas.addEventListener('mouseout', event => {
+  board.events('mouseup', event)
+  board.events('click', event)
+})
 canvas.addEventListener('mouseup', event => board.events('mouseup', event))
 
 let keyboardInteraction = false

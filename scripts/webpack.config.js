@@ -3,6 +3,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin')
 const path = require('path')
 const TerserPlugin = require('terser-webpack-plugin')
+const webpack = require('webpack')
 const WebpackShellPlugin = require('webpack-shell-plugin')
 
 const minify = {
@@ -18,7 +19,7 @@ const minify = {
   useShortDoctype: true
 }
 
-module.exports = {
+module.exports = env => ({
   entry: [
     path.join(__dirname, '..', 'src', 'index.js')
   ],
@@ -26,7 +27,7 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.(jpg|png|webp|svg)$/,
+        test: /\.(jpg|png|webp|svg|ttf)$/,
         use: [
           {
             loader: 'file-loader',
@@ -72,6 +73,9 @@ module.exports = {
     path: path.resolve(__dirname, '..', 'dist')
   },
   plugins: [
+    new webpack.DefinePlugin({
+      ENV_TARGET: JSON.stringify((env && env.ENV_TARGET) || 'production')
+    }),
     new HtmlWebpackPlugin({
       filename: 'index.html',
       inject: true,
@@ -92,4 +96,4 @@ module.exports = {
     }),
     new MiniCssExtractPlugin({})
   ]
-}
+})

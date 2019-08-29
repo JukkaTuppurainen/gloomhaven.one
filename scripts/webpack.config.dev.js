@@ -1,7 +1,8 @@
-const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+const path = require('path')
+const webpack = require('webpack')
 
-module.exports = {
+module.exports = env => ({
   devServer: {
     contentBase: path.join(__dirname, '..'),
     compress: true,
@@ -12,7 +13,7 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.(jpg|png|webp|svg)$/,
+        test: /\.(jpg|png|webp|svg|ttf)$/,
         use: [
           {
             loader: 'file-loader'
@@ -40,6 +41,9 @@ module.exports = {
     path: path.resolve(__dirname, '..')
   },
   plugins: [
+    new webpack.DefinePlugin({
+      ENV_TARGET: JSON.stringify((env && env.ENV_TARGET) || 'production')
+    }),
     new HtmlWebpackPlugin({
       inject: true,
       template: path.join(__dirname, '..', 'index.ejs'),
@@ -49,4 +53,4 @@ module.exports = {
       minify: false
     })
   ]
-}
+})
