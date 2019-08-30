@@ -16,7 +16,6 @@ import {
   editorTouchstart
 }                         from './editor.events'
 import {board}            from '../board/board'
-import {pieceList}        from '../board/board.pieces'
 import {stopPropagation}  from '../index'
 
 
@@ -36,12 +35,6 @@ export const editor = {
     const tileSelect = document.getElementById('tile-select')
     tileSelect.addEventListener('change', tileSelectChange)
     setTimeout(updateTileSelectOptions)
-    Object.keys(pieceList).forEach(key => {
-      const option = document.createElement('option')
-      option.innerText = key
-      option.value = key
-      tileSelect.appendChild(option)
-    })
 
     document.getElementById('dt').addEventListener('click', deleteAllPieces)
     document.getElementById('tr').addEventListener('change', editorToggleChange)

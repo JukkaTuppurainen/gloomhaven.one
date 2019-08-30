@@ -231,38 +231,32 @@ button.active {
   width: 90px;
 }
 
-.door-tile .img-wrap {
+.door-tile .img-wrap,
+.x-tile .img-wrap {
   height: 78px;
   overflow: hidden;
   width: 90px;
 }
 
 .corridor-tile img,
-.door-tile img {
+.door-tile img,
+.x-tile img {
   position: absolute;
 }
 
+.corridor-tile[data-color="5"] img,
 .door-tile[data-color="1"] img {
   left: -190px;
 }
 
-.door-tile[data-color="2"] img {
+.corridor-tile[data-color="6"] img,
+.door-tile[data-color="2"] img,
+.x-tile img {
   left: -96px;
 }
 
+.corridor-tile[data-color="7"] img,
 .door-tile[data-color="3"] img {
-  left: -285px;
-}
-
-.corridor-tile[data-color="5"] img {
-  left: -190px;
-}
-
-.corridor-tile[data-color="6"] img {
-  left: -96px;
-}
-
-.corridor-tile[data-color="7"] img {
   left: -285px;
 }
 

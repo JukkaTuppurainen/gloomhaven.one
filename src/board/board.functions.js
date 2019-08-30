@@ -60,7 +60,11 @@ export const createPiece = (x, y, pieceKey, angle = 0, color = null) => {
 
   pieceElement.dataset['id'] = id
   pieceElement.classList.add('map-tile', 'img-loading')
-  if (pieceKey === 'corridor' || pieceKey === 'door') {
+  if (
+    pieceKey === 'corridor' ||
+    pieceKey === 'door' ||
+    pieceKey === 'x'
+  ) {
     pieceElement.dataset['color'] = color
     pieceElement.classList.add(pieceKey + '-tile')
   }
@@ -206,7 +210,10 @@ export const generatePiecesFromLayoutString = layoutString => {
     r = 0
     ++ii
     k = layoutString.substr(i + ii, 1)
-    if (k.match(/\d/)) {
+    if (k === 'x') {
+      n = 'x'
+      ++ii
+    } else if (k.match(/\d/)) {
       c = parseInt(k, 10)
       n = c < 4 ? 'door' : 'corridor'
       ++ii
@@ -257,9 +264,10 @@ const hexSort = (a, b) => {
 }
 
 export const getDataFromBoardPieces = () => {
-  const hexesFromAllPieces = []
+  let hexesFromAllPieces = []
   let thinWallsFromAllPieces = []
   const antiThinWallsFromAllPieces = []
+  const antiHexesFromAllPieces = []
 
   let x
   let y
@@ -293,6 +301,13 @@ export const getDataFromBoardPieces = () => {
       }
     }
 
+    if (piece.name === 'x') {
+      antiHexesFromAllPieces.push({
+        x: piece.ch.x,
+        y: piece.ch.y
+      })
+    }
+
     piece.pieceHexes.forEach(hex => {
       x = hex.x + piece.ch.x
       y = hex.y + piece.ch.y
@@ -322,8 +337,13 @@ export const getDataFromBoardPieces = () => {
     })
   })
 
+  hexesFromAllPieces = hexesFromAllPieces.filter(hex =>
+    !antiHexesFromAllPieces.find(ahex =>
+      ahex.x === hex.x &&
+      ahex.y === hex.y
+    )
+  )
   hexesFromAllPieces.sort(hexSort)
-  thinWallsFromAllPieces.sort(hexSort)
   thinWallsFromAllPieces = thinWallsFromAllPieces.filter(tw =>
     !antiThinWallsFromAllPieces.find(atw =>
       tw.x === atw.x &&
@@ -331,6 +351,7 @@ export const getDataFromBoardPieces = () => {
       tw.s === atw.s
     )
   )
+  thinWallsFromAllPieces.sort(hexSort)
 
   return {
     hexes: hexesFromAllPieces,

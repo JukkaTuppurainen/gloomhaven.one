@@ -82,5 +82,17 @@ export const scenarioList = {
   // 29: [
   //   'Sanctuary of Gloom',
   //   '1fD1ad13fD2ac7eE1a4aJ1ae6i09e012i0'
-  // ]
+  // ],
+  52: [
+    'Noxious Cellar',
+    '2kJ1a10dJ2ac12nK1ae1aK2b6iM1a6i013j05l012n06lx7kx8kx9ix9jx9kx9lx9mx10lx11kx12kx'
+  ],
+  53: [
+    'Crypt Basement',
+    '1eD1ab15fD2ae5aJ1ab5jJ2ae7eM1ac7e013e06h014h07j013j0'
+  ],
+  54: [
+    'Palace of Ice',
+    '4aG2a2iN1a5h2'
+  ]
 }

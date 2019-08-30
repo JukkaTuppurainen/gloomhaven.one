@@ -1,4 +1,5 @@
 import bitmap_tiles from '../assets/tiles.webp'
+import bitmap_items from '../assets/itemSheet.webp'
 import bitmap_A1a from '../assets/A1a.webp'
 import bitmap_A1b from '../assets/A1b.webp'
 import bitmap_A2a from '../assets/A2a.webp'
@@ -319,6 +320,19 @@ export const pieceList = {
     },
     0,
     true
+  ],
+
+  x: [
+    bitmap_items,
+    {
+      0: 'aa'
+    },
+    {
+      0: {left: 1, top: -1}
+    },
+    0,
+    true,
+    false
   ],
 
   A1a: [

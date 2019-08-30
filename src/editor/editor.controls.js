@@ -66,10 +66,12 @@ export const updateTileSelectOptions = () => {
   tileSelect.value = ''
   Object.keys(pieceList)
     .filter(key => (
-      key === 'corridor' ||
-      key === 'door' || (
-        board.pieces &&
-        !board.pieces.find(a => a.name.substr(0, 2) === key.substr(0, 2))
+      pieceList[key][5] !== false && (
+        key === 'corridor' ||
+        key === 'door' || (
+          board.pieces &&
+          !board.pieces.find(a => a.name.substr(0, 2) === key.substr(0, 2))
+        )
       )
     ))
     .forEach(key => {
