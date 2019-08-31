@@ -1,7 +1,8 @@
 import {monsters} from './monsters'
 import {
   createItem,
-  startDraggingItem
+  startDraggingItem,
+  updateActivation
 }                 from './monsters.functions'
 import {
   board,
@@ -46,7 +47,9 @@ export const abilityCardClick = event => {
     //   ++monsterValues.targets
     //   break
   }
+
   renderAbilityCard()
+  updateActivation()
 }
 
 export const itemSelectChange = event => {

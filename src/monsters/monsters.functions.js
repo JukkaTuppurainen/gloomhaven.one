@@ -22,13 +22,17 @@ export const activateMonster = monster => {
   const focus = findFocus(monster)
   render()
 
-  const f = document.createElement('div')
-  f.id = 'f'
+  const f = document.getElementById('f') || document.createElement('div')
+
   f.innerHTML = focus.messages
     .map(message => `<p>${message}</p>`)
     .join('')
 
-  document.getElementById('fw').appendChild(f)
+  if (!f.id) {
+    f.id = 'f'
+    document.getElementById('fw').appendChild(f)
+  }
+
   const focusInformationHexes = document.getElementById('fih')
   const focusInformationPath = document.getElementById('fip')
 
@@ -45,6 +49,18 @@ export const activateMonster = monster => {
       focusVisualisation[0].addEventListener('mouseout', focusVisualisation[2])
     }
   })
+}
+
+export const updateActivation = () => {
+  const monster = board.items.find(item =>
+    item.active === true &&
+    item.type === 'monster'
+  )
+  if (monster) {
+    activateMonster(monster)
+  } else {
+    deactivateMonster()
+  }
 }
 
 const showFocusHexes = () => {
@@ -161,10 +177,15 @@ export const deactivateMonster = (monster = null) => {
   if (monster) {
     monster.active = false
     monster.element.classList.remove('item-active')
-    document.getElementById('fw').innerHTML = ''
-    delete board.focusInfo
-    render()
   }
+
+  const focusDetailsWrap = document.getElementById('fw')
+  if (focusDetailsWrap) {
+    focusDetailsWrap.innerHTML = ''
+  }
+
+  delete board.focusInfo
+  render()
 }
 
 export const deleteAllItems = () => {
@@ -184,7 +205,7 @@ export const deleteItem = itemIndex => {
     itemsElement.children[itemIndex]
   )
   document.getElementById('ic').innerHTML = ''
-  deactivateMonster()
+  updateActivation()
 }
 
 export const placeItem = item => {
@@ -200,7 +221,6 @@ export const placeItem = item => {
 export const startDraggingItem = (x, y) => {
   monsters.dragging = {x, y}
   createDragShadow(board.items[monsters.hoverItem])
-  deactivateMonster()
 }
 
 export const stopDragging = () => {
@@ -209,6 +229,7 @@ export const stopDragging = () => {
   if (dragShadowElement) {
     document.body.removeChild(dragShadowElement)
   }
+  updateActivation()
 }
 
 const updateInitiative = value => {
@@ -251,5 +272,5 @@ const updateInitiative = value => {
     monsters.mouseHover.item.initiative = newInitiative
     monsters.mouseHover.item.element.children[1].innerText = monsters.mouseHover.item.initiative
   }
-  deactivateMonster()
+  updateActivation()
 }

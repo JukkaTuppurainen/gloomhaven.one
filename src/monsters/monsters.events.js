@@ -8,7 +8,8 @@ import {
   deleteItem,
   placeItem,
   startDraggingItem,
-  stopDragging
+  stopDragging,
+  updateActivation
 }                         from './monsters.functions'
 import {board}            from '../board/board'
 import {findSnap}         from '../board/board.functions'
@@ -200,6 +201,7 @@ export const monstersDocumentKeydown = event => {
         board.items[prevItemIndex].type === itemName
       ) {
         deleteItem(prevItemIndex)
+        updateActivation()
       } else {
         const point = toPoint(monsters.mouseHover)
         const item = createItem(point.x, point.y, itemName)
@@ -212,7 +214,7 @@ export const monstersDocumentKeydown = event => {
         board.items.push(item)
 
         placeItem(item)
-        deactivateMonster()
+        updateActivation()
       }
     }
   }

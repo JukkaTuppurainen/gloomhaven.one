@@ -32,7 +32,7 @@ export const filterInShortestPaths = (monster, focus, paths) => {
 
     if (allPathsLengt === paths.length) {
       focus.messages.push(
-        '<a href="#" id="fip">All of these paths</a> takes same amount of movement points.'
+        '<a href="#" id="fip">All of these paths</a> takes the same amount of movement points.'
       )
     } else {
       focus.messages.push(
