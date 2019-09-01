@@ -8,15 +8,18 @@ import controlsHTML     from './monsters.controls.html'
 import                       './monsters.css'
 import {itemsList}      from './monsters.items'
 import {
-  monstersDocumentClick,
-  monstersDocumentMousedown,
-  monstersDocumentMousemove,
-  monstersDocumentMouseup,
-  monstersDocumentKeydown
+  monstersClick,
+  monstersDocumentKeydown,
+  monstersMouseout,
+  monstersMousedown,
+  monstersMousemove,
+  monstersMouseup
 }                       from './monsters.events'
 import {
   deactivateMonster,
-  deleteAllItems
+  deleteAllItems,
+  deleteItem,
+  stopDragging
 }                       from './monsters.functions'
 import {board}          from '../board/board'
 import {render}         from '../index'
@@ -42,10 +45,11 @@ export const monsters = {
 
     board.scenario._events = board.scenario.events
     board.scenario.events  = {
-      click: monstersDocumentClick,
-      mousedown: monstersDocumentMousedown,
-      mousemove: monstersDocumentMousemove,
-      mouseup: monstersDocumentMouseup
+      click: monstersClick,
+      mousedown: monstersMousedown,
+      mousemove: monstersMousemove,
+      mouseout: monstersMouseout,
+      mouseup: monstersMouseup
     }
 
     monsters.on = true
@@ -84,7 +88,15 @@ export const monsters = {
     delete board.scenario._events
 
     monsters.on = false
-    monsters.dragging = false
+    if (monsters.dragging) {
+      stopDragging()
+    }
+
+    if (monsters.hoverItem !== false) {
+      deleteItem(monsters.hoverItem)
+      monsters.hoverItem = false
+    }
+
     board.items.forEach(i => {
       if (i.active) {
         deactivateMonster(i)

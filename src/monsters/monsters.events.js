@@ -24,7 +24,7 @@ import {
 const minMouseMoveDeltaToConsiderClickAsDragging = 20
 let mouseDownCoords = false
 
-export const monstersDocumentClick = event => {
+export const monstersClick = event => {
   mouseDownCoords = false
   if (monsters.dragging) {
     stopDragging()
@@ -48,7 +48,7 @@ export const monstersDocumentClick = event => {
   }
 }
 
-export const monstersDocumentMousedown = event => {
+export const monstersMousedown = event => {
   if (monsters.dragging === false) {
     monsters.hoverItem = false
     const hexFromPoint = pointToHex(event.pageX, event.pageY)
@@ -72,7 +72,7 @@ export const monstersDocumentMousedown = event => {
   }
 }
 
-export const monstersDocumentMousemove = event => {
+export const monstersMousemove = event => {
   if (mouseDownCoords) {
     const deltaX = event.pageX - mouseDownCoords.x
     const deltaY = event.pageY - mouseDownCoords.y
@@ -133,7 +133,12 @@ export const monstersDocumentMousemove = event => {
   }
 }
 
-export const monstersDocumentMouseup = event => {
+export const monstersMouseout = event => {
+  monstersMouseup(event)
+  monstersClick(event)
+}
+
+export const monstersMouseup = event => {
   if (monsters.dragging) {
     const item = board.items[monsters.hoverItem]
     const closest = findSnap(
