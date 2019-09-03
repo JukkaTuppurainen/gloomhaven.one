@@ -53,7 +53,7 @@ export const scenarioLoad = scenario => {
   const dataFromPieces = getDataFromBoardPieces()
   board.scenario.hexes = dataFromPieces.hexes
 
-  if (!board.editor) {
+  if (!board.editor && board.scenario.hexes.length) {
     // Resize the canvas and grid to match the scenario layout
     const gridSize = getGridSize(board.scenario.hexes)
     ++gridSize.height

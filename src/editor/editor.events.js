@@ -16,7 +16,7 @@ import {pointToHex} from '../lib/hexUtils'
 let mouseDownCoords = false
 const minMouseMoveDeltaToConsiderClickAsDragging = 10
 
-export const editorDocumentClick = event => {
+export const editorClick = event => {
   mouseDownCoords = false
   if (editor.dragging !== false) {
     stopDragging()
@@ -31,7 +31,7 @@ export const editorDocumentMousedown = event => {
     editor.on &&
     editor.dragging === false
   ) {
-    editor.hoverPiece = false
+    editor.hoverPiece = -1
     const hexFromPoint = pointToHex(event.pageX, event.pageY)
 
     const boardHoverPiece = getPieceIndexFromBoard(hexFromPoint)
@@ -39,7 +39,7 @@ export const editorDocumentMousedown = event => {
       editor.hoverPiece = boardHoverPiece
     }
 
-    if (editor.hoverPiece !== false) {
+    if (editor.hoverPiece >= 0) {
       mouseDownCoords = {
         x: event.pageX,
         y: event.pageY
@@ -57,7 +57,7 @@ export const editorDocumentMousemove = event => {
 
     if (
       !editor.dragging &&
-      editor.hoverPiece !== false && (
+      editor.hoverPiece >= 0 && (
         deltaX > minMouseMoveDeltaToConsiderClickAsDragging ||
         deltaX < -minMouseMoveDeltaToConsiderClickAsDragging ||
         deltaY > minMouseMoveDeltaToConsiderClickAsDragging ||
@@ -134,13 +134,13 @@ export const editorTouchend = event => {
   event.pageX = lastTouch.pageX
   event.pageY = lastTouch.pageY
   editorDocumentMouseup(event)
-  editorDocumentClick(event)
+  editorClick(event)
 }
 
 export const editorTouchmove = event => {
   if (
     editor.on &&
-    editor.hoverPiece !== false
+    editor.hoverPiece >= 0
   ) {
     event.preventDefault()
   }

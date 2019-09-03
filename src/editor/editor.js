@@ -7,7 +7,7 @@ import {
 }                         from './editor.controls'
 import {deleteAllPieces}  from './editor.functions'
 import {
-  editorDocumentClick,
+  editorClick,
   editorDocumentMousedown,
   editorDocumentMousemove,
   editorDocumentMouseup,
@@ -22,8 +22,9 @@ import {stopPropagation}  from '../index'
 export const editor = {
   dragging: false,
   events: {
-    click: editorDocumentClick
+    click: editorClick
   },
+  hoverPiece: -1,
   load: () => {
     board.editor = true
 
@@ -50,6 +51,10 @@ export const editor = {
     document.addEventListener('touchstart', editorTouchstart)
     document.body.classList.add('editor-open')
 
+    if (editor.layout) {
+      setTimeout(() => window.location.hash = `:${editor.layout}`)
+    }
+
     if (
       window.location.hash &&
       window.location.hash.substr(0, 2) === '#:'
@@ -59,6 +64,7 @@ export const editor = {
   },
   unload: () => {
     board.editor = false
+    editor.layout = window.location.hash.substr(2)
     setEditorOff()
     const editorControls = document.getElementById('e')
     editorControls.innerHTML = ''

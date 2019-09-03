@@ -50,18 +50,13 @@ export const monstersClick = event => {
 
 export const monstersMousedown = event => {
   if (monsters.dragging === false) {
-    monsters.hoverItem = false
     const hexFromPoint = pointToHex(event.pageX, event.pageY)
 
     monsters.hoverItem = board.items.findIndex(i =>
       i.ch.x === hexFromPoint.x && i.ch.y === hexFromPoint.y
     )
 
-    if (monsters.hoverItem === -1) {
-      monsters.hoverItem = false
-    }
-
-    if (monsters.hoverItem !== false) {
+    if (monsters.hoverItem > -1) {
       mouseDownCoords = {
         x: event.pageX,
         y: event.pageY
@@ -79,7 +74,7 @@ export const monstersMousemove = event => {
 
     if (
       !monsters.dragging &&
-      monsters.hoverItem !== false && (
+      monsters.hoverItem > -1 && (
         deltaX > minMouseMoveDeltaToConsiderClickAsDragging ||
         deltaX < -minMouseMoveDeltaToConsiderClickAsDragging ||
         deltaY > minMouseMoveDeltaToConsiderClickAsDragging ||

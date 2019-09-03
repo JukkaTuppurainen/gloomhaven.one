@@ -2,7 +2,8 @@ import {editor}       from './editor'
 import {
   deletePiece,
   generateEditorBoard,
-  startDragging
+  startDragging,
+  stopDragging
 }                     from './editor.functions'
 import {board}        from '../board/board'
 import {createPiece}  from '../board/board.functions'
@@ -220,6 +221,14 @@ const setEditorOn = () => {
 }
 
 export const setEditorOff = () => {
+  if (editor.dragging) {
+    if (editor.hoverPiece >= 0) {
+      deletePiece(editor.hoverPiece)
+      editor.hoverPiece = -1
+    }
+    stopDragging()
+  }
+
   document.body.classList.remove('editor-on')
   document.getElementById('piece-controls').innerHTML = ''
   document.querySelectorAll('.map-tile-focus').forEach(n => n.classList.remove('map-tile-focus'))

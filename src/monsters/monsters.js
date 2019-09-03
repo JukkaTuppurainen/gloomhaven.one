@@ -29,6 +29,7 @@ import {resolveLOS}     from '../lib/resolveLOS'
 board.items = []
 
 export const monsters = {
+  hoverItem: -1,
   on: false,
   dragging: false,
   mouseHover: {
@@ -89,12 +90,14 @@ export const monsters = {
 
     monsters.on = false
     if (monsters.dragging) {
+      if (board.items[monsters.hoverItem]) {
+        deleteItem(monsters.hoverItem)
+      }
       stopDragging()
     }
 
-    if (monsters.hoverItem !== false) {
-      deleteItem(monsters.hoverItem)
-      monsters.hoverItem = false
+    if (monsters.hoverItem > -1) {
+      monsters.hoverItem = -1
     }
 
     board.items.forEach(i => {
