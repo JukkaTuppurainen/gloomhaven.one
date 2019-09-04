@@ -13,8 +13,8 @@ export const getPathsToAttack = (monster, focus, paths) => {
     getHexRange(player.ch, monsterValues.range || 1)
       .filter(hex => !board.items.find(item => (
         item.ch.x === hex.x &&
-        item.ch.y === hex.y
-        // Allow traps & difficult terrains here
+        item.ch.y === hex.y &&
+        item.type !== 'difficult'
       )))
       .filter(hex => isInSight(player.ch, hex))
       .forEach(freeHexInRange => {

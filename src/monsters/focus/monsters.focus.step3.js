@@ -71,7 +71,7 @@ export const checkTargetsFromPaths = (monster, focus, paths, proximities) => {
   let shortestProxPath = 999
 
   pathTargets.forEach(pathTarget => {
-    let proxPath = getPath(monster.ch, pathTarget.ch)
+    let proxPath = getPath(monster.ch, pathTarget.ch, [], true)
     proximities.push({
       distance: proxPath.length,
       target: pathTarget

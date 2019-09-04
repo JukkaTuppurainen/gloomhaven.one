@@ -5,9 +5,9 @@ export const itemsList = {
   player: {
     name: 'Player character'
   },
-  // difficult: {
-  //   name: 'Difficult terrain'
-  // },
+  difficult: {
+    name: 'Difficult terrain'
+  },
   monster: {
     name: 'Monster',
   }

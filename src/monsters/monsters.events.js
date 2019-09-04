@@ -180,9 +180,9 @@ export const monstersDocumentKeydown = event => {
       case 'w':
         itemName = 'player'
         break
-      // case 'e':
-      //   itemName = 'difficult'
-      //   break
+      case 'e':
+        itemName = 'difficult'
+        break
       case 'r':
         itemName = 'monster'
         break
