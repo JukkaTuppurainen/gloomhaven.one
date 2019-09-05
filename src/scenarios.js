@@ -79,10 +79,46 @@ export const scenarioList = {
     'Necromancer’s Sanctum',
     '4kC1ac16iD1aa1aJ1ac9fK1ac8h08m015j0'
   ],
-  // 29: [
-  //   'Sanctuary of Gloom',
-  //   '1fD1ad13fD2ac7eE1a4aJ1ae6i09e012i0'
-  // ],
+  21: [
+    'Infernal Throne',
+    '13jD1ab13dD2ab2hE1a8jJ1a8aJ2aa7h07l014d015i014o09i0'
+  ],
+  22: [
+    'Temple of the Elements',
+    '11fB2b1aC1ac1jC2bc8kD1a8aD2aa3eM1a3e03j09e09j010h0'
+  ],
+  23: [
+    'Deep Ruins',
+    '3nD1aa14hI1bc7fK2bc1aM1a7f07n013j0'
+  ],
+  24: [
+    'Echo Chamber',
+    '6gA2bc8pB4bb10lD2bd2gG2a2lJ1b4bL2ac7f25h27k25l25m29m211p28q2'
+  ],
+  25: [
+    'Icecrag Ascent',
+    '1aG2a13gK2ab5fN1ac4h212j2'
+  ],
+  26: [
+    'Ancient Cistern',
+    '9aC1ac8eJ1aa1aL1ac12jM1a8c411e011l0'
+  ],
+  27: [
+    'Ruinous Rift',
+    '1aM1ac'
+  ],
+  28: [
+    'Outer Ritual Chamber',
+    '14aC1ac1aC2b6aM1a5c013c0'
+  ],
+  29: [
+    'Sanctuary of Gloom',
+    '1fD1ad13fD2ac7eE1a4aJ1ae6i09e012i0'
+  ],
+  30: [
+    'Shrine of the Depths',
+    '2nE1a1iL1ac1aN1b1h43h45h47h44n04i4'
+  ],
   52: [
     'Noxious Cellar',
     '2kJ1a10dJ2ac12nK1ae1aK2b6iM1a6i013j05l012n06lx7kx8kx9ix9jx9kx9lx9mx10lx11kx12kx'
