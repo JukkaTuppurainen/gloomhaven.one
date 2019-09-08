@@ -220,7 +220,9 @@ export const placeItem = item => {
 
 export const startDraggingItem = (x, y) => {
   monsters.dragging = {x, y}
-  createDragShadow(board.items[monsters.hoverItem])
+  const dragItem = board.items[monsters.hoverItem]
+  dragItem.element.classList.add('item-dragging')
+  createDragShadow(dragItem)
 }
 
 export const stopDragging = () => {
@@ -228,6 +230,10 @@ export const stopDragging = () => {
   const dragShadowElement = document.getElementById('drag-shadow')
   if (dragShadowElement) {
     document.body.removeChild(dragShadowElement)
+  }
+  const draggedItem = document.querySelector('.item-dragging')
+  if (draggedItem) {
+    draggedItem.classList.remove('item-dragging')
   }
   updateActivation()
 }
