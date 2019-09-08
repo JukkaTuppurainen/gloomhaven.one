@@ -121,6 +121,7 @@ export const createItem = (x, y, type) => {
     pieceHexes: [{x: 0, y: 0}],
     pxH: hexHeight + 1,
     pxW: hexWidth + 1,
+    stacks: type === 'monster' || type === 'player',
     type,
     w: 1,
     x,
@@ -209,19 +210,38 @@ export const deleteItem = itemIndex => {
 }
 
 export const placeItem = item => {
-  const prevItemIndex = board.items.findIndex(i => (
-    i !== item && i.ch.x === item.ch.x && i.ch.y === item.ch.y
-  ))
+  const prevItems = board.items.filter(boardItem =>
+    boardItem !== item &&
+    boardItem.ch.x === item.ch.x &&
+    boardItem.ch.y === item.ch.y
+  )
 
-  if (prevItemIndex > -1) {
-    deleteItem(prevItemIndex)
-  }
+  let prevItemIndex
+  prevItems.forEach(prevItem => {
+    prevItemIndex = board.items.findIndex(i => i === prevItem)
+
+    if (prevItem.stacks) {
+      if (item.stacks) {
+        deleteItem(prevItemIndex)
+      } else {
+        prevItem.element.classList.add('item-stacked')
+      }
+    } else {
+      if (item.stacks) {
+        item.element.classList.add('item-stacked')
+      } else {
+        deleteItem(prevItemIndex)
+      }
+    }
+  })
 }
 
 export const startDraggingItem = (x, y) => {
   monsters.dragging = {x, y}
   const dragItem = board.items[monsters.hoverItem]
-  dragItem.element.classList.add('item-dragging')
+  const dragItemClassList = dragItem.element.classList
+  dragItemClassList.add('item-dragging')
+  dragItemClassList.remove('item-stacked')
   createDragShadow(dragItem)
 }
 

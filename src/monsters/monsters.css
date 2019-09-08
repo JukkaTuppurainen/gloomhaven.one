@@ -21,6 +21,11 @@
   z-index: 9;
 }
 
+.item-stacked {
+  transform: scale(.84);
+  z-index: 5;
+}
+
 .in {
   bottom: 7px;
   font-family: 'Pirata One', sans-serif;

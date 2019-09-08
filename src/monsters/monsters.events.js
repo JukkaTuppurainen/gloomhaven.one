@@ -51,12 +51,19 @@ export const monstersClick = event => {
 export const monstersMousedown = event => {
   if (monsters.dragging === false) {
     const hexFromPoint = pointToHex(event.pageX, event.pageY)
-
-    monsters.hoverItem = board.items.findIndex(i =>
+    const itemsInHex = board.items.filter(i =>
       i.ch.x === hexFromPoint.x && i.ch.y === hexFromPoint.y
     )
 
-    if (monsters.hoverItem > -1) {
+    if (itemsInHex.length) {
+      const hoverItem = itemsInHex[
+        itemsInHex.length > 1
+          ? itemsInHex[0].stacks ? 0 : 1
+          : 0
+      ]
+
+      monsters.hoverItem = board.items.findIndex(i => i === hoverItem)
+
       mouseDownCoords = {
         x: event.pageX,
         y: event.pageY
