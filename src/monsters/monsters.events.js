@@ -186,9 +186,8 @@ export const monstersDocumentKeydown = event => {
       case 'r':
         itemName = 'monster'
         break
-      // case 't':
-      //   itemName = 'trap'
-      //   break
+      case 't':
+        itemName = 'trap'
     }
 
     if (itemName) {

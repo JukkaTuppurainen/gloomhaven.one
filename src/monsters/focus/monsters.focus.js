@@ -22,6 +22,8 @@ export const findFocus = monster => {
     pathStart: monster.ch
   }
 
+  const players = board.items.filter(item => item.type === 'player')
+
   /*
    * # FOCUS SELECTION STEP 1
    *   - Is some targets are already in the range?
@@ -41,7 +43,7 @@ export const findFocus = monster => {
 
   let paths = []
 
-  getPathsToAttack(monster, focus, paths)
+  getPathsToAttack(monster, focus, paths, players)
   if (focus.player === false) {
     // If focus.player is set to false, there is not a single path to target available.
     return focus
@@ -54,7 +56,7 @@ export const findFocus = monster => {
    *   - Take the shortest path and if required, check physical distances.
    */
 
-  filterInShortestPaths(monster, focus, paths)
+  filterInShortestPaths(monster, focus, paths, players)
 
   let proximities = []
 

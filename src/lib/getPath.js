@@ -62,11 +62,13 @@ export const realNeighbors = (hex, filterItemTypes = []) => {
       return !findThinWall(commonCorners[0], commonCorners[1])
     })
     .map(neighborHex => {
-      neighborHex.isDifficult = !!board.items.find(item =>
+      let itemInNeighborHex = board.items.find(item =>
         item.ch.x === neighborHex.x &&
-        item.ch.y === neighborHex.y &&
-        item.type === 'difficult'
+        item.ch.y === neighborHex.y
       )
+
+      neighborHex.isDifficult = !!(itemInNeighborHex && itemInNeighborHex.type === 'difficult')
+      neighborHex.isTrap = !!(itemInNeighborHex && itemInNeighborHex.type === 'trap')
       return neighborHex
     })
 }
@@ -122,6 +124,7 @@ export const getPath = (startCoords, endCoords, filterItems = [], flying = false
       r.pathLength = r.reduce((previousValue, currentValue) => (
         previousValue + (currentValue.isDifficult ? 2 : 1)
       ), 0)
+      r.hasTraps = r.some(rHex => rHex.isTrap)
 
       return r.reverse()
     }
@@ -135,12 +138,17 @@ export const getPath = (startCoords, endCoords, filterItems = [], flying = false
     for (i = 0; i < neighbors.length; ++i) {
       let neighbor = board.scenario.hexes.find(h => h.x === neighbors[i].x && h.y === neighbors[i].y)
       neighbor.isDifficult = neighbors[i].isDifficult
+      neighbor.isTrap = neighbors[i].isTrap
 
       if (closedList.find(h => h.x === neighbor.x && h.y === neighbor.y)) {
         continue
       }
 
-      let gScore = currentNode.g + (neighbor.isDifficult && !flying ? 2 : 1)
+      let gScore = currentNode.g + (() => {
+        if (!flying && neighbor.isDifficult) { return 2 }
+        if (!flying && neighbor.isTrap) { return 100 }
+        return 1
+      })()
       let gScoreIsBest = false
 
       if (!openList.find(hex => (

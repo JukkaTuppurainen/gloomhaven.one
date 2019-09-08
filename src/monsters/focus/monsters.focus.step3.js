@@ -8,12 +8,29 @@ import {board}          from '../../board/board'
 import {getPath}        from '../../lib/getPath'
 
 
-export const filterInShortestPaths = (monster, focus, paths) => {
-  focus.messages.push(`I have path to <a href="#" id="fih">${
+export const filterInShortestPaths = (monster, focus, paths, players) => {
+  let message = ''
+
+  if (paths[0].hasTraps) {
+    let trapCount = paths[0].filter(hex => hex.isTrap).length
+    message += `There are no safe paths to ${
+      players.length === 1
+        ? 'the enemy'
+        : 'enemies'
+    }. By travelling through ${
+      trapCount === 1
+        ? 'a single trap'
+        : `${trapCount}&nbsp;traps`
+    }, `
+  }
+
+  message += `I have path to <a href="#" id="fih">${
     paths.length === 1
       ? 'a single hex'
-      : `${paths.length} hexes`
-  }</a> where I could make an attack.`)
+      : `${paths.length}&nbsp;hexes`
+  }</a> where I could make an attack.`
+
+  focus.messages.push(message)
 
   if (paths.length > 1) {
     const shortestDistance = paths.reduce(((previousValue, currentPathArray) => (
@@ -22,7 +39,7 @@ export const filterInShortestPaths = (monster, focus, paths) => {
         : previousValue
     )), false)
 
-    const allPathsLengt = paths.length
+    const allPathsLength = paths.length
     const shortestPaths = paths.filter(p => p.pathLength === shortestDistance)
     paths.length = 0
     paths.push(...shortestPaths)
@@ -30,9 +47,13 @@ export const filterInShortestPaths = (monster, focus, paths) => {
     board.focusInfo.paths = paths
     board.focusInfo.pathStart = monster.ch
 
-    if (allPathsLengt === paths.length) {
+    if (allPathsLength === paths.length) {
       focus.messages.push(
-        '<a href="#" id="fip">All of these paths</a> takes the same amount of movement points.'
+        `<a href="#" id="fip">${
+          allPathsLength === 2
+            ? 'Both'
+            : 'All'
+        } of these paths</a> takes the same amount of movement points.`
       )
     } else {
       focus.messages.push(
@@ -85,7 +106,6 @@ export const checkTargetsFromPaths = (monster, focus, paths, proximities) => {
   const proximitiesBefore = proximities.length
   const shortestProximities = proximities.filter(p => p.distance === shortestProxPath)
 
-  // proximities = proximities.filter(p => p.distance === shortestProxPath)
   proximities.length = 0
   proximities.push(...shortestProximities)
 

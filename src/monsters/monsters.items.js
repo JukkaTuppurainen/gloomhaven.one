@@ -10,10 +10,10 @@ export const itemsList = {
   },
   monster: {
     name: 'Monster',
+  },
+  trap: {
+    name: 'Trap'
   }
-  // trap: {
-  //   name: 'Trap'
-  // },
 }
 
 export const playerNames = {
