@@ -1,5 +1,6 @@
 import {findFocus}      from './focus/monsters.focus'
 import {monsters}       from './monsters'
+import {itemsList}      from './monsters.items'
 import bitmap_itemsheet from '../assets/itemSheet.webp'
 import {
   board,
@@ -121,7 +122,7 @@ export const createItem = (x, y, type) => {
     pieceHexes: [{x: 0, y: 0}],
     pxH: hexHeight + 1,
     pxW: hexWidth + 1,
-    stacks: type === 'monster' || type === 'player',
+    stacks: itemsList[type].stacks,
     type,
     w: 1,
     x,

@@ -11,6 +11,7 @@ import {
   stopDragging,
   updateActivation
 }                         from './monsters.functions'
+import {itemsList}        from './monsters.items'
 import {board}            from '../board/board'
 import {findSnap}         from '../board/board.functions'
 import {updateDragShadow} from '../editor/editor.functions'
@@ -200,8 +201,11 @@ export const monstersDocumentKeydown = event => {
     }
 
     if (itemName) {
+      const itemStacks = itemsList[itemName].stacks
       const prevItemIndex = board.items.findIndex(boardItem => (
-        boardItem.ch.x === monsters.mouseHover.x && boardItem.ch.y === monsters.mouseHover.y
+        boardItem.ch.x === monsters.mouseHover.x &&
+        boardItem.ch.y === monsters.mouseHover.y &&
+        boardItem.stacks === itemStacks
       ))
 
       if (
@@ -210,6 +214,18 @@ export const monstersDocumentKeydown = event => {
       ) {
         deleteItem(prevItemIndex)
         updateActivation()
+
+        if (!itemStacks) {
+          const prevStackedItemIndex = board.items.findIndex(boardItem => (
+            boardItem.ch.x === monsters.mouseHover.x &&
+            boardItem.ch.y === monsters.mouseHover.y &&
+            boardItem.stacks
+          ))
+
+          if (prevStackedItemIndex > -1) {
+            board.items[prevStackedItemIndex].element.classList.remove('item-stacked')
+          }
+        }
       } else {
         const point = toPoint(monsters.mouseHover)
         const item = createItem(point.x, point.y, itemName)

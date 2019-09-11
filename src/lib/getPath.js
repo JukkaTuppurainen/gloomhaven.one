@@ -64,7 +64,8 @@ export const realNeighbors = (hex, filterItemTypes = []) => {
     .map(neighborHex => {
       let itemInNeighborHex = board.items.find(item =>
         item.ch.x === neighborHex.x &&
-        item.ch.y === neighborHex.y
+        item.ch.y === neighborHex.y &&
+        !item.stacks
       )
 
       neighborHex.isDifficult = !!(itemInNeighborHex && itemInNeighborHex.type === 'difficult')
