@@ -1,4 +1,5 @@
 import {board}        from './board/board'
+import {resizeCanvas} from './board/board.scenarioLoad'
 import                     './components/toggle'
 import                     './lib/testWebp'
 import {renderer}     from './renderer/renderer'
@@ -123,6 +124,11 @@ const closeModal = () => {
 }
 
 document.getElementById('co').innerText = `Contact email address: contact${String.fromCharCode(64)}gloomhaven.one`
+
+window.addEventListener('resize', () => {
+  resizeCanvas()
+  render()
+})
 
 // document.getElementById('los-mode').addEventListener('change', event => {
 //   board.losMode = event.target.value === '1'

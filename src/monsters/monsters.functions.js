@@ -155,7 +155,7 @@ export const createPlayerControl = item => {
   const playerControl = document.createElement('div')
   playerControl.className = 'icw'
   playerControl.innerHTML = '<button id="icd" class="pm"></button><button id="ici" class="pm"></button>'
-  playerControl.style.left = item.x - 5 + 'px'
+  playerControl.style.left = item.x - 5 + board.pxOffset + 'px'
   playerControl.style.top = item.y + 41 + 'px'
   document.getElementById('ic').appendChild(playerControl)
 

@@ -178,7 +178,7 @@ export const updateDragShadow = (x, y, pieceOrItem) => {
   const dragShadow = document.getElementById('drag-shadow')
 
   if (closestPoint) {
-    dragShadow.style.left = `${closestPoint.x}px`
+    dragShadow.style.left = `${closestPoint.x + board.pxOffset}px`
     dragShadow.style.top = `${closestPoint.y}px`
   }
 }

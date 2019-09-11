@@ -29,7 +29,7 @@ export const monstersClick = event => {
   if (monsters.dragging) {
     stopDragging()
   } else {
-    const clickHex = pointToHex(event.pageX, event.pageY)
+    const clickHex = pointToHex(event.pageX - board.pxOffset, event.pageY)
     const clickItem = board.items.find(item => (
       item.ch.x === clickHex.x && item.ch.y === clickHex.y
     ))
@@ -50,7 +50,7 @@ export const monstersClick = event => {
 
 export const monstersMousedown = event => {
   if (monsters.dragging === false) {
-    const hexFromPoint = pointToHex(event.pageX, event.pageY)
+    const hexFromPoint = pointToHex(event.pageX - board.pxOffset, event.pageY)
     const itemsInHex = board.items.filter(i =>
       i.ch.x === hexFromPoint.x && i.ch.y === hexFromPoint.y
     )
@@ -69,12 +69,15 @@ export const monstersMousedown = event => {
         y: event.pageY
       }
 
+      clearPlayerControl()
       render()
     }
   }
 }
 
 export const monstersMousemove = event => {
+  let adjustedEventPageX = event.pageX - board.pxOffset
+
   if (mouseDownCoords) {
     const deltaX = event.pageX - mouseDownCoords.x
     const deltaY = event.pageY - mouseDownCoords.y
@@ -88,7 +91,6 @@ export const monstersMousemove = event => {
         deltaY < -minMouseMoveDeltaToConsiderClickAsDragging
       )
     ) {
-      clearPlayerControl()
       startDraggingItem(
         event.pageX - board.items[monsters.hoverItem].x,
         event.pageY - board.items[monsters.hoverItem].y
@@ -110,7 +112,7 @@ export const monstersMousemove = event => {
   }
 
   if (!mouseDownCoords && !monsters.dragging) {
-    const hex = pointToHex(event.pageX, event.pageY)
+    const hex = pointToHex(adjustedEventPageX, event.pageY)
     if (
       hex.x !== monsters.mouseHover.x ||
       hex.y !== monsters.mouseHover.y

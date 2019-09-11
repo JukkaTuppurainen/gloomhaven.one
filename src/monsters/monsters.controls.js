@@ -60,7 +60,10 @@ export const itemSelectChange = event => {
   board.items.push(item)
   monsters.hoverItem = board.items.length - 1
 
-  startDraggingItem(hexWidth / 2, hexHeight / 2)
+  startDraggingItem(
+    (hexWidth / 2) + board.pxOffset,
+    hexHeight / 2
+  )
 
   event.target.value = ''
 }

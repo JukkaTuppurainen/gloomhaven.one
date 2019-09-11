@@ -80,6 +80,7 @@ export const board = {
     x: null,
     y: null
   },
+  pxOffset: 0,
   unload: () => {
     if (board.scenario && board.scenario.unload) {
       board.scenario.unload()

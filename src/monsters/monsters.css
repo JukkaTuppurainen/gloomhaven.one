@@ -1,3 +1,18 @@
+/* board adjust */
+
+#c,
+#board,
+#items {
+  transform: translateX(0);
+  transition: transform .15s;
+}
+
+.monsters-on #c,
+.monsters-on #board,
+.monsters-on #items {
+  transform: translateX(280px);
+}
+
 /* items */
 
 .item-tile .img-wrap {

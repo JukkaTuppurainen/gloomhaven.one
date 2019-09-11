@@ -78,6 +78,7 @@ export const drawPath = ctx => {
         ctx.strokeStyle = '#090'
         ctx.fillStyle = '#090'
         ctx.stroke()
+        ctx.setLineDash([])
 
         ctx.lineWidth = 1
         ctx.beginPath()
