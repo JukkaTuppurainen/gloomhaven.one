@@ -1,12 +1,74 @@
+import {drawTriangle} from './renderer.functions'
 import {
   board,
   hexHeight,
   hexWidth
-}                 from '../board/board'
-import {toPoint}  from '../lib/hexUtils'
+}                     from '../board/board'
+import {toPoint}      from '../lib/hexUtils'
 
 
-export const drawPath = ctx => {
+const drawEndPathTriangle = (ctx, path) => {
+  const lastPoint = toPoint(path[path.length - 1])
+  lastPoint.x += hexWidth / 2
+  lastPoint.y += hexHeight / 2
+
+  const pointBeforeLastPoint = toPoint(path[path.length - 2])
+  pointBeforeLastPoint.x += hexWidth / 2
+  pointBeforeLastPoint.y += hexHeight / 2
+
+  drawTriangle(
+    lastPoint.x,
+    lastPoint.y,
+    20,
+    Math.atan2(
+      pointBeforeLastPoint.y - lastPoint.y,
+      pointBeforeLastPoint.x - lastPoint.x
+    ),
+    35,
+    0.3
+  )
+}
+
+const drawPath = (ctx, path) => {
+  const coordinates = path.map(hex => {
+    const point = toPoint(hex)
+    point.x += hexWidth / 2
+    point.y += hexHeight / 2
+    return point
+  })
+
+  ctx.beginPath()
+  ctx.moveTo(
+    (coordinates[0].x + coordinates[1].x) / 2,
+    (coordinates[0].y + coordinates[1].y) / 2,
+  )
+  let i
+  for (i = 1; i < coordinates.length - 1; ++i) {
+    ctx.lineTo(
+      coordinates[i].x,
+      coordinates[i].y
+    )
+  }
+  ctx.lineTo(
+    (coordinates[i - 1].x + coordinates[i].x) / 2,
+    (coordinates[i - 1].y + coordinates[i].y) / 2,
+  )
+  ctx.stroke()
+}
+
+const drawNumberCircle = (ctx, path) => {
+  const point = toPoint(path[path.length - 1])
+  point.x += hexWidth / 2
+  point.y += hexHeight / 2
+  ctx.arc(point.x, point.y, 14, 0, Math.PI * 2)
+  ctx.fill()
+  ctx.textAlign = 'center'
+  ctx.font = '23px "Pirata One"'
+  ctx.fillStyle = '#fff'
+  ctx.fillText(path.pathLength, point.x, point.y + 9)
+}
+
+export const drawFocusPath = ctx => {
   const focusInfo = board.focusInfo
   if (
     focusInfo &&
@@ -14,87 +76,38 @@ export const drawPath = ctx => {
     focusInfo.paths
   ) {
     focusInfo.paths.forEach(path => {
-      ctx.beginPath()
-      let first = true
-      let prevPoint
-      let trianglePoints = []
-
-      ctx.beginPath()
-
-      path.forEach((pathHex, i) => {
-        let point = toPoint(pathHex)
-        point.x += hexWidth / 2
-        point.y += hexHeight / 2
-
-        if (first) {
-          let playerPoint = toPoint(focusInfo.pathStart)
-          playerPoint.x += hexWidth / 2
-          playerPoint.y += hexHeight / 2
-          first = false
-          if (path.length > 1) {
-            ctx.moveTo(
-              (playerPoint.x + point.x) / 2,
-              (playerPoint.y + point.y) / 2
-            )
-          } else {
-            prevPoint = playerPoint
-          }
-        }
-
-        if (i < path.length - 1) {
-          ctx.lineTo(point.x, point.y)
-        } else if (prevPoint) {
-          ctx.lineTo(
-            (prevPoint.x + point.x) / 2,
-            (prevPoint.y + point.y) / 2
-          )
-
-          let angle = Math.atan2(prevPoint.y - point.y, prevPoint.x - point.x)
-          let arrowWidth = Math.PI * 0.1
-
-          trianglePoints.push({
-            x: point.x + 20 * Math.cos(angle),
-            y: point.y + 20 * Math.sin(angle)
-          })
-
-          trianglePoints.push(
-            {
-              x: trianglePoints[0].x + 35 * Math.cos(angle + arrowWidth),
-              y: trianglePoints[0].y + 35 * Math.sin(angle + arrowWidth)
-            },
-            {
-              x: trianglePoints[0].x + 35 * Math.cos(angle - arrowWidth),
-              y: trianglePoints[0].y + 35 * Math.sin(angle - arrowWidth)
-            }
-          )
-        }
-
-        prevPoint = point
-      })
-
-      if (prevPoint && trianglePoints.length) {
+      if (path.length) {
+        const fullPath = [focusInfo.pathStart, ...path]
+        ctx.lineWidth = 10
         ctx.setLineDash([5, 5])
+        ctx.strokeStyle = '#090'
+        ctx.fillStyle = '#090'
+        drawPath(ctx, fullPath)
+        ctx.lineWidth = 1
+        ctx.setLineDash([])
+        drawEndPathTriangle(ctx, fullPath)
+        drawNumberCircle(ctx, path)
+      }
+    })
+  }
+}
+
+export const drawMovePath = ctx => {
+  const focusInfo = board.focusInfo
+  if (
+    focusInfo &&
+    focusInfo.moveHexesVisible &&
+    focusInfo.moveHexes
+  ) {
+    focusInfo.moveHexes.forEach(moveHex => {
+      if (moveHex.path.length) {
+        const fullPath = [focusInfo.pathStart, ...moveHex.path]
         ctx.lineWidth = 10
         ctx.strokeStyle = '#090'
         ctx.fillStyle = '#090'
-        ctx.stroke()
-        ctx.setLineDash([])
-
-        ctx.lineWidth = 1
-        ctx.beginPath()
-        ctx.moveTo(trianglePoints[0].x, trianglePoints[0].y)
-        ctx.lineTo(trianglePoints[1].x, trianglePoints[1].y)
-        ctx.lineTo(trianglePoints[2].x, trianglePoints[2].y)
-        ctx.lineTo(trianglePoints[0].x, trianglePoints[0].y)
-        ctx.fill()
-
-        ctx.arc(prevPoint.x, prevPoint.y, 14, 0, Math.PI * 2)
-        ctx.fill()
-
-        ctx.textAlign = 'center'
-        ctx.font = '23px "Pirata One"'
-        ctx.fillStyle = '#fff'
-        ctx.fillText(path.pathLength, prevPoint.x, prevPoint.y + 9)
+        drawPath(ctx, fullPath)
+        drawEndPathTriangle(ctx, fullPath)
+        drawNumberCircle(ctx, moveHex.path)
       }
     })
   }

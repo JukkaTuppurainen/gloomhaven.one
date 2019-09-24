@@ -18,6 +18,8 @@ export const monsterValues = {
 }
 
 export const abilityCardClick = event => {
+  let update = true
+
   switch (event.target.id) {
     case 'Adm':
       --monsterValues.move
@@ -46,10 +48,14 @@ export const abilityCardClick = event => {
     // case 'Ait':
     //   ++monsterValues.targets
     //   break
+    default:
+      update = false
   }
 
-  renderAbilityCard()
-  updateActivation()
+  if (update) {
+    renderAbilityCard()
+    updateActivation()
+  }
 }
 
 export const itemSelectChange = event => {

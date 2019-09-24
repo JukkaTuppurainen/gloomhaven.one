@@ -43,3 +43,17 @@ export const paintFocusHexes = ctx => {
     })
   }
 }
+
+export const paintMoveHexes = ctx => {
+  if (
+    board.focusInfo &&
+    board.focusInfo.moveHexesVisible
+  ) {
+    ctx.fillStyle = '#0f03'
+
+    board.focusInfo.moveHexes.forEach(hex => {
+      drawHex(hex)
+      ctx.fill()
+    })
+  }
+}

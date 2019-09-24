@@ -15,3 +15,22 @@ export const drawHex = hex => {
   otherCorners.forEach(c => ctx.lineTo(c.x, c.y))
   ctx.closePath()
 }
+
+export const drawTriangle = (x, y, offset, angle, height, width) => {
+  ctx.beginPath()
+
+  x += offset * Math.cos(angle)
+  y += offset * Math.sin(angle)
+
+  ctx.moveTo(x, y)
+  ctx.lineTo(
+    x + (height * Math.cos(angle + width)),
+    y + (height * Math.sin(angle + width)),
+  )
+  ctx.lineTo(
+    x + (height * Math.cos(angle - width)),
+    y + (height * Math.sin(angle - width)),
+  )
+  ctx.closePath()
+  ctx.fill()
+}

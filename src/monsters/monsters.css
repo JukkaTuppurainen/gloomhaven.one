@@ -124,16 +124,25 @@
 }
 
 #At,
-#ai {
+#ai,
+#f h1 {
   font-family: 'Pirata One', sans-serif;
+  font-style: normal;
+  font-weight: 400;
   text-shadow: 1px 1px 2px #000;
 }
 
-#At {
+#At,
+#f h1 {
   font-size: 23px;
   letter-spacing: .5px;
   line-height: 38px;
   text-align: center;
+}
+
+#f h1 {
+  margin: 0;
+  text-align: left;
 }
 
 #ai {

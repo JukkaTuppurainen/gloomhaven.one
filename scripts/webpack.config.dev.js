@@ -8,6 +8,7 @@ module.exports = env => ({
     compress: true,
     port: 3000
   },
+  devtool: 'inline-source-map',
   entry: './src/index.js',
   mode: 'development',
   module: {

@@ -4,6 +4,11 @@ import {getHexRange}  from '../../lib/getHexRange'
 import {isInSight}    from '../../lib/isInSight'
 
 
+export const countTrapsInPath = path =>
+  path.reduce((trapCount, currentHexInPath) => (
+    trapCount + (currentHexInPath.isTrap ? 1 : 0)
+  ), 0)
+
 export const findTargetsInRange = (hex, range) => {
   const targets = []
 

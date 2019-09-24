@@ -11,7 +11,8 @@ import {board}                      from '../../board/board'
 export const findFocus = monster => {
   const focus = {
     messages: [],
-    player: undefined
+    player: undefined,
+    traps: 0
   }
 
   board.focusInfo = {

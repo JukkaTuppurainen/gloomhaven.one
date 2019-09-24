@@ -13,6 +13,7 @@ export const filterInShortestPaths = (monster, focus, paths, players) => {
 
   if (paths[0].hasTraps) {
     let trapCount = paths[0].filter(hex => hex.isTrap).length
+    focus.traps = trapCount
     message += `There are no safe paths to ${
       players.length === 1
         ? 'the enemy'
@@ -53,7 +54,7 @@ export const filterInShortestPaths = (monster, focus, paths, players) => {
           allPathsLength === 2
             ? 'Both'
             : 'All'
-        } of these paths</a> takes the same amount of movement points.`
+        } of these paths</a> would take the same amount of movement points.`
       )
     } else {
       focus.messages.push(
@@ -61,7 +62,7 @@ export const filterInShortestPaths = (monster, focus, paths, players) => {
           paths.length === 1
             ? 'path'
             : `${paths.length} paths`
-        }</a> requires ${shortestDistance}&nbsp;movement point${
+        }</a> would require ${shortestDistance}&nbsp;movement point${
           shortestDistance > 1 ? 's' : ''
         }.`
       )

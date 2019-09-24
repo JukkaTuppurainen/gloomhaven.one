@@ -1,6 +1,7 @@
 import {findFocus}      from './focus/monsters.focus'
 import {monsters}       from './monsters'
 import {itemsList}      from './monsters.items'
+import {findMovement}   from './movement/monster.movement'
 import bitmap_itemsheet from '../assets/itemSheet.webp'
 import {
   board,
@@ -21,33 +22,41 @@ export const activateMonster = monster => {
   monster.active = true
   monster.element.classList.add('item-active')
   const focus = findFocus(monster)
+  const movement = focus.player ? findMovement(monster, focus) : false
   render()
 
-  const f = document.getElementById('f') || document.createElement('div')
+  const infoHTML = [
+    '<h1>Focus</h1>',
+    ...focus.messages.map(message => `<p>${message}</p>`)
+  ]
 
-  f.innerHTML = focus.messages
-    .map(message => `<p>${message}</p>`)
-    .join('')
+  if (movement) {
+    infoHTML.push(
+      '<h1>Actions</h1>',
+      ...movement.messages.map(message => `<p>${message}</p>`)
+    )
+  }
+
+  const f = document.getElementById('f') || document.createElement('div')
+  f.innerHTML = infoHTML.join('')
 
   if (!f.id) {
     f.id = 'f'
     document.getElementById('fw').appendChild(f)
   }
 
-  const focusInformationHexes = document.getElementById('fih')
-  const focusInformationPath = document.getElementById('fip')
-
-  const focusVisualisations = [
-    [focusInformationHexes, showFocusHexes, hideFocusHexes],
-    [focusInformationPath, showFocusPath, hideFocusPath]
+  const focusInfos = [
+    [document.getElementById('fih'), 'focusHexes'],
+    [document.getElementById('fip'), 'paths'],
+    [document.getElementById('fim'), 'moveHexes']
   ]
 
-  focusVisualisations.forEach(focusVisualisation => {
-    if (focusVisualisation[0]) {
-      focusVisualisation[0].addEventListener('focus', focusVisualisation[1])
-      focusVisualisation[0].addEventListener('mouseover', focusVisualisation[1])
-      focusVisualisation[0].addEventListener('blur', focusVisualisation[2])
-      focusVisualisation[0].addEventListener('mouseout', focusVisualisation[2])
+  focusInfos.forEach(focusInfo => {
+    if (focusInfo[0]) {
+      focusInfo[0].addEventListener('focus', () => toggleFocusInfo(focusInfo[1], true))
+      focusInfo[0].addEventListener('mouseover', () => toggleFocusInfo(focusInfo[1], true))
+      focusInfo[0].addEventListener('blur', () => toggleFocusInfo(focusInfo[1], false))
+      focusInfo[0].addEventListener('mouseout', () => toggleFocusInfo(focusInfo[1], false))
     }
   })
 }
@@ -64,23 +73,8 @@ export const updateActivation = () => {
   }
 }
 
-const showFocusHexes = () => {
-  board.focusInfo.focusHexesVisible = true
-  render()
-}
-
-const hideFocusHexes = () => {
-  board.focusInfo.focusHexesVisible = false
-  render()
-}
-
-const showFocusPath = () => {
-  board.focusInfo.pathsVisible = true
-  render()
-}
-
-const hideFocusPath = () => {
-  board.focusInfo.pathsVisible = false
+const toggleFocusInfo = (info, state) => {
+  board.focusInfo[`${info}Visible`] = state
   render()
 }
 
