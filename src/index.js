@@ -122,7 +122,7 @@ const closeModal = () => {
   modalOpen = false
 }
 
-document.getElementById('co').innerText = `Contact: contact${String.fromCharCode(64)}gloomhaven.one`
+document.getElementById('co').innerText = `Contact email address: contact${String.fromCharCode(64)}gloomhaven.one`
 
 // document.getElementById('los-mode').addEventListener('change', event => {
 //   board.losMode = event.target.value === '1'
