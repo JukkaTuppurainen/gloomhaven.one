@@ -34,6 +34,10 @@ module.exports = env => ({
       {
         test: /\.css$/,
         use: ['style-loader', 'css-loader']
+      },
+      {
+        test: /\.ejs$/,
+        loader: 'ejs-compiled-loader?htmlmin'
       }
     ]
   },
@@ -49,6 +53,7 @@ module.exports = env => ({
       inject: true,
       template: path.join(__dirname, '..', 'index.ejs'),
       templateParameters: {
+        isAlpha: (env && env.ENV_TARGET) === 'alpha',
         isProduction: false
       },
       minify: false
