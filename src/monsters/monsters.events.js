@@ -121,18 +121,20 @@ export const monstersMousemove = event => {
       monsters.mouseHover.x = hex.x
       monsters.mouseHover.y = hex.y
 
-      const item = board.items.find(i => hex.x === i.ch.x && hex.y === i.ch.y)
-      if (!item) {
-        if (monsters.mouseHover.item) {
-          monsters.mouseHover.item = false
-          clearPlayerControl()
-        }
-      } else if (item !== monsters.mouseHover.item) {
-        monsters.mouseHover.item = item
+      const player = board.items.find(i =>
+        hex.x === i.ch.x &&
+        hex.y === i.ch.y &&
+        i.type === 'player'
+      )
+
+      if (monsters.mouseHover.item && (!player || player !== monsters.mouseHover.item)) {
+        monsters.mouseHover.item = false
         clearPlayerControl()
-        if (item.type === 'player') {
-          createPlayerControl(item)
-        }
+      }
+
+      if (player) {
+        monsters.mouseHover.item = player
+        createPlayerControl(player)
       }
     }
   }

@@ -37,8 +37,11 @@
 }
 
 .item-stacked {
-  transform: scale(.84);
   z-index: 5;
+}
+
+.item-stacked .img-wrap {
+  transform: scale(.84);
 }
 
 .in {
