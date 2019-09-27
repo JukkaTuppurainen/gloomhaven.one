@@ -10,6 +10,7 @@ import {
   hexHeight,
   hexWidth
 }                     from '../board/board'
+import {flagFloor}    from '../monsters/monsters.items'
 
 
 let endHex
@@ -37,7 +38,9 @@ const heuristic = hex => {
   }
 
   // return Math.max(Math.abs(hex.x - endHex.x), Math.abs(hex.y - endHex.y)) * 1.2
-  return Math.sqrt(((hexCenter.x - endHexCenter.x) ** 2) + ((hexCenter.y - endHexCenter.y) ** 2)) / 100
+  return Math.sqrt(
+    ((hexCenter.x - endHexCenter.x) ** 2) + ((hexCenter.y - endHexCenter.y) ** 2)
+  ) / 100
 }
 
 export const realNeighbors = (hex, filterItemTypes = []) => {
@@ -62,14 +65,14 @@ export const realNeighbors = (hex, filterItemTypes = []) => {
       return !findThinWall(commonCorners[0], commonCorners[1])
     })
     .map(neighborHex => {
-      let itemInNeighborHex = board.items.find(item =>
+      let floorItemInHex = board.items.find(item =>
         item.ch.x === neighborHex.x &&
         item.ch.y === neighborHex.y &&
-        !item.stacks
+        item.stacks === flagFloor
       )
 
-      neighborHex.isDifficult = !!(itemInNeighborHex && itemInNeighborHex.type === 'difficult')
-      neighborHex.isTrap = !!(itemInNeighborHex && itemInNeighborHex.type === 'trap')
+      neighborHex.isDifficult = !!(floorItemInHex && floorItemInHex.type === 'difficult')
+      neighborHex.isTrap = !!(floorItemInHex && floorItemInHex.type === 'trap')
       return neighborHex
     })
 }
@@ -137,7 +140,9 @@ export const getPath = (startCoords, endCoords, filterItems = [], flying = false
     let neighbors = realNeighbors(currentNode, filterItems)
 
     for (i = 0; i < neighbors.length; ++i) {
-      let neighbor = board.scenario.hexes.find(h => h.x === neighbors[i].x && h.y === neighbors[i].y)
+      let neighbor = board.scenario.hexes.find(h =>
+        h.x === neighbors[i].x && h.y === neighbors[i].y
+      )
       neighbor.isDifficult = neighbors[i].isDifficult
       neighbor.isTrap = neighbors[i].isTrap
 

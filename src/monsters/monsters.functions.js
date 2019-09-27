@@ -205,30 +205,40 @@ export const deleteItem = itemIndex => {
 }
 
 export const placeItem = item => {
-  const prevItems = board.items.filter(boardItem =>
+  let prevItems = board.items.filter(boardItem =>
     boardItem !== item &&
     boardItem.ch.x === item.ch.x &&
     boardItem.ch.y === item.ch.y
   )
 
-  let prevItemIndex
   prevItems.forEach(prevItem => {
-    prevItemIndex = board.items.findIndex(i => i === prevItem)
+    let stackLayer = 1
+    while (stackLayer < 8) {
+      if (
+        item.stacks & stackLayer &&
+        prevItem.stacks & stackLayer
+      ) {
+        deleteItem(board.items.findIndex(i => i === prevItem))
+        break
+      }
 
-    if (prevItem.stacks) {
-      if (item.stacks) {
-        deleteItem(prevItemIndex)
-      } else {
-        prevItem.element.classList.add('item-stacked')
-      }
-    } else {
-      if (item.stacks) {
-        item.element.classList.add('item-stacked')
-      } else {
-        deleteItem(prevItemIndex)
-      }
+      stackLayer *= 2
     }
   })
+
+  prevItems = board.items.filter(boardItem =>
+    boardItem !== item &&
+    boardItem.ch.x === item.ch.x &&
+    boardItem.ch.y === item.ch.y
+  )
+
+  if (prevItems.length) {
+    (
+      prevItems[0].stacks > item.stacks
+        ? prevItems[0]
+        : item
+    ).element.classList.add('item-stacked')
+  }
 }
 
 export const startDraggingItem = (x, y) => {

@@ -1,23 +1,27 @@
+export const flagFloor  = 1
+export const flagRoom   = 2
+export const flagFlying = 4
+
 export const itemsList = {
   obstacle: {
     name: 'Obstacle',
-    stacks: false
+    stacks: flagFloor | flagRoom
   },
   player: {
     name: 'Player character',
-    stacks: true
+    stacks: flagRoom | flagFlying
   },
   difficult: {
     name: 'Difficult terrain',
-    stacks: false
+    stacks: flagFloor
   },
   monster: {
     name: 'Monster',
-    stacks: true
+    stacks: flagRoom | flagFlying
   },
   trap: {
     name: 'Trap',
-    stacks: false
+    stacks: flagFloor
   }
 }
 

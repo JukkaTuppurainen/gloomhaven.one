@@ -31,19 +31,21 @@ export const monstersClick = event => {
     stopDragging()
   } else {
     const clickHex = pointToHex(event.pageX - board.pxOffset, event.pageY)
-    const clickItem = board.items.find(item => (
-      item.ch.x === clickHex.x && item.ch.y === clickHex.y
+    const clickMonster = board.items.find(item => (
+      item.ch.x === clickHex.x &&
+      item.ch.y === clickHex.y &&
+      item.type === 'monster'
     ))
 
-    if (clickItem && clickItem.type === 'monster') {
-      if (clickItem.active) {
-        deactivateMonster(clickItem)
+    if (clickMonster) {
+      if (clickMonster.active) {
+        deactivateMonster(clickMonster)
       } else {
         const prevActiveItem = board.items.find(item => item.active)
         if (prevActiveItem) {
           deactivateMonster(prevActiveItem)
         }
-        activateMonster(clickItem)
+        activateMonster(clickMonster)
       }
     }
   }
@@ -59,7 +61,7 @@ export const monstersMousedown = event => {
     if (itemsInHex.length) {
       const hoverItem = itemsInHex[
         itemsInHex.length > 1
-          ? itemsInHex[0].stacks ? 0 : 1
+          ? itemsInHex[0].stacks > itemsInHex[1].stacks ? 0 : 1
           : 0
       ]
 
@@ -207,7 +209,7 @@ export const monstersDocumentKeydown = event => {
       const prevItemIndex = board.items.findIndex(boardItem => (
         boardItem.ch.x === monsters.mouseHover.x &&
         boardItem.ch.y === monsters.mouseHover.y &&
-        boardItem.stacks === itemStacks
+        boardItem.stacks & itemStacks
       ))
 
       if (
@@ -217,16 +219,13 @@ export const monstersDocumentKeydown = event => {
         deleteItem(prevItemIndex)
         updateActivation()
 
-        if (!itemStacks) {
-          const prevStackedItemIndex = board.items.findIndex(boardItem => (
-            boardItem.ch.x === monsters.mouseHover.x &&
-            boardItem.ch.y === monsters.mouseHover.y &&
-            boardItem.stacks
-          ))
+        const otherItemIndex = board.items.findIndex(boardItem => (
+          boardItem.ch.x === monsters.mouseHover.x &&
+          boardItem.ch.y === monsters.mouseHover.y
+        ))
 
-          if (prevStackedItemIndex > -1) {
-            board.items[prevStackedItemIndex].element.classList.remove('item-stacked')
-          }
+        if (otherItemIndex > -1) {
+          board.items[otherItemIndex].element.classList.remove('item-stacked')
         }
       } else {
         const point = toPoint(monsters.mouseHover)
