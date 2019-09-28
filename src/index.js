@@ -7,8 +7,16 @@ import {scenarioList} from './scenarios'
 import                     './style.css'
 
 
-if (/* global ENV_TARGET */ ENV_TARGET === 'alpha' ) {
+if (/* global ENV_isAlpha */ ENV_isAlpha) {
   import(/* webpackMode: 'eager' */ './monsters/monsters')
+
+  if (/* global ENV_isProduction */ ENV_isProduction) {
+    const alphaNotice = document.createElement('div')
+    alphaNotice.id = 'alpha'
+    alphaNotice.innerHTML = 'This is an early alpha version. Monster focus and movement information may be incorrect.'
+    document.body.classList.add('alpha')
+    document.body.appendChild(alphaNotice)
+  }
 }
 
 const canvas = document.getElementById('c')

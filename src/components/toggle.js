@@ -6,7 +6,7 @@ const options = [{
   name: 'Play'
 }]
 
-if (/* global ENV_TARGET */ ENV_TARGET === 'alpha' ) {
+if (/* global ENV_isAlpha */ ENV_isAlpha) {
   options.push({
     color: '#74dc6d',
     name: 'Monsters'

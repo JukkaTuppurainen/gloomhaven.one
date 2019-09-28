@@ -19,7 +19,7 @@ const minify = {
 }
 
 module.exports = env => {
-  const isAlpha = (env && env.ENV_TARGET) === 'alpha'
+  const isAlpha = (env && env['ENV_TARGET']) === 'alpha'
   const outputPath = [__dirname, '..', 'dist']
   if (isAlpha) {
     outputPath.push('alpha')
@@ -27,7 +27,8 @@ module.exports = env => {
 
   const plugins = [
     new webpack.DefinePlugin({
-      ENV_TARGET: JSON.stringify((env && env.ENV_TARGET) || 'production')
+      ENV_isAlpha: isAlpha,
+      ENV_isProduction: true
     }),
     new HtmlWebpackPlugin({
       filename: 'index.html',

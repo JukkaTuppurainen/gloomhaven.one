@@ -47,13 +47,14 @@ module.exports = env => ({
   },
   plugins: [
     new webpack.DefinePlugin({
-      ENV_TARGET: JSON.stringify((env && env.ENV_TARGET) || 'production')
+      ENV_isAlpha: (env && env['ENV_TARGET']) === 'alpha',
+      ENV_isProduction: false
     }),
     new HtmlWebpackPlugin({
       inject: true,
       template: path.join(__dirname, '..', 'index.ejs'),
       templateParameters: {
-        isAlpha: (env && env.ENV_TARGET) === 'alpha',
+        isAlpha: (env && env['ENV_TARGET']) === 'alpha',
         isProduction: false
       },
       minify: false
