@@ -4,11 +4,13 @@ import {isInSight}  from '../lib/isInSight'
 
 
 export const paintMouseHex = ctx => {
-  if (board.mouseHex) {
+  if (board.mouseHex && board.mouseHex.x) {
     drawHex(board.mouseHex)
 
     const style = board.style
-    const isScenarioHex = board.scenario.hexes.find(hex => hex.x === board.mouseHex.x && hex.y === board.mouseHex.y)
+    const isScenarioHex = board.scenario.hexes.some(hex =>
+      hex.x === board.mouseHex.x && hex.y === board.mouseHex.y
+    )
 
     if (isScenarioHex && style.hexHover) {
       ctx.fillStyle = style.hexHover

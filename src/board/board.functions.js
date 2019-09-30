@@ -65,6 +65,9 @@ export const createPiece = (x, y, pieceKey, angle = 0, color = null) => {
     pieceKey === 'door' ||
     pieceKey === 'x'
   ) {
+    if (!color) {
+      color = pieceKey === 'corridor' ? 4 : 0
+    }
     pieceElement.dataset['color'] = color
     pieceElement.classList.add(pieceKey + '-tile')
   }

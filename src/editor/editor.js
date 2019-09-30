@@ -33,8 +33,7 @@ export const editor = {
     editorControls.innerHTML = editorControlsHTML
 
     // Tile creation select
-    const tileSelect = document.getElementById('tile-select')
-    tileSelect.addEventListener('change', tileSelectChange)
+    document.getElementById('tile-select').addEventListener('change', tileSelectChange)
     setTimeout(updateTileSelectOptions)
 
     document.getElementById('dt').addEventListener('click', deleteAllPieces)
