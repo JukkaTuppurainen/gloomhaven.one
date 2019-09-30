@@ -1,5 +1,7 @@
 import {findFocus}      from './focus/monsters.focus'
 import {monsters}       from './monsters'
+import {itemsList}      from './monsters.items'
+import {findMovement}   from './movement/monster.movement'
 import bitmap_itemsheet from '../assets/itemSheet.webp'
 import {
   board,
@@ -20,33 +22,41 @@ export const activateMonster = monster => {
   monster.active = true
   monster.element.classList.add('item-active')
   const focus = findFocus(monster)
+  const movement = focus.player ? findMovement(monster, focus) : false
   render()
 
-  const f = document.getElementById('f') || document.createElement('div')
+  const infoHTML = [
+    '<h1>Focus</h1>',
+    ...focus.messages.map(message => `<p>${message}</p>`)
+  ]
 
-  f.innerHTML = focus.messages
-    .map(message => `<p>${message}</p>`)
-    .join('')
+  if (movement) {
+    infoHTML.push(
+      '<h1>Actions</h1>',
+      ...movement.messages.map(message => `<p>${message}</p>`)
+    )
+  }
+
+  const f = document.getElementById('f') || document.createElement('div')
+  f.innerHTML = infoHTML.join('')
 
   if (!f.id) {
     f.id = 'f'
     document.getElementById('fw').appendChild(f)
   }
 
-  const focusInformationHexes = document.getElementById('fih')
-  const focusInformationPath = document.getElementById('fip')
-
-  const focusVisualisations = [
-    [focusInformationHexes, showFocusHexes, hideFocusHexes],
-    [focusInformationPath, showFocusPath, hideFocusPath]
+  const focusInfos = [
+    [document.getElementById('fih'), 'focusHexes'],
+    [document.getElementById('fip'), 'paths'],
+    [document.getElementById('fim'), 'moveHexes']
   ]
 
-  focusVisualisations.forEach(focusVisualisation => {
-    if (focusVisualisation[0]) {
-      focusVisualisation[0].addEventListener('focus', focusVisualisation[1])
-      focusVisualisation[0].addEventListener('mouseover', focusVisualisation[1])
-      focusVisualisation[0].addEventListener('blur', focusVisualisation[2])
-      focusVisualisation[0].addEventListener('mouseout', focusVisualisation[2])
+  focusInfos.forEach(focusInfo => {
+    if (focusInfo[0]) {
+      focusInfo[0].addEventListener('focus', () => toggleFocusInfo(focusInfo[1], true))
+      focusInfo[0].addEventListener('mouseover', () => toggleFocusInfo(focusInfo[1], true))
+      focusInfo[0].addEventListener('blur', () => toggleFocusInfo(focusInfo[1], false))
+      focusInfo[0].addEventListener('mouseout', () => toggleFocusInfo(focusInfo[1], false))
     }
   })
 }
@@ -63,23 +73,8 @@ export const updateActivation = () => {
   }
 }
 
-const showFocusHexes = () => {
-  board.focusInfo.focusHexesVisible = true
-  render()
-}
-
-const hideFocusHexes = () => {
-  board.focusInfo.focusHexesVisible = false
-  render()
-}
-
-const showFocusPath = () => {
-  board.focusInfo.pathsVisible = true
-  render()
-}
-
-const hideFocusPath = () => {
-  board.focusInfo.pathsVisible = false
+const toggleFocusInfo = (info, state) => {
+  board.focusInfo[`${info}Visible`] = state
   render()
 }
 
@@ -121,6 +116,7 @@ export const createItem = (x, y, type) => {
     pieceHexes: [{x: 0, y: 0}],
     pxH: hexHeight + 1,
     pxW: hexWidth + 1,
+    stacks: itemsList[type].stacks,
     type,
     w: 1,
     x,
@@ -154,7 +150,7 @@ export const createPlayerControl = item => {
   const playerControl = document.createElement('div')
   playerControl.className = 'icw'
   playerControl.innerHTML = '<button id="icd" class="pm"></button><button id="ici" class="pm"></button>'
-  playerControl.style.left = item.x - 5 + 'px'
+  playerControl.style.left = item.x - 5 + board.pxOffset + 'px'
   playerControl.style.top = item.y + 41 + 'px'
   document.getElementById('ic').appendChild(playerControl)
 
@@ -209,18 +205,49 @@ export const deleteItem = itemIndex => {
 }
 
 export const placeItem = item => {
-  const prevItemIndex = board.items.findIndex(i => (
-    i !== item && i.ch.x === item.ch.x && i.ch.y === item.ch.y
-  ))
+  let prevItems = board.items.filter(boardItem =>
+    boardItem !== item &&
+    boardItem.ch.x === item.ch.x &&
+    boardItem.ch.y === item.ch.y
+  )
 
-  if (prevItemIndex > -1) {
-    deleteItem(prevItemIndex)
+  prevItems.forEach(prevItem => {
+    let stackLayer = 1
+    while (stackLayer < 8) {
+      if (
+        item.stacks & stackLayer &&
+        prevItem.stacks & stackLayer
+      ) {
+        deleteItem(board.items.findIndex(i => i === prevItem))
+        break
+      }
+
+      stackLayer *= 2
+    }
+  })
+
+  prevItems = board.items.filter(boardItem =>
+    boardItem !== item &&
+    boardItem.ch.x === item.ch.x &&
+    boardItem.ch.y === item.ch.y
+  )
+
+  if (prevItems.length) {
+    (
+      prevItems[0].stacks > item.stacks
+        ? prevItems[0]
+        : item
+    ).element.classList.add('item-stacked')
   }
 }
 
 export const startDraggingItem = (x, y) => {
   monsters.dragging = {x, y}
-  createDragShadow(board.items[monsters.hoverItem])
+  const dragItem = board.items[monsters.hoverItem]
+  const dragItemClassList = dragItem.element.classList
+  dragItemClassList.add('item-dragging')
+  dragItemClassList.remove('item-stacked')
+  createDragShadow(dragItem)
 }
 
 export const stopDragging = () => {
@@ -228,6 +255,10 @@ export const stopDragging = () => {
   const dragShadowElement = document.getElementById('drag-shadow')
   if (dragShadowElement) {
     document.body.removeChild(dragShadowElement)
+  }
+  const draggedItem = document.querySelector('.item-dragging')
+  if (draggedItem) {
+    draggedItem.classList.remove('item-dragging')
   }
   updateActivation()
 }

@@ -1,3 +1,18 @@
+/* board adjust */
+
+#c,
+#board,
+#items {
+  transform: translateX(0);
+  transition: transform .15s;
+}
+
+.monsters-on #c,
+.monsters-on #board,
+.monsters-on #items {
+  transform: translateX(280px);
+}
+
 /* items */
 
 .item-tile .img-wrap {
@@ -14,7 +29,19 @@
 
 .item-active {
   filter: brightness(1.25) drop-shadow(0 0 8px red) drop-shadow(0 0 5px #f40);
+  z-index: 8;
+}
+
+.item-dragging {
   z-index: 9;
+}
+
+.item-stacked {
+  z-index: 5;
+}
+
+.item-stacked .img-wrap {
+  transform: scale(.84);
 }
 
 .in {
@@ -100,16 +127,25 @@
 }
 
 #At,
-#ai {
+#ai,
+#f h1 {
   font-family: 'Pirata One', sans-serif;
+  font-style: normal;
+  font-weight: 400;
   text-shadow: 1px 1px 2px #000;
 }
 
-#At {
+#At,
+#f h1 {
   font-size: 23px;
   letter-spacing: .5px;
   line-height: 38px;
   text-align: center;
+}
+
+#f h1 {
+  margin: 0;
+  text-align: left;
 }
 
 #ai {

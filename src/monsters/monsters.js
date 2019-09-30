@@ -22,6 +22,7 @@ import {
   stopDragging
 }                       from './monsters.functions'
 import {board}          from '../board/board'
+import {resizeCanvas}   from '../board/board.scenarioLoad'
 import {render}         from '../index'
 import {resolveLOS}     from '../lib/resolveLOS'
 
@@ -54,7 +55,10 @@ export const monsters = {
     }
 
     monsters.on = true
+    board.pxOffset = 280
+    resizeCanvas()
 
+    document.body.classList.add('monsters-on')
     document.getElementById('h').innerHTML = controlsHTML
 
     const itemSelect = document.getElementById('hs')
@@ -89,6 +93,11 @@ export const monsters = {
     delete board.scenario._events
 
     monsters.on = false
+    board.pxOffset = 0
+    resizeCanvas()
+
+    document.body.classList.remove('monsters-on')
+
     if (monsters.dragging) {
       if (board.items[monsters.hoverItem]) {
         deleteItem(monsters.hoverItem)
@@ -108,6 +117,7 @@ export const monsters = {
 
     document.getElementById('h').innerHTML = ''
     document.removeEventListener('keydown', monstersDocumentKeydown)
+    render()
   }
 }
 

@@ -6,9 +6,13 @@ import {
 import {
   paintFocusHexes,
   paintMouseHex,
+  paintMoveHexes,
   paintPlayer
 }                   from './renderer.painthex'
-import {drawPath}   from './renderer.path'
+import {
+  drawFocusPath,
+  drawMovePath
+}                   from './renderer.path'
 // import {
 //   paintPathingDebug,
 //   writeHexNumbers
@@ -26,12 +30,14 @@ renderFunctions.push(
   shadeHexesNotInSight,
   paintFocusHexes,
   paintMouseHex,
+  paintMoveHexes,
   paintPlayer,
   // paintPathingDebug,
   // writeHexNumbers,
   // drawWalls,
   drawHoverLines,
-  drawPath
+  drawFocusPath,
+  drawMovePath
 )
 
 export const renderer = () => {

@@ -1,12 +1,14 @@
 import './toggle.css'
 
 
+/* global ENV_isAlpha */
+
 const options = [{
-  color: 'orange',
+  color: ENV_isAlpha ? 'orange' : '#ec8989',
   name: 'Play'
 }]
 
-if (/* global ENV_TARGET */ ENV_TARGET === 'alpha' ) {
+if (ENV_isAlpha) {
   options.push({
     color: '#74dc6d',
     name: 'Monsters'
@@ -14,7 +16,7 @@ if (/* global ENV_TARGET */ ENV_TARGET === 'alpha' ) {
 }
 
 options.push({
-  color: '#aaf',
+  color: ENV_isAlpha ? '#aaf' : '#74dc6d',
   name: 'Editor'
 })
 

@@ -48,13 +48,8 @@ export const scenarioInit = () => {
   canvas.width = pxSizeX
 }
 
-export const scenarioLoad = scenario => {
-  Object.assign(board.scenario, scenario)
-  const dataFromPieces = getDataFromBoardPieces()
-  board.scenario.hexes = dataFromPieces.hexes
-
+export const resizeCanvas = () => {
   if (!board.editor && board.scenario.hexes.length) {
-    // Resize the canvas and grid to match the scenario layout
     const gridSize = getGridSize(board.scenario.hexes)
     ++gridSize.height
     ++gridSize.width
@@ -66,8 +61,17 @@ export const scenarioLoad = scenario => {
     const canvas = document.getElementById('c')
 
     canvas.height = Math.max(pxSizeY, window.innerHeight - 12)
-    canvas.width = Math.max(pxSizeX, window.innerWidth - 12)
+    canvas.width = Math.max(pxSizeX, window.innerWidth - 12 - board.pxOffset)
   }
+}
+
+export const scenarioLoad = scenario => {
+  Object.assign(board.scenario, scenario)
+  const dataFromPieces = getDataFromBoardPieces()
+  board.scenario.hexes = dataFromPieces.hexes
+
+  // Resize the canvas and grid to match the scenario layout
+  resizeCanvas()
 
   // Make thinWalls
   dataFromPieces.thinWalls.forEach(thinWall => {

@@ -8,6 +8,7 @@ module.exports = env => ({
     compress: true,
     port: 3000
   },
+  devtool: 'inline-source-map',
   entry: './src/index.js',
   mode: 'development',
   module: {
@@ -33,6 +34,10 @@ module.exports = env => ({
       {
         test: /\.css$/,
         use: ['style-loader', 'css-loader']
+      },
+      {
+        test: /\.ejs$/,
+        loader: 'ejs-compiled-loader?htmlmin'
       }
     ]
   },
@@ -42,12 +47,14 @@ module.exports = env => ({
   },
   plugins: [
     new webpack.DefinePlugin({
-      ENV_TARGET: JSON.stringify((env && env.ENV_TARGET) || 'production')
+      ENV_isAlpha: (env && env['ENV_TARGET']) === 'alpha',
+      ENV_isProduction: false
     }),
     new HtmlWebpackPlugin({
       inject: true,
       template: path.join(__dirname, '..', 'index.ejs'),
       templateParameters: {
+        isAlpha: (env && env['ENV_TARGET']) === 'alpha',
         isProduction: false
       },
       minify: false

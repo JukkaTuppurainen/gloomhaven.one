@@ -11,6 +11,7 @@ import {
   stopDragging,
   updateActivation
 }                         from './monsters.functions'
+import {itemsList}        from './monsters.items'
 import {board}            from '../board/board'
 import {findSnap}         from '../board/board.functions'
 import {updateDragShadow} from '../editor/editor.functions'
@@ -29,20 +30,22 @@ export const monstersClick = event => {
   if (monsters.dragging) {
     stopDragging()
   } else {
-    const clickHex = pointToHex(event.pageX, event.pageY)
-    const clickItem = board.items.find(item => (
-      item.ch.x === clickHex.x && item.ch.y === clickHex.y
+    const clickHex = pointToHex(event.pageX - board.pxOffset, event.pageY)
+    const clickMonster = board.items.find(item => (
+      item.ch.x === clickHex.x &&
+      item.ch.y === clickHex.y &&
+      item.type === 'monster'
     ))
 
-    if (clickItem && clickItem.type === 'monster') {
-      if (clickItem.active) {
-        deactivateMonster(clickItem)
+    if (clickMonster) {
+      if (clickMonster.active) {
+        deactivateMonster(clickMonster)
       } else {
         const prevActiveItem = board.items.find(item => item.active)
         if (prevActiveItem) {
           deactivateMonster(prevActiveItem)
         }
-        activateMonster(clickItem)
+        activateMonster(clickMonster)
       }
     }
   }
@@ -50,24 +53,34 @@ export const monstersClick = event => {
 
 export const monstersMousedown = event => {
   if (monsters.dragging === false) {
-    const hexFromPoint = pointToHex(event.pageX, event.pageY)
-
-    monsters.hoverItem = board.items.findIndex(i =>
+    const hexFromPoint = pointToHex(event.pageX - board.pxOffset, event.pageY)
+    const itemsInHex = board.items.filter(i =>
       i.ch.x === hexFromPoint.x && i.ch.y === hexFromPoint.y
     )
 
-    if (monsters.hoverItem > -1) {
+    if (itemsInHex.length) {
+      const hoverItem = itemsInHex[
+        itemsInHex.length > 1
+          ? itemsInHex[0].stacks > itemsInHex[1].stacks ? 0 : 1
+          : 0
+      ]
+
+      monsters.hoverItem = board.items.findIndex(i => i === hoverItem)
+
       mouseDownCoords = {
         x: event.pageX,
         y: event.pageY
       }
 
+      clearPlayerControl()
       render()
     }
   }
 }
 
 export const monstersMousemove = event => {
+  let adjustedEventPageX = event.pageX - board.pxOffset
+
   if (mouseDownCoords) {
     const deltaX = event.pageX - mouseDownCoords.x
     const deltaY = event.pageY - mouseDownCoords.y
@@ -81,7 +94,6 @@ export const monstersMousemove = event => {
         deltaY < -minMouseMoveDeltaToConsiderClickAsDragging
       )
     ) {
-      clearPlayerControl()
       startDraggingItem(
         event.pageX - board.items[monsters.hoverItem].x,
         event.pageY - board.items[monsters.hoverItem].y
@@ -103,7 +115,7 @@ export const monstersMousemove = event => {
   }
 
   if (!mouseDownCoords && !monsters.dragging) {
-    const hex = pointToHex(event.pageX, event.pageY)
+    const hex = pointToHex(adjustedEventPageX, event.pageY)
     if (
       hex.x !== monsters.mouseHover.x ||
       hex.y !== monsters.mouseHover.y
@@ -111,18 +123,20 @@ export const monstersMousemove = event => {
       monsters.mouseHover.x = hex.x
       monsters.mouseHover.y = hex.y
 
-      const item = board.items.find(i => hex.x === i.ch.x && hex.y === i.ch.y)
-      if (!item) {
-        if (monsters.mouseHover.item) {
-          monsters.mouseHover.item = false
-          clearPlayerControl()
-        }
-      } else if (item !== monsters.mouseHover.item) {
-        monsters.mouseHover.item = item
+      const player = board.items.find(i =>
+        hex.x === i.ch.x &&
+        hex.y === i.ch.y &&
+        i.type === 'player'
+      )
+
+      if (monsters.mouseHover.item && (!player || player !== monsters.mouseHover.item)) {
+        monsters.mouseHover.item = false
         clearPlayerControl()
-        if (item.type === 'player') {
-          createPlayerControl(item)
-        }
+      }
+
+      if (player) {
+        monsters.mouseHover.item = player
+        createPlayerControl(player)
       }
     }
   }
@@ -180,20 +194,22 @@ export const monstersDocumentKeydown = event => {
       case 'w':
         itemName = 'player'
         break
-      // case 'e':
-      //   itemName = 'difficult'
-      //   break
+      case 'e':
+        itemName = 'difficult'
+        break
       case 'r':
         itemName = 'monster'
         break
-      // case 't':
-      //   itemName = 'trap'
-      //   break
+      case 't':
+        itemName = 'trap'
     }
 
     if (itemName) {
+      const itemStacks = itemsList[itemName].stacks
       const prevItemIndex = board.items.findIndex(boardItem => (
-        boardItem.ch.x === monsters.mouseHover.x && boardItem.ch.y === monsters.mouseHover.y
+        boardItem.ch.x === monsters.mouseHover.x &&
+        boardItem.ch.y === monsters.mouseHover.y &&
+        boardItem.stacks & itemStacks
       ))
 
       if (
@@ -202,6 +218,15 @@ export const monstersDocumentKeydown = event => {
       ) {
         deleteItem(prevItemIndex)
         updateActivation()
+
+        const otherItemIndex = board.items.findIndex(boardItem => (
+          boardItem.ch.x === monsters.mouseHover.x &&
+          boardItem.ch.y === monsters.mouseHover.y
+        ))
+
+        if (otherItemIndex > -1) {
+          board.items[otherItemIndex].element.classList.remove('item-stacked')
+        }
       } else {
         const point = toPoint(monsters.mouseHover)
         const item = createItem(point.x, point.y, itemName)

@@ -11,7 +11,8 @@ import {board}                      from '../../board/board'
 export const findFocus = monster => {
   const focus = {
     messages: [],
-    player: undefined
+    player: undefined,
+    traps: 0
   }
 
   board.focusInfo = {
@@ -21,6 +22,8 @@ export const findFocus = monster => {
     pathsVisible: false,
     pathStart: monster.ch
   }
+
+  const players = board.items.filter(item => item.type === 'player')
 
   /*
    * # FOCUS SELECTION STEP 1
@@ -41,7 +44,7 @@ export const findFocus = monster => {
 
   let paths = []
 
-  getPathsToAttack(monster, focus, paths)
+  getPathsToAttack(monster, focus, paths, players)
   if (focus.player === false) {
     // If focus.player is set to false, there is not a single path to target available.
     return focus
@@ -54,7 +57,7 @@ export const findFocus = monster => {
    *   - Take the shortest path and if required, check physical distances.
    */
 
-  filterInShortestPaths(monster, focus, paths)
+  filterInShortestPaths(monster, focus, paths, players)
 
   let proximities = []
 

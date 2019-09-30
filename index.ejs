@@ -1,3 +1,4 @@
+<% /* global isAlpha, isProduction */ %>
 <!doctype html>
 <html lang="en-Us">
 <head>
@@ -5,30 +6,16 @@
 <style>body{background:#000;color:#fff}header,#n{display:none}</style>
 <meta charset="utf-8">
 <meta name="viewport" content="width=800, initial-scale=0.8">
-<link rel="icon" href="./favicon.svg" sizes="any" type="image/svg+xml">
-<link rel="icon" href="./favicon.png" sizes="32x32" type="image/png">
-<%=
-/* global isProduction */
-isProduction ? require('./googleAnalytics.html') : ''
+<link rel="icon" href="<%= require('./favicon.svg') %>" sizes="any" type="image/svg+xml">
+<link rel="icon" href="<%= require('./favicon.png') %>" sizes="32x32" type="image/png">
+<%-
+isProduction ? require('./partials/googleAnalytics.html') : ''
 %>
-<meta
-  property="og:description"
-  content="A browser based web app to resolve any unclear line of sight situation with just a few clicks."
->
-<meta
-  name="description"
-  content="A browser based web app to resolve any unclear line of sight situation with just a few clicks."
->
-<meta property="og:image" content="https://gloomhaven.one/<%= require('./src/assets/GloomhavenOneCover.jpg') %>">
-<meta property="og:image:alt" content="An example image of the Gloomhaven Line of Sight Tool">
-<meta property="og:image:height" content="630">
-<meta property="og:image:secure_url" content="https://gloomhaven.one/<%= require('./src/assets/GloomhavenOneCover.jpg') %>">
-<meta property="og:image:type" content="image/jpeg">
-<meta property="og:image:width" content="1200">
-<meta property="og:site_name" content="Gloomhaven Line of Sight Tool">
-<meta property="og:title" content="Gloomhaven Line of Sight Tool">
-<meta property="og:type" content="website">
-<meta property="og:url" content="https://gloomhaven.one">
+<%-
+isProduction && !isAlpha
+  ? require('./partials/meta-description.ejs')()
+  : '<meta name="robots" content="noindex" />'
+%>
 </head>
 <body>
 <div id="n">
@@ -39,17 +26,11 @@ isProduction ? require('./googleAnalytics.html') : ''
 
       <p>Simply select a scenario from dropdown and click a hex to see the line of sight information. There is currently only some scenarios, but more will be added later on.</p>
 
-      <p>There is also an editor which can be used to create any layout which then may be shared as URL. The editor has two modes:</p>
-      <ol>
-        <li class="flex">
-          <div class="t"><div class="tv" style="background-color: #ec8989;"></div></div>
-          <span>Line of Sight mode: click hex to see line of sight information.</span>
-        </li>
-        <li class="flex">
-          <div class="t"><div class="tv" style="background-color: #74dc6d;"></div></div>
-          <span>Editing mode: add map tiles, drag and rotate them to place.</span>
-        </li>
-      </ol>
+<%-
+isAlpha
+  ? require('./partials/mode-info-alpha.html')
+  : require('./partials/mode-info.html')
+%>
 
       <h2>Other</h2>
         <p><span id="co"></span>. There is also a <a href="https://boardgamegeek.com/thread/2263913/gloomhaven-line-sight-web-app">discussion thread for this app at BoardGameGeek</a>.</p>

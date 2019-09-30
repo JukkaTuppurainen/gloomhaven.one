@@ -62,6 +62,14 @@ body.modal-open > *:not(#n) {
   filter: blur(1.5px) brightness(0.75)
 }
 
+#alpha {
+  background: #333;
+  padding: 4px 10px;
+  position: fixed;
+  top: 0;
+  width: 100%;
+}
+
 #n {
   height: 100vh;
   left: 0;
@@ -142,6 +150,10 @@ header {
   position: absolute;
   width: 100%;
   z-index: 99;
+}
+
+.alpha header {
+  top: 20px
 }
 
 #iw {
@@ -458,4 +470,11 @@ ol li {
 
 li.flex {
   align-items: center;
+}
+
+@media (min-width: 1024px) {
+  .sh {
+    cursor: help;
+    border-bottom: 1px #555 dotted;
+  }
 }
