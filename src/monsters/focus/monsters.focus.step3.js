@@ -126,5 +126,5 @@ export const checkTargetsFromPaths = (monster, focus, paths, proximities) => {
         ? 'Both'
         : 'All'
       : proximities.length
-  } of them are at equally close in proximity.`)
+  } of them are equally close in proximity from my current position.`)
 }
