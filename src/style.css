@@ -63,11 +63,11 @@ body.modal-open > *:not(#n) {
 }
 
 #n {
-  bottom: 0;
+  height: 100vh;
   left: 0;
   position: fixed;
-  right: 0;
   top: 0;
+  width: 100vw;
   z-index: 998;
 }
 
