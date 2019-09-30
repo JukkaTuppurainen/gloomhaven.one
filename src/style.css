@@ -471,3 +471,10 @@ ol li {
 li.flex {
   align-items: center;
 }
+
+@media (min-width: 1024px) {
+  .sh {
+    cursor: help;
+    border-bottom: 1px #555 dotted;
+  }
+}

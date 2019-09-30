@@ -25,17 +25,11 @@ isProduction && !isAlpha
 
       <p>Simply select a scenario from dropdown and click a hex to see the line of sight information. There is currently only some scenarios, but more will be added later on.</p>
 
-      <p>There is also an editor which can be used to create any layout which then may be shared as URL. The editor has two modes:</p>
-      <ol>
-        <li class="flex">
-          <div class="t"><div class="tv" style="background-color: #ec8989;"></div></div>
-          <span>Line of Sight mode: click hex to see line of sight information.</span>
-        </li>
-        <li class="flex">
-          <div class="t"><div class="tv" style="background-color: #74dc6d;"></div></div>
-          <span>Editing mode: add map tiles, drag and rotate them to place.</span>
-        </li>
-      </ol>
+<%-
+isAlpha
+  ? require('./partials/mode-info-alpha.html')
+  : require('./partials/mode-info.html')
+%>
 
       <h2>Other</h2>
         <p><span id="co"></span>. There is also a <a href="https://boardgamegeek.com/thread/2263913/gloomhaven-line-sight-web-app">discussion thread for this app at BoardGameGeek</a>.</p>
