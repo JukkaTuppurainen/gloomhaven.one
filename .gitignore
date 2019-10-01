@@ -1,4 +1,6 @@
-node_modules
 .idea
-dist
 .tmp
+aws
+dist
+node_modules
+sync.bat
