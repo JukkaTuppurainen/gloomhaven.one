@@ -50,7 +50,7 @@ export const getPossibleMovementTargets = (monster, focus) => {
    */
 
   movementTargets = movementTargets.filter(movementTarget => {
-    const pathFilterItems = ['obstacle']
+    const pathFilterItems = ['obstacle', 'player']
     if (!focus.traps) {
       pathFilterItems.push('trap')
     }

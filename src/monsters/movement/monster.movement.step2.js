@@ -1,6 +1,9 @@
 import {countTrapsInPath} from '../focus/monsters.focus.functions'
+import {monsterValues}    from '../monsters.controls'
 import {board}            from '../../board/board'
 import {getPath}          from '../../lib/getPath'
+import {isAdjacent}       from '../../lib/hexUtils'
+import {isInSight}        from '../../lib/isInSight'
 
 
 export const resolveBestPath = (movementTargets, focus) => {
@@ -73,14 +76,67 @@ export const resolveBestPath = (movementTargets, focus) => {
 
   /*
    * ## MOVEMENT RESOLVE STEP 2.5
+   *   - If doing ranged attack, check for disadvantage and possibility to avoid it
+   */
+
+  if (smallestDistance === 0 && monsterValues.range) {
+    let withDisadvantage = 0
+    let withoutDisadvantage = 0
+
+    movementTargets = movementTargets.filter(mt => {
+      if (
+        !isInSight(mt, focus.player.ch) ||
+        getPath(mt, focus.player.ch, [], true).length > monsterValues.range
+      ) {
+        return false
+      }
+
+      mt.a = isAdjacent(mt, focus.player.ch)
+
+      if (mt.a) {
+        ++withDisadvantage
+      } else {
+        ++withoutDisadvantage
+      }
+
+      return true
+    })
+
+    if (withoutDisadvantage && withDisadvantage && monsterValues.range > 1) {
+      let shortest = movementTargets.reduce((previousValue, currentValue) =>
+        previousValue === false || currentValue.path.length < previousValue
+          ? currentValue.path.length
+          : previousValue
+      , false)
+
+      movementTargets = movementTargets.filter(mt => !mt.a)
+
+      let nextShortest = movementTargets.reduce((previousValue, currentValue) =>
+        previousValue === false || currentValue.path.length < previousValue
+          ? currentValue.path.length
+          : previousValue
+      , false)
+
+      if (nextShortest > shortest) {
+        focus.disadvantage = 2 // avoided
+      }
+    }
+
+    if (!withoutDisadvantage && withDisadvantage) {
+      focus.disadvantage = 1 // can't avoid
+    }
+  }
+
+  /*
+   * ## MOVEMENT RESOLVE STEP 2.6
    *   - Resolve the least number of hexes to move and filter the movement targets.
    */
 
   let leastSteps = movementTargets.reduce((previousValue, currentValue) =>
-      currentValue.path.length < previousValue
-        ? currentValue.path.length
-        : previousValue
-    , 999)
+    currentValue.path.length < previousValue
+      ? currentValue.path.length
+      : previousValue
+  , 999)
 
   movementTargets = movementTargets.filter(movementTarget =>
     movementTarget.path.length === leastSteps

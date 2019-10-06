@@ -34,19 +34,27 @@ export const findMovement = (monster, focus) => {
 
   movement.messages.push(
     // Does move?
-    movementTargets.length > 1 ||
-    movementTargets[0].path.length
+    movementTargets.length > 1 || (
+      movementTargets[0] &&
+      movementTargets[0].path.length
+    )
 
       // Moves
       ? `I move to <a href="#" id="fim">${
         movementTargets.length === 1
           ? 'this hex'
           : 'one of these hexes'
-      }</a>${doesAttack ? ` and perform ${monsterValues.range ? 'a ranged' : 'an'} attack` : ''}.`
+      }</a>${focus.disadvantage === 2 ? ' to avoid Disadvantage' : ''}${doesAttack ? ` and perform ${
+        monsterValues.range
+          ? 'a ranged'
+          : 'an'
+      } attack${focus.disadvantage === 1 ? ' with Disadvantage' : ''}` : ''}.`
 
       // Doesn't move
       : doesAttack
-        ? `I stand here and perform ${monsterValues.range ? 'a ranged' : 'an'} attack.`
+        ? `I stand here and perform ${monsterValues.range ? 'a ranged' : 'an'} attack${
+            focus.disadvantage === 1 ? ' with Disadvantage' : ''
+          }.`
         : 'I stand here since moving would not get me any closer.'
   )
 

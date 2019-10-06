@@ -1,7 +1,8 @@
+import {getHexRange} from './getHexRange'
 import {
   hexHeight,
   hexWidth
-} from '../board/board'
+}                    from '../board/board'
 
 
 export const addPoint = (corners, point) => Object.entries(corners).map(c => ({
@@ -61,6 +62,14 @@ export const getGridPxSize = grid => {
 }
 
 export const gridGet = (hex, grid) => grid[hex.x * (grid[grid.length - 1].y + 1) + hex.y]
+
+export const isAdjacent = (hex1, hex2) => {
+  let adjs = getHexRange(hex1, 1)
+  adjs.shift()
+  return adjs.some(adjHex =>
+    adjHex.x === hex2.x && adjHex.y === hex2.y
+  )
+}
 
 export const neighborsOf = ({x, y}, {height, width}) => {
   const neighbors = []
