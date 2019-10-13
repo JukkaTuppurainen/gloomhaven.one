@@ -43,27 +43,30 @@ const heuristic = hex => {
   ) / 100
 }
 
-export const realNeighbors = (hex, filterItemTypes = []) => {
-  const hexCorners = addPoint(cornersCoordinates, toPoint(hex))
+const realNeighbors = (hex, filterItemTypes = []) => {
+  if (!hex.rn) {
+    const hexCorners = addPoint(cornersCoordinates, toPoint(hex))
+    hex.rn = neighborsOf(hex, board.gridSize)
+      .filter(neighborHex => board.scenario.hexes.some(findHex => (
+        neighborHex.x === findHex.x && neighborHex.y === findHex.y
+      )))
+      .filter(neighborHex => {
+        const neighborCorners = addPoint(cornersCoordinates, toPoint(neighborHex))
+        const commonCorners = hexCorners.filter(c1 => neighborCorners.find(c2 => (
+          c1.x === c2.x && c1.y === c2.y
+        )))
 
-  return neighborsOf(hex, board.gridSize)
-    .filter(neighborHex => board.scenario.hexes.find(findHex => (
-      neighborHex.x === findHex.x && neighborHex.y === findHex.y
-    )))
+        return !findThinWall(commonCorners[0], commonCorners[1])
+      })
+  }
+
+  return hex.rn
     .filter(neighborHex =>
-      !board.items.find(findItem =>
+      !board.items.some(findItem =>
         filterItemTypes.includes(findItem.type) &&
         findItem.ch.x === neighborHex.x &&
         findItem.ch.y === neighborHex.y
       ))
-    .filter(neighborHex => {
-      const neighborCorners = addPoint(cornersCoordinates, toPoint(neighborHex))
-      const commonCorners = hexCorners.filter(c1 => neighborCorners.find(c2 => (
-        c1.x === c2.x && c1.y === c2.y
-      )))
-
-      return !findThinWall(commonCorners[0], commonCorners[1])
-    })
     .map(neighborHex => {
       let floorItemInHex = board.items.find(item =>
         item.ch.x === neighborHex.x &&
