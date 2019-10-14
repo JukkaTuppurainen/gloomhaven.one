@@ -10,7 +10,7 @@
     "dev": "node_modules\\.bin\\webpack-dev-server.cmd --config ./scripts/webpack.config.dev.js --env.ENV_TARGET=alpha"
   },
   "author": "Jukka Tuppurainen",
-  "license": "ISC",
+  "license": "MIT",
   "private": true,
   "dependencies": {},
   "devDependencies": {
