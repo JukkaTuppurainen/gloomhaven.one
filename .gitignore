@@ -3,4 +3,4 @@
 aws
 dist
 node_modules
-sync.bat
+*.bat
