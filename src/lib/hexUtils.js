@@ -13,7 +13,7 @@ export const addPoint = (corners, point) => Object.entries(corners).map(c => ({
 export const toPoint = hex => {
   let y = hexHeight * hex.y
 
-  if (hex.x % 2 === 1) {
+  if (hex.x & 1) {
     y += (hexHeight / 2)
   }
 

@@ -1,15 +1,14 @@
 import {
   board,
   cornersCoordinates
-}                  from './board'
+}                     from './board'
+import {pieceList}    from './board.pieces'
+import {rotateHexes}  from '../lib/hexRotate'
 import {
   addPoint,
   getGridPxSize,
-  gridGet,
-  rectangle,
   toPoint
-}                  from '../lib/hexUtils'
-import {pieceList} from './board.pieces'
+}                     from '../lib/hexUtils'
 
 
 export const createPiece = (x, y, pieceKey, angle = 0, color = null) => {
@@ -20,7 +19,6 @@ export const createPiece = (x, y, pieceKey, angle = 0, color = null) => {
 
   const pieceFromList = pieceList[pieceKey]
 
-  let stringSplit
   let useAngle
 
   if (angle >= 180 && pieceFromList[4] === true) {
@@ -29,15 +27,13 @@ export const createPiece = (x, y, pieceKey, angle = 0, color = null) => {
     useAngle = angle
   }
 
-  stringSplit = pieceFromList[1][useAngle].split('.')
-
+  const stringSplit = pieceFromList[1].split('.')
   const hexString = stringSplit[0]
   const thinwallString = stringSplit[1]
   const pieceElement = document.createElement('div')
   const hexCoordinates = parseHexString(hexString, gridSize, 0, -1)
-  const pieceGrid = rectangle(gridSize)
-  const pieceHexes = hexCoordinatesToHexes(hexCoordinates, pieceGrid)
-  const {pxSizeX, pxSizeY} = getGridPxSize(pieceHexes)
+  let pieceHexes = hexCoordinatesToHexes(hexCoordinates)
+
   let pieceThinwalls
   if (thinwallString) {
     pieceThinwalls = parseThinwallString(thinwallString)
@@ -46,14 +42,21 @@ export const createPiece = (x, y, pieceKey, angle = 0, color = null) => {
         pieceHex.x === pieceThinwall[0] - 1 && pieceHex.y === pieceThinwall[1] - 1
       ))
 
-      if (!matchingHex.metaThinwalls) {
-        matchingHex.metaThinwalls = [pieceThinwall[2]]
+      if (!matchingHex.mt) {
+        matchingHex.mt = [pieceThinwall[2]]
       } else {
-        matchingHex.metaThinwalls.push(pieceThinwall[2])
+        matchingHex.mt.push(pieceThinwall[2])
       }
     })
   }
 
+  if (angle !== 0) {
+    pieceHexes = rotateHexes(pieceHexes, angle / 60)
+  }
+
+  pieceHexes.sort(hexSort)
+
+  const {pxSizeX, pxSizeY} = getGridPxSize(pieceHexes)
   const isSingleTile = pieceHexes.length === 1
   const isUnique = pieceHexes.length > 2
   const id = pieceKey + Date.now()
@@ -91,18 +94,14 @@ export const createPiece = (x, y, pieceKey, angle = 0, color = null) => {
       pieceElementCanvas.width = pxSizeX
       pieceElement.appendChild(pieceElementCanvas)
 
-      pieceCtx.fillStyle = '#0006'
-      pieceGrid.forEach(hex => {
-        if (pieceHexes.find(pieceHex => (
-          pieceHex.x === hex.x && pieceHex.y === hex.y
-        ))) {
-          const [firstCorner, ...otherCorners] = addPoint(cornersCoordinates, toPoint(hex))
-          pieceCtx.beginPath()
-          pieceCtx.moveTo(firstCorner.x, firstCorner.y)
-          otherCorners.forEach(({x, y}) => pieceCtx.lineTo(x, y))
-          pieceCtx.lineTo(firstCorner.x, firstCorner.y)
-          pieceCtx.fill()
-        }
+      pieceCtx.fillStyle = '#fff6'
+      pieceHexes.forEach(hex => {
+        const [firstCorner, ...otherCorners] = addPoint(cornersCoordinates, toPoint(hex))
+        pieceCtx.beginPath()
+        pieceCtx.moveTo(firstCorner.x, firstCorner.y)
+        otherCorners.forEach(({x, y}) => pieceCtx.lineTo(x, y))
+        pieceCtx.lineTo(firstCorner.x, firstCorner.y)
+        pieceCtx.fill()
       })
     }
     img.src = pieceFromList[0]
@@ -128,7 +127,6 @@ export const createPiece = (x, y, pieceKey, angle = 0, color = null) => {
   const piece = {
     color: color || pieceFromList[3],
     element: pieceElement,
-    grid: pieceGrid,
     h: gridSize.height,
     id,
     isSingleTile,
@@ -325,8 +323,8 @@ export const getDataFromBoardPieces = () => {
         hexesFromAllPieces.push({x, y})
       }
 
-      if (hex.metaThinwalls) {
-        hex.metaThinwalls.forEach(s => {
+      if (hex.mt) {
+        hex.mt.forEach(s => {
 
           if (!thinWallsFromAllPieces.find(existingThinWall => (
             existingThinWall.x === x &&
@@ -436,17 +434,14 @@ export const parseHexString = (hexString, gridSize, gridSizeAdjust = 0, hexCoord
   return hexCoordinates
 }
 
-export const hexCoordinatesToHexes = (hexCoordinates, grid) => {
+export const hexCoordinatesToHexes = hexCoordinates => {
   const hexes = []
 
   for (let i = 0; i < hexCoordinates.length; i += 2) {
-    const gridHex = gridGet({
+    hexes.push({
       x: hexCoordinates[i],
       y: hexCoordinates[i + 1]
-    }, grid)
-    if (gridHex) {
-      hexes.push(gridHex)
-    }
+    })
   }
 
   return hexes

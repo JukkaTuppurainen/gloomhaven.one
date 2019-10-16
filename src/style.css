@@ -272,8 +272,7 @@ button.active {
   left: -285px;
 }
 
-.img-loading,
-.img-error {
+.img-loading {
   background: #fff8;
 }
 
