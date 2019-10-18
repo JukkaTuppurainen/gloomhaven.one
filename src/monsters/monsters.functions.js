@@ -9,13 +9,10 @@ import {
   hexWidth
 }                       from '../board/board'
 import {
-  pointToHex,
-  rectangle
-}                       from '../lib/hexUtils'
-import {
   createDragShadow
 }                       from '../editor/editor.functions'
 import {render}         from '../index'
+import {pointToHex}     from '../lib/hexUtils'
 
 
 export const activateMonster = monster => {
@@ -86,8 +83,6 @@ export const createItem = (x, y, type) => {
   const itemElement = document.createElement('div')
   itemElement.className = `img-loading item-tile item-${type}`
 
-  const itemGrid = rectangle({height: 1, width: 1})
-
   const imgWrap = document.createElement('div')
   imgWrap.classList.add('img-wrap')
   const img = document.createElement('img')
@@ -111,7 +106,6 @@ export const createItem = (x, y, type) => {
   const item = {
     ch,
     element: itemElement,
-    grid: itemGrid,
     h: 1,
     pieceHexes: [{x: 0, y: 0}],
     pxH: hexHeight + 1,

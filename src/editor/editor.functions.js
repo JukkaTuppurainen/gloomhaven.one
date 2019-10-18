@@ -173,12 +173,31 @@ export const stopDragging = () => {
   updatePieceControlPositions()
 }
 
+let isAlreadyOverBoardHex = true
+
 export const updateDragShadow = (x, y, pieceOrItem) => {
-  const {closestPoint} = findSnap(pieceOrItem, x, y)
+  const closest = findSnap(pieceOrItem, x, y)
   const dragShadow = document.getElementById('drag-shadow')
 
-  if (closestPoint) {
-    dragShadow.style.left = `${closestPoint.x + board.pxOffset}px`
-    dragShadow.style.top = `${closestPoint.y}px`
+  if (closest.closestPoint) {
+    dragShadow.style.left = `${closest.closestPoint.x + board.pxOffset}px`
+    dragShadow.style.top = `${closest.closestPoint.y}px`
+  }
+
+  if (pieceOrItem.type) {
+    const overBoardHex = board.scenario.hexes.some(hex =>
+      hex.x === closest.closestHex.x &&
+      hex.y === closest.closestHex.y
+    )
+
+    if (!overBoardHex) {
+      if (isAlreadyOverBoardHex) {
+        document.body.classList.add('no-drag')
+        isAlreadyOverBoardHex = false
+      }
+    } else if (!isAlreadyOverBoardHex) {
+      document.body.classList.remove('no-drag')
+      isAlreadyOverBoardHex = true
+    }
   }
 }

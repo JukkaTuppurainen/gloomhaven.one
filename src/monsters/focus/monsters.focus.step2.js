@@ -69,6 +69,10 @@ export const getPathsToAttack = (monster, focus, paths, players) => {
 
   if (!paths.length) {
     focus.player = false
-    focus.messages.push('I have no focus because I do not have a single path to any target.')
+    focus.messages.push(`I have no focus ${
+      players.length
+        ? 'because I do not have a single path to any target.'
+        : 'as all my enemies has fallen before me!'
+    }`)
   }
 }

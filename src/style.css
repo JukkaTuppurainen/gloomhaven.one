@@ -115,7 +115,6 @@ body.modal-open #n {
 }
 
 #mc {
-  background: url('data:image/svg+xml;utf8,<?xml version="1.0" encoding="UTF-8"?><svg width="19" height="19" version="1.1" viewBox="0 0 19 19" xmlns="http://www.w3.org/2000/svg"><g transform="translate(-16 -9.1)" display="none"><path d="m20 35-13-7.6-4e-7-15 13-7.6 13 7.6v15z" fill="%23fff"/></g><path d="m6.4 10-4.5-5.3c2.9-2.1 4.3-2.5 5.5-2l2.7 3.2 4.5-4.8c1.4-1.4 3.2.76 3.6 1.4l-5.7 6.3 4.5 5.3c-1.1.88-4 3.2-5.6 1.9l-2.5-3-4.4 4.7c-1.2 1.2-3-.0014-3.8-1.3z" fill="%23e26868" fill-rule="evenodd" stroke="%23000" stroke-width="1.2"/></svg>') no-repeat 0 0 / 26px;
   border: none;
   display: block;
   height: 26px;
@@ -123,6 +122,11 @@ body.modal-open #n {
   right: -37px;
   top: -44px;
   width: 26px;
+}
+
+#mc,
+.no-drag .item-dragging:after {
+  background: url('data:image/svg+xml;utf8,<?xml version="1.0" encoding="UTF-8"?><svg width="19" height="19" version="1.1" viewBox="0 0 19 19" xmlns="http://www.w3.org/2000/svg"><g transform="translate(-16 -9.1)" display="none"><path d="m20 35-13-7.6-4e-7-15 13-7.6 13 7.6v15z" fill="%23fff"/></g><path d="m6.4 10-4.5-5.3c2.9-2.1 4.3-2.5 5.5-2l2.7 3.2 4.5-4.8c1.4-1.4 3.2.76 3.6 1.4l-5.7 6.3 4.5 5.3c-1.1.88-4 3.2-5.6 1.9l-2.5-3-4.4 4.7c-1.2 1.2-3-.0014-3.8-1.3z" fill="%23e26868" fill-rule="evenodd" stroke="%23000" stroke-width="1.2"/></svg>') no-repeat 0 0 / contain;
 }
 
 #m p {
@@ -340,6 +344,26 @@ button.active {
 #drag-shadow {
   position: absolute;
   z-index: 9;
+}
+
+.no-drag #drag-shadow {
+  display: none;
+}
+
+.no-drag .item-dragging .img-wrap,
+.no-drag .item-dragging .in {
+  filter: brightness(.5);
+}
+
+.no-drag .item-dragging:after {
+  content: "";
+  display: block;
+  height: 32px;
+  left: 29px;
+  position: relative;
+  top: 23px;
+  width: 32px;
+  z-index: 2;
 }
 
 .flex {
