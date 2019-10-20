@@ -119,6 +119,46 @@ export const scenarioList = {
     'Shrine of the Depths',
     '2nE1a1iL1ac1aN1b1h43h45h47h44n04i4'
   ],
+  31: [
+    'Plane of Night',
+    '11aG2ac7iJ1b1nL2ad12i27p2'
+  ],
+  32: [
+    'Decrepit Wood',
+    '12aA4a15aG2bc1fH2bc9gI1a4bL1bc11b711d37f314b114h18j1'
+  ],
+  33: [
+    'Savvas Armory',
+    '2bA3bd1eA4bd3hC2b8hI1bc14hM1ac4d4a3h07j013j0'
+  ],
+  34: [
+    'Scorched Summit',
+    '1fL2a1aL3b1e63e65e67e66f24f22f2'
+  ],
+  35: [
+    'Gloomhaven Battlements A',
+    '4gB2bc3aI1bc9fL1bc9aL3ac8b48d48g48i49e711e713e715e75f47f48f014f312f310f34g06g4'
+  ],
+  36: [
+    'Gloomhaven Battlements B',
+    '4gB2bc3aI1bc9fL1bc9aL3ac8b48d48g48i49e711e713e715e75f47f48f014f312f310f34g06g4'
+  ],
+  37: [
+    'Doom Trench',
+    '6jH2a1aJ1be14kK2ab6j213m2'
+  ],
+  38: [
+    'Slave Pens',
+    '12bA4ac15aC2a1mD1b7lH2bc10gM1bc14c313f313l36p3'
+  ],
+  39: [
+    'Treacherous Divide',
+    '17cD2bd1dL2ac9cN1a8e68g616e2'
+  ],
+  40: [
+    'Ancient Defense Network',
+    '12mA4bc3bC1a15lD1a18hD2ae1eK2be8aL1ac10gM1ac9i017i014n019l03e07c0'
+  ],
   52: [
     'Noxious Cellar',
     '2kJ1a10dJ2ac12nK1ae1aK2b6iM1a6i013j05l012n06lx7kx8kx9ix9jx9kx9lx9mx10lx11kx12kx'
