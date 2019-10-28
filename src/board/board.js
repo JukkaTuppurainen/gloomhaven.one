@@ -48,6 +48,7 @@ const eventHandler = (eventName, event) => {
 export const board = {
   events: eventHandler,
   grid: null,
+  items: [],
   loadScenario: id => {
     if (board.scenario !== null) {
       board.unload()

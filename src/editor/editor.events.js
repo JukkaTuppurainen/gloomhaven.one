@@ -1,7 +1,9 @@
 import {editor}     from './editor'
 import {
+  dragItems,
   generateEditorBoard,
   getPieceIndexFromBoard,
+  renderDOM,
   startDragging,
   stopDragging,
   updateDragShadow
@@ -10,21 +12,26 @@ import {board}      from '../board/board'
 import {boardClick} from '../board/board.events'
 import {findSnap}   from '../board/board.functions'
 import {render}     from '../index'
-import {pointToHex} from '../lib/hexUtils'
+import {
+  pointToHex,
+  toPoint
+}                   from '../lib/hexUtils'
 
+
+let monsterFunctions
+(async () => {
+  monsterFunctions = await import(/* webpackMode: 'weak' */ '../monsters/monsters.functions')
+})()
 
 let mouseDownCoords = false
 const minMouseMoveDeltaToConsiderClickAsDragging = 10
 
 export const editorClick = event => {
   mouseDownCoords = false
-  if (editor.dragging !== false) {
-    stopDragging()
-  } else if (!editor.on) {
+  if (!editor.on) {
     boardClick(event)
   }
 }
-
 
 export const editorDocumentMousedown = event => {
   if (
@@ -86,6 +93,11 @@ export const editorDocumentMousemove = event => {
       }
     }
 
+    dragItems.forEach(item => {
+      item.x = event.pageX - item.dx
+      item.y = event.pageY - item.dy
+    })
+
     renderDOM()
     updateDragShadow(
       event.pageX - editor.dragging.x,
@@ -108,17 +120,33 @@ export const editorDocumentMouseup = event => {
       piece.x = closest.closestPoint.x
       piece.y = closest.closestPoint.y
       piece.ch = closest.closestHex
+
+      if (monsterFunctions) {
+        piece.pieceHexes.forEach(pieceHex => {
+          if (pieceHex.items) {
+            pieceHex.items.forEach(item => {
+              item.ch.x = piece.ch.x + pieceHex.x
+              item.ch.y = piece.ch.y + pieceHex.y + (pieceHex.x & 1 ? piece.ch.x & 1 : 0)
+              const point = toPoint(item.ch)
+              item.x = point.x
+              item.y = point.y
+
+              monsterFunctions.placeItem(item)
+
+              board.items.push(item)
+            })
+            delete pieceHex.items
+          }
+        })
+      }
+
       renderDOM()
     }
     generateEditorBoard()
-  }
-}
 
-const renderDOM = () => {
-  const piece = board.pieces[editor.hoverPiece]
-  const draggedPieceStyle = piece.element.style
-  draggedPieceStyle.left = `${piece.x}px`
-  draggedPieceStyle.top = `${piece.y}px`
+    mouseDownCoords = false
+    stopDragging()
+  }
 }
 
 const synthesiseEventPageCoordinates = event => {

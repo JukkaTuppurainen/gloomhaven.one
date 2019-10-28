@@ -1,3 +1,4 @@
+import {deleteBoardCache}           from './monsters.focus.functions'
 import {checkTargetsAlreadyInRange} from './monsters.focus.step1'
 import {getPathsToAttack}           from './monsters.focus.step2'
 import {
@@ -24,6 +25,11 @@ export const findFocus = monster => {
   }
 
   const players = board.items.filter(item => item.type === 'player')
+
+  if (board.cacheInvalid === true) {
+    deleteBoardCache()
+    board.cacheInvalid = false
+  }
 
   /*
    * # FOCUS SELECTION STEP 1

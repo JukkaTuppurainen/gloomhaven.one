@@ -76,7 +76,10 @@ const toggleFocusInfo = (info, state) => {
 }
 
 export const clearPlayerControl = () => {
-  document.getElementById('ic').innerHTML = ''
+  const itemControls = document.getElementById('ic')
+  if (itemControls) {
+    itemControls.innerHTML = ''
+  }
 }
 
 export const createItem = (x, y, type) => {
@@ -179,22 +182,17 @@ export const deactivateMonster = (monster = null) => {
 }
 
 export const deleteAllItems = () => {
+  clearPlayerControl()
   deactivateMonster()
   board.items = []
-  const itemControls = document.getElementById('ic')
-  if (itemControls) {
-    itemControls.innerHTML = ''
-  }
   document.getElementById('items').innerHTML = ''
 }
 
 export const deleteItem = itemIndex => {
-  const itemsElement = document.getElementById('items')
-  board.items.splice(itemIndex, 1)
-  itemsElement.removeChild(
-    itemsElement.children[itemIndex]
+  document.getElementById('items').removeChild(
+    board.items.splice(itemIndex, 1)[0].element
   )
-  document.getElementById('ic').innerHTML = ''
+  clearPlayerControl()
   updateActivation()
 }
 

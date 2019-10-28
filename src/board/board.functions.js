@@ -144,6 +144,8 @@ export const createPiece = (x, y, pieceKey, angle = 0, color = null) => {
   const closest = findSnap(piece, x, y)
   piece.ch = closest.closestHex
 
+  board.cacheInvalid = true
+
   return piece
 }
 
@@ -180,7 +182,7 @@ export const findSnap = (piece, eventX, eventY) => {
 
   return {
     closestPoint,
-    closestHex
+    closestHex: closestHex ? {...closestHex} : false
   }
 }
 

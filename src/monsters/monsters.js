@@ -27,8 +27,6 @@ import {render}         from '../index'
 import {resolveLOS}     from '../lib/resolveLOS'
 
 
-board.items = []
-
 export const monsters = {
   hoverItem: -1,
   on: false,
@@ -96,7 +94,7 @@ export const monsters = {
     board.pxOffset = 0
     resizeCanvas()
 
-    document.body.classList.remove('monsters-on')
+    document.body.classList.remove('monsters-on', 'no-drag')
 
     if (monsters.dragging) {
       if (board.items[monsters.hoverItem]) {

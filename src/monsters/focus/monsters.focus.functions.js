@@ -9,6 +9,10 @@ export const countTrapsInPath = path =>
     trapCount + (currentHexInPath.isTrap ? 1 : 0)
   ), 0)
 
+export const deleteBoardCache = () => {
+  board.scenario.hexes.forEach(hex => delete hex.rn)
+}
+
 export const findTargetsInRange = (hex, range) => {
   const targets = []
 
