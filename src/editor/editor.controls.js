@@ -1,16 +1,30 @@
 import {editor}       from './editor'
 import {
   deletePiece,
+  itemsToUpdate,
   generateEditorBoard,
+  renderDOM,
   startDragging,
   stopDragging
 }                     from './editor.functions'
 import {board}        from '../board/board'
-import {createPiece}  from '../board/board.functions'
+import {
+  createPiece,
+  hexSort
+}                     from '../board/board.functions'
 import {pieceList}    from '../board/board.pieces'
 import {render}       from '../index'
+import {rotateHexes}  from '../lib/hexRotate'
+import {
+  getGridPxSize,
+  toPoint
+}                     from '../lib/hexUtils'
 import {resolveLOS}   from '../lib/resolveLOS'
 
+
+setTimeout(() => {
+  window.board = board
+})
 
 const pieceSort = (a, b) => {
   if (!a.isUnique && b.isUnique) {
@@ -34,31 +48,69 @@ const elementSort = (a, b) => {
 
 const rotatePiece = (index, angle) => {
   const piece = board.pieces[index]
-  const name = piece.name
-  angle = piece.rotation + angle
-  if (angle >= 360) {
-    angle -= 360
+  const pieceFromList = pieceList[piece.name]
+
+  let newAngle = piece.rotation + angle
+  if (newAngle >= 360) {
+    newAngle -= 360
   }
-  const boardElement = document.getElementById('board')
 
-  boardElement.removeChild(
-    document.querySelectorAll('.map-tile')[index]
-  )
+  let useAngle
 
-  const newPiece = createPiece(piece.x, piece.y, name, angle, piece.color)
-  board.pieces.splice(index, 1)
-  board.pieces.push(newPiece)
-  board.pieces.sort(pieceSort)
+  if (newAngle >= 180 && pieceFromList[4] === true) {
+    useAngle = newAngle - 180
+  } else {
+    useAngle = newAngle
+  }
 
-  boardElement.appendChild(newPiece.element)
+  piece.pieceHexes.forEach(hex => {
+    let x = hex.x + piece.ch.x
+    let y = hex.y + piece.ch.y + (hex.x & 1 && piece.ch.x & 1 ? 1 : 0)
+    hex.items = board.items.filter(item =>
+      item.ch.x === x &&
+      item.ch.y === y
+    )
+  })
 
-  ;[...boardElement.children]
-    .sort(elementSort)
-    .forEach(node => boardElement.appendChild(node))
+  piece.rotation = newAngle
+  piece.pieceHexes = rotateHexes(piece.pieceHexes, (angle / 60))
+  piece.pieceHexes.sort(hexSort)
+
+  const pxSize = getGridPxSize(piece.pieceHexes)
+  piece.pxH = pxSize.pxSizeY
+  piece.pxW = pxSize.pxSizeX
+
+  const imgWrapStyle = piece.element.children[0].style
+  imgWrapStyle.transform = `rotate(${newAngle}deg)`
+  imgWrapStyle.removeProperty('left')
+  imgWrapStyle.removeProperty('top')
+
+  if (pieceFromList[2][newAngle]) {
+    Object.entries(pieceFromList[2][newAngle]).forEach(keyValue => {
+      imgWrapStyle[keyValue[0]] = keyValue[1] * .75 + 'px'
+    })
+  } else if (pieceFromList[2][useAngle]) {
+    Object.entries(pieceFromList[2][useAngle]).forEach(keyValue => {
+      imgWrapStyle[keyValue[0]] = keyValue[1] * .75 + 'px'
+    })
+  }
+
+  piece.pieceHexes.forEach(hex => {
+    hex.items.forEach(item => {
+      item.ch.x = piece.ch.x + hex.x
+      item.ch.y = piece.ch.y + hex.y + (hex.x & 1 && piece.ch.x & 1 ? 1 : 0)
+      const point = toPoint(item.ch)
+      item.x = point.x
+      item.y = point.y
+      itemsToUpdate.push(item)
+    })
+  })
 
   generateEditorBoard()
   updateTileSelectOptions()
   createPieceControls()
+  renderDOM()
+  itemsToUpdate.length = 0
 }
 
 export const updateTileSelectOptions = () => {

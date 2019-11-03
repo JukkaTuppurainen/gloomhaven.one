@@ -64,6 +64,10 @@ export const rotateHexes = (hexes, steps = 1) => {
       })
     }
 
+    if (hex.items) {
+      ret.items = hex.items
+    }
+
     return ret
   })
 

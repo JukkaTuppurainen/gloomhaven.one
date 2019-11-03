@@ -250,7 +250,7 @@ export const generatePiecesFromLayoutString = layoutString => {
   })
 }
 
-const hexSort = (a, b) => {
+export const hexSort = (a, b) => {
   if (a.x > b.x) {
     return 1
   }

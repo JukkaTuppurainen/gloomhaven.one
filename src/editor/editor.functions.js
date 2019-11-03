@@ -21,6 +21,11 @@ import {
 import {resolveLOS} from '../lib/resolveLOS'
 
 
+let monsterFunctions
+(async () => {
+  monsterFunctions = await import(/* webpackMode: 'weak' */ '../monsters/monsters.functions')
+})()
+
 const toChar = n => String.fromCharCode(n + (n < 27 ? 96 : 38))
 
 export const createDragShadow = pieceOrItem => {
@@ -84,9 +89,13 @@ export const deleteAllPieces = () => {
 
   generateEditorBoard()
   updateTileSelectOptions()
+
+  if (monsterFunctions) {
+    monsterFunctions.deleteAllItems()
+  }
 }
 
-export let dragItems = []
+export const itemsToUpdate = []
 
 export const deletePiece = index => {
   board.pieces.splice(index, 1)
@@ -102,6 +111,10 @@ export const deletePiece = index => {
   generateEditorBoard()
   updateTileSelectOptions()
   createPieceControls()
+
+  if (monsterFunctions) {
+    monsterFunctions.deleteSomeItems()
+  }
 }
 
 export const generateEditorBoard = () => {
@@ -159,6 +172,8 @@ export const startDragging = (x, y) => {
   document.getElementById('editor-controls').style.display = 'none'
   editor.dragging = {x, y}
 
+  itemsToUpdate.length = 0
+
   const dragPiece = board.pieces[editor.hoverPiece]
   if (dragPiece.ch) {
     const dragFromHexes = dragPiece.pieceHexes.map(dragPieceHexes => {
@@ -172,7 +187,7 @@ export const startDragging = (x, y) => {
       return ({x, y})
     })
 
-    dragItems = board.items.filter(item => {
+    itemsToUpdate.push(...board.items.filter(item => {
       if (dragFromHexes.some(dragHex =>
         dragHex.x === item.ch.x &&
         dragHex.y === item.ch.y
@@ -181,11 +196,9 @@ export const startDragging = (x, y) => {
         item.dy = dragPiece.y - item.y + y
         return true
       }}
-    )
+    ))
 
-    board.items = board.items.filter(item => !dragItems.includes(item))
-  } else {
-    dragItems = []
+    board.items = board.items.filter(item => !itemsToUpdate.includes(item))
   }
 
   render()
@@ -193,15 +206,21 @@ export const startDragging = (x, y) => {
 }
 
 export const renderDOM = () => {
-  let draggedElementStyle
+  let thingElementStyle
+  const thingsToUpdate = []
 
-  [
-    board.pieces[editor.hoverPiece],
-    ...dragItems
-  ].forEach(dragged => {
-    draggedElementStyle = dragged.element.style
-    draggedElementStyle.left = `${dragged.x}px`
-    draggedElementStyle.top = `${dragged.y}px`
+  if (board.pieces[editor.hoverPiece]) {
+    thingsToUpdate.push(board.pieces[editor.hoverPiece])
+  }
+
+  if (itemsToUpdate.length) {
+    thingsToUpdate.push(...itemsToUpdate)
+  }
+
+  thingsToUpdate.forEach(thing => {
+    thingElementStyle = thing.element.style
+    thingElementStyle.left = `${thing.x}px`
+    thingElementStyle.top = `${thing.y}px`
   })
 }
 

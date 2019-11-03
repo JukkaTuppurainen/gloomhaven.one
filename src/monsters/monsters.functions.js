@@ -196,6 +196,19 @@ export const deleteItem = itemIndex => {
   updateActivation()
 }
 
+export const deleteSomeItems = () => {
+  const allItems = [...board.items]
+
+  allItems.forEach(item => {
+    if (!board.scenario.hexes.some(hex =>
+      hex.x === item.ch.x &&
+      hex.y === item.ch.y
+    )) {
+      deleteItem(board.items.findIndex(q => q === item))
+    }
+  })
+}
+
 export const placeItem = item => {
   let prevItems = board.items.filter(boardItem =>
     boardItem !== item &&

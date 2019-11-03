@@ -1,8 +1,8 @@
 import {editor}     from './editor'
 import {
-  dragItems,
   generateEditorBoard,
   getPieceIndexFromBoard,
+  itemsToUpdate,
   renderDOM,
   startDragging,
   stopDragging,
@@ -93,7 +93,7 @@ export const editorDocumentMousemove = event => {
       }
     }
 
-    dragItems.forEach(item => {
+    itemsToUpdate.forEach(item => {
       item.x = event.pageX - item.dx
       item.y = event.pageY - item.dy
     })
