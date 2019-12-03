@@ -14,7 +14,8 @@ import {
 export const monsterValues = {
   move: 2,
   range: 0,
-  targets: 1
+  targets: 1,
+  mt: 0
 }
 
 export const abilityCardClick = event => {
@@ -48,6 +49,12 @@ export const abilityCardClick = event => {
     // case 'Ait':
     //   ++monsterValues.targets
     //   break
+    case 'Amt':
+      ++monsterValues.mt
+      if (monsterValues.mt > 2) {
+        monsterValues.mt = 0
+      }
+      break
     default:
       update = false
   }
@@ -82,4 +89,5 @@ export const renderAbilityCard = () => {
   document.getElementById('Avm').innerText = monsterValues.move
   document.getElementById('Avr').innerText = monsterValues.range
   // document.getElementById('Avt').innerText = monsterValues.targets
+  document.getElementById('Amt').className = `s${monsterValues.mt}`
 }

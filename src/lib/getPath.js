@@ -82,7 +82,7 @@ const realNeighbors = (hex, filterItemTypes = []) => {
 
 const loopAbort = 200
 
-export const getPath = (startCoords, endCoords, filterItems = [], flying = false) => {
+export const getPath = (startCoords, endCoords, filterItems = [], movementType = 0) => {
   let loopIteration = 0
 
   initHexes(board.scenario.hexes)
@@ -128,9 +128,12 @@ export const getPath = (startCoords, endCoords, filterItems = [], flying = false
         current = current.parent
       }
 
-      r.pathLength = r.reduce((previousValue, currentValue) => (
-        previousValue + (currentValue.isDifficult ? 2 : 1)
-      ), 0)
+      r.pathLength = r.reduce((previousValue, currentValue, i) =>
+        previousValue + ((
+          currentValue.isDifficult && (
+            movementType === 0 || (movementType === 1 && i === 0)
+          )
+        ) ? 2 : 1), 0)
       r.hasTraps = r.some(rHex => rHex.isTrap)
 
       return r.reverse()
@@ -154,8 +157,8 @@ export const getPath = (startCoords, endCoords, filterItems = [], flying = false
       }
 
       let gScore = currentNode.g + (() => {
-        if (!flying && neighbor.isDifficult) { return 2 }
-        if (!flying && neighbor.isTrap) { return 100 }
+        if (movementType === 0 && neighbor.isDifficult) { return 2 }
+        if (movementType === 0 && neighbor.isTrap) { return 100 }
         return 1
       })()
       let gScoreIsBest = false

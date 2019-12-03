@@ -6,6 +6,11 @@ import {getPath}          from '../../lib/getPath'
 
 
 export const getPossibleMovementTargets = (monster, focus) => {
+  let allowedMovemenetTargets = ['monster', 'player']
+  if (monsterValues.mt < 2) {
+    allowedMovemenetTargets.push('obstacle')
+  }
+
   /*
    * ## MOVEMENT RESOLVE STEP 1.1
    *   - Get range of hexes that is within range of monster's move value.
@@ -18,11 +23,8 @@ export const getPossibleMovementTargets = (monster, focus) => {
       !board.items.some(item =>
         item !== monster &&
         item.ch.x === hex.x &&
-        item.ch.y === hex.y && (
-          item.type === 'monster' ||
-          item.type === 'player' ||
-          item.type === 'obstacle'
-        )
+        item.ch.y === hex.y &&
+        allowedMovemenetTargets.includes(item.type)
       )
     )
 
@@ -32,7 +34,7 @@ export const getPossibleMovementTargets = (monster, focus) => {
    *     movement targets.
    */
 
-  if (!focus.traps) {
+  if (!focus.traps && monsterValues.mt < 2) {
     movementTargets = movementTargets.filter(hex =>
       !board.items.some(item =>
         item.ch.x === hex.x &&
@@ -50,14 +52,23 @@ export const getPossibleMovementTargets = (monster, focus) => {
    */
 
   movementTargets = movementTargets.filter(movementTarget => {
-    const pathFilterItems = ['obstacle', 'player']
-    if (!focus.traps) {
-      pathFilterItems.push('trap')
+    const pathFilterItems = []
+
+    if (monsterValues.mt === 0) {
+      pathFilterItems.push('obstacle', 'player')
+
+      if (!focus.traps) {
+        pathFilterItems.push('trap')
+      }
     }
 
-    let path = getPath(monster.ch, movementTarget, pathFilterItems)
+    const path = getPath(monster.ch, movementTarget, pathFilterItems, monsterValues.mt)
 
-    if (focus.traps && countTrapsInPath(path) > focus.traps) {
+    if (
+      focus.traps &&
+      monsterValues.mt === 0 &&
+      countTrapsInPath(path) > focus.traps
+    ) {
       return false
     }
 

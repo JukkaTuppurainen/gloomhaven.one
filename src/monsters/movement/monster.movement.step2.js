@@ -19,6 +19,10 @@ export const resolveBestPath = (movementTargets, focus) => {
   let pathsToAttackHexes
   let shortestPath
 
+  const pathingBlockingItems = monsterValues.mt === 0
+    ? ['obstacle']
+    : []
+
   /*
    * ## MOVEMENT RESOLVE STEP 2.2
    *   - Get path from every movement target to every single possible attack hex.
@@ -30,7 +34,7 @@ export const resolveBestPath = (movementTargets, focus) => {
     pathsToAttackHexes = []
     attackHexes.forEach(hex => {
       pathsToAttackHexes.push(
-        getPath(movementTarget, hex, ['obstacle'])
+        getPath(movementTarget, hex, pathingBlockingItems, monsterValues.mt)
       )
     })
 
@@ -54,9 +58,11 @@ export const resolveBestPath = (movementTargets, focus) => {
    *   - Filter out movement targets where the total trap count is too high.
    */
 
-  movementTargets = movementTargets.filter(movementTarget =>
-    movementTarget.totalTraps <= focus.traps
-  )
+  if (monsterValues.mt === 0) {
+    movementTargets = movementTargets.filter(movementTarget =>
+      movementTarget.totalTraps <= focus.traps
+    )
+  }
 
   /*
    * ## MOVEMENT RESOLVE STEP 2.4
@@ -86,7 +92,7 @@ export const resolveBestPath = (movementTargets, focus) => {
     movementTargets = movementTargets.filter(mt => {
       if (
         !isInSight(mt, focus.player.ch) ||
-        getPath(mt, focus.player.ch, [], true).length > monsterValues.range
+        getPath(mt, focus.player.ch, [], 2).length > monsterValues.range
       ) {
         return false
       }

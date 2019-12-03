@@ -33,7 +33,7 @@ export const findFocus = monster => {
 
   /*
    * # FOCUS SELECTION STEP 1
-   *   - Is some targets are already in the range?
+   *   - Are some targets already in the range?
    */
 
   checkTargetsAlreadyInRange(monster, focus)

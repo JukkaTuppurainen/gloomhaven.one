@@ -8,14 +8,22 @@ import {isInSight}      from '../../lib/isInSight'
 const getPathsToPlayersHexRange = (players, range, monster, paths, maxTrapsInPath = 0) => {
   let hexesToAttackFrom = []
 
+  let allowedItemsInTargetHex = monsterValues.mt < 2
+    ? maxTrapsInPath === 0
+      ? ['difficult']
+      : ['difficult', 'trap']
+    : ['difficult', 'trap', 'obstacle']
+
+  let notAllowedItemsInPath = monsterValues.mt === 0
+    ? ['obstacle', 'player']
+    : []
+
   players.forEach(player => {
     getHexRange(player.ch, range)
-      .filter(hex => !board.items.find(item => (
+      .filter(hex => !board.items.some(item => (
         item.ch.x === hex.x &&
-        item.ch.y === hex.y && (
-          (maxTrapsInPath === 0 && item.type !== 'difficult') ||
-          (maxTrapsInPath > 0 && item.type !== 'difficult' && item.type !== 'trap')
-        )
+        item.ch.y === hex.y &&
+        !allowedItemsInTargetHex.includes(item.type)
       )))
       .filter(hex => isInSight(player.ch, hex))
       .forEach(freeHexInRange => {
@@ -34,13 +42,22 @@ const getPathsToPlayersHexRange = (players, range, monster, paths, maxTrapsInPat
   let path
 
   hexesToAttackFrom.forEach(attackHex => {
-    path = getPath(monster.ch, attackHex, ['obstacle', 'player'])
+    path = getPath(monster.ch, attackHex, notAllowedItemsInPath, monsterValues.mt)
     if (path.length) {
-      const trapsInPath = path.reduce((trapCount, currentHexInPath) => (
-        trapCount + (currentHexInPath.isTrap ? 1 : 0)
-      ), 0)
+      let ok = false
 
-      if (trapsInPath <= maxTrapsInPath) {
+      if (monsterValues.mt === 0) {
+        const trapsInPath = path.reduce((trapCount, currentHexInPath) => (
+          trapCount + (currentHexInPath.isTrap ? 1 : 0)
+        ), 0)
+        if (trapsInPath <= maxTrapsInPath) {
+          ok = true
+        }
+      } else {
+        ok = true
+      }
+
+      if (ok) {
         path.targets = attackHex.targets
         paths.push(path)
         board.focusInfo.focusHexes.push(attackHex)
@@ -52,7 +69,9 @@ const getPathsToPlayersHexRange = (players, range, monster, paths, maxTrapsInPat
 }
 
 export const getPathsToAttack = (monster, focus, paths, players) => {
-  const trapsCount = board.items.filter(item => item.type === 'trap').length
+  const trapsCount = monsterValues.mt < 2
+    ? board.items.filter(item => item.type === 'trap').length
+    : 0
 
   let tryPathingWithTraps = 0
   while (!paths.length && tryPathingWithTraps <= trapsCount) {

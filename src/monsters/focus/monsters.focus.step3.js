@@ -12,17 +12,24 @@ export const filterInShortestPaths = (monster, focus, paths, players) => {
   let message = ''
 
   if (paths[0].hasTraps) {
-    let trapCount = paths[0].filter(hex => hex.isTrap).length
-    focus.traps = trapCount
-    message += `There are no safe paths to ${
-      players.length === 1
-        ? 'the enemy'
-        : 'enemies'
-    }. By travelling through ${
-      trapCount === 1
-        ? 'a single trap'
-        : `${trapCount}&nbsp;traps`
-    }, `
+    if (monsterValues.mt === 0) {
+      let trapCount = paths[0].filter(hex => hex.isTrap).length
+      focus.traps = trapCount
+      message += `There are no safe paths to ${
+        players.length === 1
+          ? 'the enemy'
+          : 'enemies'
+      }. By travelling through ${
+        trapCount === 1
+          ? 'a single trap'
+          : `${trapCount}&nbsp;traps`
+      }, `
+    } else if (monsterValues.mt === 1) {
+      if (paths[0][paths[0].length - 1].isTrap) {
+        focus.traps = 1
+        message += `By jumping to a trap `
+      }
+    }
   }
 
   message += `I have path to <a href="#" id="fih">${
@@ -93,7 +100,7 @@ export const checkTargetsFromPaths = (monster, focus, paths, proximities) => {
   let shortestProxPath = 999
 
   pathTargets.forEach(pathTarget => {
-    let proxPath = getPath(monster.ch, pathTarget.ch, [], true)
+    let proxPath = getPath(monster.ch, pathTarget.ch, [], 2)
     proximities.push({
       distance: proxPath.length,
       target: pathTarget
