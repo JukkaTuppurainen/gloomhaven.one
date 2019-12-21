@@ -9,22 +9,25 @@ import {checkInitiatives}           from './monsters.focus.step4'
 import {board}                      from '../../board/board'
 
 
-export const findFocus = monster => {
+export const findFocus = (monster, verbose, fromTargets) => {
   const focus = {
     messages: [],
     player: undefined,
-    traps: 0
+    traps: 0,
+    verbose
   }
 
-  board.focusInfo = {
-    focusHexes: [],
-    focusHexesVisible: false,
-    paths: false,
-    pathsVisible: false,
-    pathStart: monster.ch
+  if (verbose === 2) {
+    board.focusInfo = {
+      focusHexes: [],
+      focusHexesVisible: false,
+      paths: false,
+      pathsVisible: false,
+      pathStart: monster.ch
+    }
   }
 
-  const players = board.items.filter(item => item.type === 'player')
+  const targets = fromTargets || board.items.filter(item => item.type === 'player')
 
   if (board.cacheInvalid === true) {
     deleteBoardCache()
@@ -36,8 +39,8 @@ export const findFocus = monster => {
    *   - Are some targets already in the range?
    */
 
-  checkTargetsAlreadyInRange(monster, focus)
-  if (focus.player) {
+  checkTargetsAlreadyInRange(monster, focus, targets)
+  if (focus.player || focus.ambiguous) {
     return focus
   }
 
@@ -50,7 +53,7 @@ export const findFocus = monster => {
 
   let paths = []
 
-  getPathsToAttack(monster, focus, paths, players)
+  getPathsToAttack(monster, focus, paths, targets)
   if (focus.player === false) {
     // If focus.player is set to false, there is not a single path to target available.
     return focus
@@ -63,7 +66,7 @@ export const findFocus = monster => {
    *   - Take the shortest path and if required, check physical distances.
    */
 
-  filterInShortestPaths(monster, focus, paths, players)
+  filterInShortestPaths(monster, focus, paths, targets)
 
   let proximities = []
 

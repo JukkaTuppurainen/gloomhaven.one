@@ -18,7 +18,7 @@ import {pointToHex}     from '../lib/hexUtils'
 export const activateMonster = monster => {
   monster.active = true
   monster.element.classList.add('item-active')
-  const focus = findFocus(monster)
+  const focus = findFocus(monster, 2)
   const movement = focus.player ? findMovement(monster, focus) : false
   render()
 
@@ -121,12 +121,20 @@ export const createItem = (x, y, type) => {
   }
 
   if (type === 'player') {
-    item.initiative = Math.random() * 90 + 1 | 0
+    const players = board.items.filter(i => i.type === 'player')
+    const initiatives = players.map(i => i.initiative)
 
-    const inUse = board.items
-      .filter(i => i.type === 'player')
-      .map(i => i.color)
+    if (initiatives.length > 90) {
+      return
+    }
 
+    do {
+      item.initiative = Math.random() * 95 + 1 | 0
+    } while (
+      initiatives.includes(item.initiative)
+    )
+
+    const inUse = players.map(i => i.color)
     const colors = [0, 1, 2, 3, 4, 5].filter(c => !inUse.includes(c))
 
     item.color = colors.length
@@ -152,10 +160,10 @@ export const createPlayerControl = item => {
   document.getElementById('ic').appendChild(playerControl)
 
   document.getElementById('icd').addEventListener('click', () => {
-    updateInitiative(-(Math.random() * 10 + 5 | 0))
+    updateInitiative(false)
   })
   document.getElementById('ici').addEventListener('click', () => {
-    updateInitiative(Math.random() * 10 + 5 | 0)
+    updateInitiative(true)
   })
 }
 
@@ -268,45 +276,36 @@ export const stopDragging = () => {
   updateActivation()
 }
 
-const updateInitiative = value => {
+const updateInitiative = increase => {
   if (!monsters.mouseHover.item === false) {
-    const direction = value > 0 ? 1 : -1
+    const r = 15
+
     const initiatives = board.items
       .filter(i => i.type === 'player')
       .map(i => i.initiative)
-      .sort((a, b) => a > b ? direction : -direction)
 
     const currentInitiative = monsters.mouseHover.item.initiative
-    let nextInitiative = false
+    let freeValues = []
+    const d = increase ? 1 : -1
 
-    initiatives.forEach(initiative => {
-      if (
-        !nextInitiative &&
-        (
-          (direction === 1 && initiative > currentInitiative) ||
-          (direction === -1 && initiative < currentInitiative)
-        )
-      ) {
-        nextInitiative = initiative
-      }
-    })
-
-    let newInitiative = monsters.mouseHover.item.initiative + value
-    if (newInitiative < 1) {
-      newInitiative = 1
-    }
-    if (newInitiative > 99) {
-      newInitiative = 99
-    }
-    if (direction === 1 && nextInitiative && newInitiative + 2 > nextInitiative) {
-      newInitiative = nextInitiative
-    }
-    if (direction === -1 && nextInitiative && newInitiative - 2 < nextInitiative) {
-      newInitiative = nextInitiative
+    for (
+      let i = currentInitiative + d;
+      i < 100 &&
+      i > 0 &&
+      i < currentInitiative + r &&
+      i > currentInitiative - r;
+      i += d
+    ) {
+      freeValues.push(i)
     }
 
-    monsters.mouseHover.item.initiative = newInitiative
-    monsters.mouseHover.item.element.children[1].innerText = monsters.mouseHover.item.initiative
+    freeValues = freeValues.filter(f => !initiatives.includes(f))
+
+    if (freeValues.length) {
+      let f = freeValues[Math.random() * freeValues.length | 0]
+      monsters.mouseHover.item.initiative = f
+      monsters.mouseHover.item.element.children[1].innerText = f
+    }
   }
   updateActivation()
 }

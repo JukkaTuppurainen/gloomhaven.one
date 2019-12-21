@@ -13,13 +13,12 @@ export const deleteBoardCache = () => {
   board.scenario.hexes.forEach(hex => delete hex.rn)
 }
 
-export const findTargetsInRange = (hex, range) => {
-  const targets = []
+export const findTargetsInRange = (hex, range, targets) => {
+  const targetsInRange = []
 
   let player
   getHexRange(hex, range).forEach(hexInRange => {
-    player = board.items.find(item => (
-      item.type === 'player' &&
+    player = targets.find(item => (
       item.ch.x === hexInRange.x &&
       item.ch.y === hexInRange.y
     ))
@@ -27,7 +26,7 @@ export const findTargetsInRange = (hex, range) => {
       player &&
       isInSight(hex, player.ch)
     ) {
-      targets.push(Object.assign(
+      targetsInRange.push(Object.assign(
         {},
         player,
         {r: hexInRange.r}
@@ -35,7 +34,7 @@ export const findTargetsInRange = (hex, range) => {
     }
   })
 
-  return targets
+  return targetsInRange
 }
 
 export const joinAsNames = players => {

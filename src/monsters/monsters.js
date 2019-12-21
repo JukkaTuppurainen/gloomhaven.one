@@ -32,8 +32,8 @@ export const monsters = {
   on: false,
   dragging: false,
   mouseHover: {
-    x: null,
-    y: null
+    x: 0,
+    y: 0
   },
   activate: () => {
     board.mouseHex = {

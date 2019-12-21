@@ -486,7 +486,11 @@ ul {
   padding-left: 20px;
 }
 
-ol li {
+ol {
+  list-style-position: inside;
+}
+
+ol.large li {
   line-height: 16px;
   margin-bottom: 12px;
 }
@@ -497,7 +501,8 @@ li.flex {
 
 @media (min-width: 1024px) {
   .sh {
-    cursor: help;
+    background: #181818;
     border-bottom: 1px #555 dotted;
+    cursor: help;
   }
 }

@@ -215,11 +215,9 @@
   background-image: url('data:image/svg+xml;utf8,<?xml version="1.0"?><svg width="128" height="128" version="1.1" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg"><defs><clipPath id="a"><path d="m0 300h300v-300h-300z"/></clipPath></defs><g transform="translate(0 -263)"><g transform="matrix(.56 0 0 -.56 -19 409)" fill="%23fff"><g fill="%23fff"><g clip-path="url(%23a)" fill="%23fff"><g transform="translate(84 109)"><path d="m0 0-16 129c.024-.02.046-.036.071-.055 11-8.4 27-6.7 42-15 14-7.6 28-20 54-57s33-54 36-70c3-18-3.9-32 .59-45 .01-.029.018-.055.028-.085zm127-49c-.27 13 6.9 25 3.3 46-3.5 21-22 48-37 69-15 21-34 48-53 58-19 10-33 7.5-45 12-12 4.5-18 17-22 14-2.4-1.7-1.9-5.7.81-10l18-144 2.4-3.3 130-64c3.5-4.1 7.2-5.9 9.6-4.2 4.2 3-6 13-6.3 26" fill="%23fff"/></g><g transform="translate(112 118)"><path d="m0 0 3.5-15-36-25-5.6 24-21 13 36 25 13-8.3 96 68-14 8.6 59 13-32-52-3.5 16z" fill="%23fff"/></g></g></g></g></g></svg>');
 }
 
-/*
 .Ait {
   background-image: url('data:image/svg+xml;utf8,<?xml version="1.0"?><svg width="128" height="128" version="1.1" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg"><g transform="translate(0 -263)" fill="none" stroke="%23fff" stroke-linecap="round" stroke-width="16"><circle cx="64" cy="327" r="26" style="paint-order:normal"/><circle cx="64" cy="327" r="55" style="paint-order:normal"/></g></svg>');
 }
-*/
 
 .item-monster img {
   left: -188px;

@@ -1,4 +1,8 @@
-import {countTrapsInPath} from '../focus/monsters.focus.functions'
+import {findFocus}        from '../focus/monsters.focus'
+import {
+  countTrapsInPath,
+  findTargetsInRange
+}                         from '../focus/monsters.focus.functions'
 import {monsterValues}    from '../monsters.controls'
 import {board}            from '../../board/board'
 import {getPath}          from '../../lib/getPath'
@@ -6,7 +10,7 @@ import {isAdjacent}       from '../../lib/hexUtils'
 import {isInSight}        from '../../lib/isInSight'
 
 
-export const resolveBestPath = (movementTargets, focus) => {
+export const resolveBestPath = (monster, focus, movementTargets) => {
   /*
    * ## MOVEMENT RESOLVE STEP 2.1
    *   - Get hexes where attack against the focus is eventually possible from focus info.
@@ -20,7 +24,7 @@ export const resolveBestPath = (movementTargets, focus) => {
   let shortestPath
 
   const pathingBlockingItems = monsterValues.mt === 0
-    ? ['obstacle']
+    ? ['obstacle', 'player']
     : []
 
   /*
@@ -135,6 +139,103 @@ export const resolveBestPath = (movementTargets, focus) => {
 
   /*
    * ## MOVEMENT RESOLVE STEP 2.6
+   *   - If targeting multiple targets, resolve movement targets with the highest target count.
+   */
+
+  const players = board.items.filter(item => item.type === 'player')
+  let shouldTarget
+
+  if (smallestDistance === 0 && monsterValues.targets > 1) {
+    movementTargets.forEach(mt => {
+      mt.targets = findTargetsInRange(
+        mt,
+        monsterValues.range || 1,
+        players
+      )
+    })
+
+    movementTargets = movementTargets.filter(mt =>
+      mt.targets.some(target => target.ch === focus.player.ch)
+    )
+
+    const highestTargetCount = movementTargets.reduce((previousValue, currentValue) =>
+      currentValue.targets.length > previousValue
+        ? currentValue.targets.length
+        : previousValue
+    , 0)
+
+    shouldTarget = highestTargetCount < monsterValues.targets
+      ? highestTargetCount
+      : monsterValues.targets
+
+    movementTargets = movementTargets.filter(mt => mt.targets.length >= shouldTarget)
+  }
+
+  /*
+   * ## MOVEMENT RESOLVE STEP 2.7
+   *   - If multitargeting, resolve the movement target with highest priority targets
+   *     and the smallest amount of disadvantages.
+   */
+
+  let info
+
+  if (monsterValues.targets > 1) {
+    const secondaryFocuses = []
+
+    for (let i = 0; i < shouldTarget - 1; ++i) {
+      let secondaryTargets = []
+
+      movementTargets.forEach(mt => {
+        mt.targets.forEach(t => {
+          if (
+            t.ch !== focus.player.ch &&
+            !secondaryTargets.some(st => st.ch === t.ch) &&
+            !secondaryFocuses.some(sf => sf.player.ch === t.ch)
+          ) {
+            secondaryTargets.push(t)
+          }
+        })
+      })
+
+      let secondaryFocus = findFocus(monster, 0, secondaryTargets)
+      secondaryFocuses.push(secondaryFocus)
+
+      movementTargets = movementTargets.filter(mt => {
+        if (!mt.targets.some(target => target.ch === secondaryFocus.player.ch)) {
+          return false
+        }
+
+        if (monsterValues.range) {
+          mt.a = mt.a || 0
+          if (isAdjacent(mt, secondaryFocus.player.ch)) {
+            ++mt.a
+          }
+        }
+
+        return true
+      })
+    }
+
+    if (monsterValues.range) {
+      const leastDisadvantage = movementTargets.reduce((previousValue, currentValue) => (
+        (typeof currentValue.a !== 'undefined' && currentValue.a < previousValue)
+          ? currentValue.a
+          : previousValue
+      ), 999)
+
+      if (leastDisadvantage !== 999) {
+        movementTargets = movementTargets.filter(mt => mt.a === leastDisadvantage)
+      }
+    }
+
+    info = [focus, ...secondaryFocuses.map(sf => ({
+      player: sf.player,
+      disadvantage: 0
+    }))]
+  }
+
+  /*
+   * ## MOVEMENT RESOLVE STEP 2.8
    *   - Resolve the least number of hexes to move and filter the movement targets.
    */
 
@@ -147,6 +248,8 @@ export const resolveBestPath = (movementTargets, focus) => {
   movementTargets = movementTargets.filter(movementTarget =>
     movementTarget.path.length === leastSteps
   )
+
+  movementTargets.info = info
 
   return movementTargets
 }

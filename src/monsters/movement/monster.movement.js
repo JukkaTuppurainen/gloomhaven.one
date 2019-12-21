@@ -1,6 +1,7 @@
 import {getPossibleMovementTargets} from './monster.movement.step1'
 import {resolveBestPath}            from './monster.movement.step2'
 import {monsterValues}              from '../monsters.controls'
+import {playerNames}                from '../monsters.items'
 import {board}                      from '../../board/board'
 
 
@@ -21,42 +22,66 @@ export const findMovement = (monster, focus) => {
    *   - Determine which movement target is the best option.
    */
 
-  movementTargets = resolveBestPath(movementTargets, focus)
+  movementTargets = resolveBestPath(monster, focus, movementTargets)
 
   /*
    * Add to focusInfo and return result with message
    */
 
-  const doesAttack = movementTargets.some(movementTarget => movementTarget.distance === 0)
+  const doesAttack = movementTargets.some(mt => mt.distance === 0)
+  const multitarget = movementTargets.some(mt => mt.targets && mt.targets.length > 1)
 
   board.focusInfo.moveHexes = movementTargets
   board.focusInfo.moveHexesVisible = false
 
-  movement.messages.push(
-    // Does move?
+  let message
+
+  // Does move?
+  if (
     movementTargets.length > 1 || (
       movementTargets[0] &&
       movementTargets[0].path.length
     )
+  ) {
+    message = `I move to <a href="#" id="fim">${
+      movementTargets.length === 1
+        ? 'this hex'
+        : 'one of these hexes'
+      }</a>${focus.disadvantage === 2 && !multitarget ? ' to avoid Disadvantage' : ''}`
+  } else {
+    message = 'I stand here'
+    if (!doesAttack) {
+      message += ' since moving would not get me any closer'
+    }
+  }
 
-      // Moves
-      ? `I move to <a href="#" id="fim">${
-        movementTargets.length === 1
-          ? 'this hex'
-          : 'one of these hexes'
-      }</a>${focus.disadvantage === 2 ? ' to avoid Disadvantage' : ''}${doesAttack ? ` and perform ${
-        monsterValues.range
-          ? 'a ranged'
-          : 'an'
-      } attack${focus.disadvantage === 1 ? ' with Disadvantage' : ''}` : ''}.`
+  if (doesAttack) {
+    message += ' and perform '
 
-      // Doesn't move
-      : doesAttack
-        ? `I stand here and perform ${monsterValues.range ? 'a ranged' : 'an'} attack${
-            focus.disadvantage === 1 ? ' with Disadvantage' : ''
-          }.`
-        : 'I stand here since moving would not get me any closer.'
-  )
+    if (!multitarget) {
+      message += ` ${monsterValues.range ? 'a ranged' : 'an'}`
+    } else if (monsterValues.range) {
+      message += 'ranged'
+    }
+
+    message += ' attack'
+
+    if (multitarget) {
+      message += `s against the following targets:<ol>`
+      movementTargets.info.forEach(target => {
+        message += `<li>${playerNames[target.player.color]}</li>`
+      })
+      message += '</ol>'
+    } else if (focus.disadvantage === 1) {
+      message += ' with Disadvantage'
+    }
+  }
+
+  if (!multitarget) {
+    message += '.'
+  }
+
+  movement.messages.push(message)
 
   return movement
 }

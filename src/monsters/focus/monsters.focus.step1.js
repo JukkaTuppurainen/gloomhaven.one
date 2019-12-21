@@ -9,10 +9,11 @@ import {
 }                       from '../monsters.items'
 
 
-export const checkTargetsAlreadyInRange = (monster, focus) => {
+export const checkTargetsAlreadyInRange = (monster, focus, targets) => {
   const targetsInRange = findTargetsInRange(
     monster.ch,
-    monsterValues.range || 1
+    monsterValues.range || 1,
+    targets
   )
 
   if (targetsInRange.length === 0) {
@@ -27,23 +28,27 @@ export const checkTargetsAlreadyInRange = (monster, focus) => {
 
   if (targetsInRange.length === 1) {
     focus.player = targetsInRange[0]
-    focus.messages.push(
-      `The focus is the ${
-        playerNames[focus.player.color]
-      } since ${genders[focus.player.color]} is the only ${
-        monsterValues.range
-          ? 'target already in range'
-          : 'adjacent target'
-      }.`
-    )
+    if (focus.verbose) {
+      focus.messages.push(
+        `The focus is the ${
+          playerNames[focus.player.color]
+        } since ${genders[focus.player.color]} is the only ${
+          monsterValues.range
+            ? 'target already in range'
+            : 'adjacent target'
+        }.`
+      )
+    }
     return
   }
 
   const initialTargetCount = targetsInRange.length
 
-  focus.messages.push(
-    `I already have ${initialTargetCount} targets in range.`
-  )
+  if (focus.verbose) {
+    focus.messages.push(
+      `I already have ${initialTargetCount} targets in range.`
+    )
+  }
 
   // Resolve the shortest range which has target(s)
   // Filter out all targets that are further away
@@ -66,23 +71,27 @@ export const checkTargetsAlreadyInRange = (monster, focus) => {
 
   if (targetsInShortestRange.length === 1) {
     focus.player = targetsInShortestRange[0]
-    focus.messages.push(
-      `The focus is the ${
-        playerNames[focus.player.color]
-      } since ${genders[focus.player.color]} is the closest target.`
-    )
+    if (focus.verbose) {
+      focus.messages.push(
+        `The focus is the ${
+          playerNames[focus.player.color]
+        } since ${genders[focus.player.color]} is the closest target.`
+      )
+    }
 
     return
   }
 
-  focus.messages.push(
-    targetsInShortestRange.length !== initialTargetCount
-      ? `${targetsInShortestRange.length} of them are at the shortest range.`
-      : `${targetsInShortestRange.length === 2
+  if (focus.verbose) {
+    focus.messages.push(
+      targetsInShortestRange.length !== initialTargetCount
+        ? `${targetsInShortestRange.length} of them are at the shortest range.`
+        : `${targetsInShortestRange.length === 2
         ? 'Both'
         : 'All'
-      } of them are at the same distance.`
-  )
+        } of them are at the same distance.`
+    )
+  }
 
   // Resolve the lowest initiative
   // Filter out all targets that have higher initiative
@@ -105,17 +114,21 @@ export const checkTargetsAlreadyInRange = (monster, focus) => {
 
   if (targetsWithLowestInitiative.length === 1) {
     focus.player = targetsWithLowestInitiative[0]
-    focus.messages.push(
-      `The focus is the ${
-        playerNames[focus.player.color]
-      } since ${genders[focus.player.color]} has the lowest initiative.`
-    )
+    if (focus.verbose) {
+      focus.messages.push(
+        `The focus is the ${
+          playerNames[focus.player.color]
+        } since ${genders[focus.player.color]} has the lowest initiative.`
+      )
+    }
   } else {
-    focus.player = 'ambiguous'
-    focus.messages.push(
-      `The focus is tied between the ${
-        joinAsNames(targetsWithLowestInitiative)
-      } as they have the same initiative.`
-    )
+    focus.ambiguous = true
+    if (focus.verbose) {
+      focus.messages.push(
+        `The focus is tied between the ${
+          joinAsNames(targetsWithLowestInitiative)
+        } as they have the same initiative.`
+      )
+    }
   }
 }

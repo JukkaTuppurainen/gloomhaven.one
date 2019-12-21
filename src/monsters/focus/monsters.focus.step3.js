@@ -32,13 +32,15 @@ export const filterInShortestPaths = (monster, focus, paths, players) => {
     }
   }
 
-  message += `I have path to <a href="#" id="fih">${
-    paths.length === 1
-      ? 'a single hex'
-      : `${paths.length}&nbsp;hexes`
-  }</a> where I could make an attack.`
+  if (focus.verbose) {
+    message += `I have path to <a href="#" id="fih">${
+      paths.length === 1
+        ? 'a single hex'
+        : `${paths.length}&nbsp;hexes`
+    }</a> where I could make an attack.`
 
-  focus.messages.push(message)
+    focus.messages.push(message)
+  }
 
   if (paths.length > 1) {
     const shortestDistance = paths.reduce(((previousValue, currentPathArray) => (
@@ -52,27 +54,31 @@ export const filterInShortestPaths = (monster, focus, paths, players) => {
     paths.length = 0
     paths.push(...shortestPaths)
 
-    board.focusInfo.paths = paths
-    board.focusInfo.pathStart = monster.ch
+    if (focus.verbose === 2) {
+      board.focusInfo.paths = paths
+      board.focusInfo.pathStart = monster.ch
+    }
 
-    if (allPathsLength === paths.length) {
-      focus.messages.push(
-        `<a href="#" id="fip">${
-          allPathsLength === 2
-            ? 'Both'
-            : 'All'
-        } of these paths</a> would take the same amount of movement points.`
-      )
-    } else {
-      focus.messages.push(
-        `<a href="#" id="fip">The shortest ${
-          paths.length === 1
-            ? 'path'
-            : `${paths.length} paths`
-        }</a> would require ${shortestDistance}&nbsp;movement point${
-          shortestDistance > 1 ? 's' : ''
-        }.`
-      )
+    if (focus.verbose) {
+      if (allPathsLength === paths.length) {
+        focus.messages.push(
+          `<a href="#" id="fip">${
+            allPathsLength === 2
+              ? 'Both'
+              : 'All'
+          } of these paths</a> would take the same amount of movement points.`
+        )
+      } else {
+        focus.messages.push(
+          `<a href="#" id="fip">The shortest ${
+            paths.length === 1
+              ? 'path'
+              : `${paths.length} paths`
+          }</a> would require ${shortestDistance}&nbsp;movement point${
+            shortestDistance > 1 ? 's' : ''
+          }.`
+        )
+      }
     }
   }
 }
@@ -85,17 +91,21 @@ export const checkTargetsFromPaths = (monster, focus, paths, proximities) => {
 
   if (pathTargets.size === 1) {
     focus.player = paths[0].targets[0]
-    focus.messages.push(`The focus is the ${playerNames[focus.player.color]}.`)
+    if (focus.verbose) {
+      focus.messages.push(`The focus is the ${playerNames[focus.player.color]}.`)
+    }
     return
   }
 
-  focus.messages.push(`${
-    paths.length === 1
-      ? 'This path'
-      : 'These paths'
-  } takes me ${
-    monsterValues.range ? 'within range' : ''
-  } to the ${joinAsNames([...pathTargets])}.`)
+  if (focus.verbose) {
+    focus.messages.push(`${
+      paths.length === 1
+        ? 'This path'
+        : 'These paths'
+    } takes me ${
+      monsterValues.range ? 'within range' : ''
+    } to the ${joinAsNames([...pathTargets])}.`)
+  }
 
   let shortestProxPath = 999
 
@@ -119,19 +129,23 @@ export const checkTargetsFromPaths = (monster, focus, paths, proximities) => {
 
   if (proximities.length === 1) {
     focus.player = proximities[0].target
-    focus.messages.push(`The focus is the ${
-      playerNames[focus.player.color]
-    } because ${
-      genders[focus.player.color]
-    } is the closest target.`)
+    if (focus.verbose) {
+      focus.messages.push(`The focus is the ${
+        playerNames[focus.player.color]
+      } because ${
+        genders[focus.player.color]
+      } is the closest target.`)
+    }
     return
   }
 
-  focus.messages.push(`${
-    proximities.length === proximitiesBefore
-      ? proximitiesBefore === 2
+  if (focus.verbose) {
+    focus.messages.push(`${
+      proximities.length === proximitiesBefore
+        ? proximitiesBefore === 2
         ? 'Both'
         : 'All'
-      : proximities.length
-  } of them are equally close in proximity from my current position.`)
+        : proximities.length
+    } of them are equally close in proximity from my current position.`)
+  }
 }

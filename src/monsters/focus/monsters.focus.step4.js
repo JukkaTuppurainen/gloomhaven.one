@@ -15,13 +15,17 @@ export const checkInitiatives = (focus, proximities) => {
 
   if (proximities.length === 1) {
     focus.player = proximities[0].target
-    focus.messages.push(
-     `The focus is the ${playerNames[focus.player.color]} due to the lowest initiative.`
-    )
+    if (focus.verbose) {
+      focus.messages.push(
+        `The focus is the ${playerNames[focus.player.color]} due to the lowest initiative.`
+      )
+    }
     return focus
   }
 
-  focus.messages.push(`The focus is tied between the ${
-    joinAsNames(proximities.map(p => p.target))
-  }.`)
+  if (focus.verbose) {
+    focus.messages.push(`The focus is tied between the ${
+      joinAsNames(proximities.map(p => p.target))
+    }.`)
+  }
 }

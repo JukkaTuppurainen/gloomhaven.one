@@ -14,6 +14,7 @@ const minify = {
   removeComments: true,
   removeEmptyAttributes: true,
   removeRedundantAttributes: true,
+  removeScriptTypeAttributes: true,
   removeStyleLinkTypeAttributes: true,
   useShortDoctype: true
 }

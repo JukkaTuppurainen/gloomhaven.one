@@ -39,6 +39,6 @@ export const genders = {
   1: 'she',
   2: 'she',
   3: 'he',
-  4: 'he',
+  4: 'it',
   5: 'he',
 }

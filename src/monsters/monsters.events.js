@@ -175,6 +175,14 @@ export const monstersMouseup = event => {
   }
 }
 
+const itemShortcuts = new Map([
+  ['q', 'obstacle'],
+  ['w', 'player'],
+  ['e', 'difficult'],
+  ['r', 'monster'],
+  ['t', 'trap'],
+])
+
 export const monstersDocumentKeydown = event => {
   if (
     !mouseDownCoords &&
@@ -185,24 +193,7 @@ export const monstersDocumentKeydown = event => {
       hex.x === monsters.mouseHover.x && hex.y === monsters.mouseHover.y
     ))
   ) {
-    let itemName
-
-    switch (event.key.toLowerCase()) {
-      case 'q':
-        itemName = 'obstacle'
-        break
-      case 'w':
-        itemName = 'player'
-        break
-      case 'e':
-        itemName = 'difficult'
-        break
-      case 'r':
-        itemName = 'monster'
-        break
-      case 't':
-        itemName = 'trap'
-    }
+    let itemName = itemShortcuts.get(event.key.toLowerCase())
 
     if (itemName) {
       const itemStacks = itemsList[itemName].stacks
@@ -230,16 +221,18 @@ export const monstersDocumentKeydown = event => {
       } else {
         const point = toPoint(monsters.mouseHover)
         const item = createItem(point.x, point.y, itemName)
-        const closest = findSnap(item, item.x, item.y)
+        if (item) {
+          const closest = findSnap(item, item.x, item.y)
 
-        item.ch = closest.closestHex
+          item.ch = closest.closestHex
 
-        const boardItems = document.getElementById('items')
-        boardItems.appendChild(item.element)
-        board.items.push(item)
+          const boardItems = document.getElementById('items')
+          boardItems.appendChild(item.element)
+          board.items.push(item)
 
-        placeItem(item)
-        updateActivation()
+          placeItem(item)
+          updateActivation()
+        }
       }
     }
   }

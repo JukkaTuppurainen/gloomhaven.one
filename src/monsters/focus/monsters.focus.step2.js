@@ -5,7 +5,7 @@ import {getPath}        from '../../lib/getPath'
 import {isInSight}      from '../../lib/isInSight'
 
 
-const getPathsToPlayersHexRange = (players, range, monster, paths, maxTrapsInPath = 0) => {
+const getPathsToPlayersHexRange = (focus, players, range, monster, paths, maxTrapsInPath = 0) => {
   let hexesToAttackFrom = []
 
   let allowedItemsInTargetHex = monsterValues.mt < 2
@@ -60,7 +60,9 @@ const getPathsToPlayersHexRange = (players, range, monster, paths, maxTrapsInPat
       if (ok) {
         path.targets = attackHex.targets
         paths.push(path)
-        board.focusInfo.focusHexes.push(attackHex)
+        if (focus.verbose === 2) {
+          board.focusInfo.focusHexes.push(attackHex)
+        }
       }
     }
   })
@@ -76,6 +78,7 @@ export const getPathsToAttack = (monster, focus, paths, players) => {
   let tryPathingWithTraps = 0
   while (!paths.length && tryPathingWithTraps <= trapsCount) {
     paths = getPathsToPlayersHexRange(
+      focus,
       players,
       monsterValues.range || 1,
       monster,
@@ -88,10 +91,12 @@ export const getPathsToAttack = (monster, focus, paths, players) => {
 
   if (!paths.length) {
     focus.player = false
-    focus.messages.push(`I have no focus ${
-      players.length
-        ? 'because I do not have a single path to any target.'
-        : 'as all my enemies has fallen before me!'
-    }`)
+    if (focus.verbose) {
+      focus.messages.push(`I have no focus ${
+        players.length
+          ? 'because I do not have a single path to any target.'
+          : 'as all my enemies has fallen before me!'
+      }`)
+    }
   }
 }
