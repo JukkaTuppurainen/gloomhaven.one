@@ -41,7 +41,10 @@ module.exports = env => {
       },
       minify
     }),
-    new MiniCssExtractPlugin({})
+    new MiniCssExtractPlugin({
+      chunkFilename: '[id].[chunkhash:8].css',
+      filename: '[name].[chunkhash:8].css'
+    })
   ]
 
   if (!isAlpha) {
