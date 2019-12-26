@@ -16,9 +16,13 @@ export const resolveBestPath = (monster, focus, movementTargets) => {
    *   - Get hexes where attack against the focus is eventually possible from focus info.
    */
 
-  const attackHexes = board.focusInfo.focusHexes.filter(h =>
-    h.targets.includes(focus.player)
-  )
+  const attackHexes = monsterValues.targets > 1
+    // When multi targeting, use all hexes which targetse the focus
+    ? board.focusInfo.focusHexes.filter(h =>
+        h.targets.includes(focus.player)
+      )
+    // When single targeting, use only last hexes from shortest paths
+    : board.focusInfo.paths.map(path => path[path.length - 1])
 
   let pathsToAttackHexes
   let shortestPath
