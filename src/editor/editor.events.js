@@ -84,12 +84,17 @@ export const editorDocumentMousemove = event => {
     piece.y = event.pageY - editor.dragging.y
 
     if (piece.name === 'corridor' || piece.name === 'door') {
-      const boardIndex = getPieceIndexFromBoard(pointToHex(event.pageX, event.pageY), editor.hoverPiece)
+      const boardIndex = getPieceIndexFromBoard(
+        pointToHex(event.pageX, event.pageY),
+        editor.hoverPiece
+      )
 
       if (board.pieces[boardIndex]) {
-        piece.color = piece.element.dataset['color'] = (
-          board.pieces[boardIndex].color + (piece.name === 'corridor' ? 4 : 0)
-        )
+        let newColor = board.pieces[boardIndex].color
+        if (newColor < 4 && piece.name === 'corridor') { newColor += 4 }
+        if (newColor > 3 && piece.name === 'door') { newColor -= 4 }
+
+        piece.color = piece.element.dataset['color'] = newColor
       }
     }
 

@@ -13,7 +13,7 @@ export const scenarioList = {
   ],
   4: [
     'Crypt of the Damned',
-    '13hC1a3eE1ac9cG1b13aM1a8i012d012j0'
+    '11hC1a1eE1ac7cG1b11aM1a6i010d010j0'
   ],
   5: [
     'Ruinous Crypt',
@@ -41,11 +41,11 @@ export const scenarioList = {
   ],
   11: [
     'Gloomhaven Square A',
-    '12mD1aa9aE1ac4kH1b1fL1a1aL2b1e43e45e47e48c04k011n02f44f46f4'
+    '12mD1aa9aE1ac4kH1b1fL1a1aL2b1e43e45e47e48c04k011n02f04f06f0'
   ],
   12: [
     'Gloomhaven Square B',
-    '12mD1aa9aE1ac4kH1b1fL1a1aL2b1e43e45e47e48c04k011n02f44f46f4'
+    '12mD1aa9aE1ac4kH1b1fL1a1aL2b1e43e45e47e48c04k011n02f04f06f0'
   ],
   13: [
     'Temple of the Seer',
@@ -117,7 +117,7 @@ export const scenarioList = {
   ],
   30: [
     'Shrine of the Depths',
-    '2nE1a1iL1ac1aN1b1h43h45h47h44n04i4'
+    '2nE1a1iL1ac1aN1b1h43h45h47h44i04n0'
   ],
   31: [
     'Plane of Night',
@@ -137,11 +137,11 @@ export const scenarioList = {
   ],
   35: [
     'Gloomhaven Battlements A',
-    '4gB2bc3aI1bc9fL1bc9aL3ac8b48d48g48i49e711e713e715e75f47f48f014f312f310f34g06g4'
+    '2gB2bc1aI1bc7fL1bc7aL3ac3f45f46b46d46g46i47e79e711e713e72g04g06f08f310f312f3'
   ],
   36: [
     'Gloomhaven Battlements B',
-    '4gB2bc3aI1bc9fL1bc9aL3ac8b48d48g48i49e711e713e715e75f47f48f014f312f310f34g06g4'
+    '2gB2bc1aI1bc7fL1bc7aL3ac3f45f46b46d46g46i47e79e711e713e72g04g06f08f310f312f3'
   ],
   37: [
     'Doom Trench',
