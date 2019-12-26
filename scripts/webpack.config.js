@@ -113,7 +113,10 @@ module.exports = env => {
         },
         {
           test: /\.ejs$/,
-          loader: 'ejs-compiled-loader?htmlmin'
+          loader: 'compile-ejs-loader',
+          options: {
+            htmlmin: true
+          }
         }
       ]
     },
