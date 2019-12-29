@@ -25,6 +25,8 @@ export const itemsList = {
   }
 }
 
+export const itemTypes = Object.keys(itemsList)
+
 export const playerNames = {
   0: 'Brute',
   1: 'Scoundrel',

@@ -58,7 +58,14 @@ export const editor = {
       window.location.hash &&
       window.location.hash.substr(0, 2) === '#:'
     ) {
-      editor.layout = window.location.hash.substr(2)
+      let hash = window.location.hash.substr(2)
+      let itemsStringStart = hash.indexOf(':')
+
+      if (itemsStringStart > -1) {
+        hash = hash.substr(0, itemsStringStart)
+      }
+
+      editor.layout = hash
     }
   },
   unload: () => {

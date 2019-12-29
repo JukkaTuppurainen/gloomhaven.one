@@ -194,7 +194,7 @@ export const fromChar = c => {
 export const generatePiecesFromLayoutString = layoutString => {
   let c
   let i = 0
-  let ii = 0
+  let ii
   let m
   let n
   let x

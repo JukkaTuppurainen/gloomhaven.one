@@ -7,8 +7,15 @@ import {scenarioList} from './scenarios'
 import                     './style.css'
 
 
+let loadScenario = '1'
+let initItems
+
 if (/* global ENV_isAlpha */ ENV_isAlpha) {
-  import(/* webpackMode: 'eager' */ './monsters/monsters')
+  import(/* webpackMode: 'eager' */ './monsters/monsters').then(module => {
+    if (initItems) {
+      module.monsters.loadItems(initItems)
+    }
+  })
 
   if (/* global ENV_isProduction */ ENV_isProduction) {
     const alphaNotice = document.createElement('div')
@@ -61,13 +68,22 @@ window.addEventListener('hashchange', () => {
   board.skipHashChangeHandler = false
 })
 
-let loadScenario = '1'
-
 if (window.location.hash) {
-  if (window.location.hash.match(/^#\d+/)) {
-    loadScenario = window.location.hash.substr(1)
-  } else if (window.location.hash.substr(0, 2) === '#:') {
+  const h = window.location.hash
+  const m = h.match(/^#\d+/)
+
+  if (m) {
+    loadScenario = m[0].substr(1)
+    const itemsStart = h.indexOf(':') + 1
+    if (itemsStart) {
+      initItems = h.substr(itemsStart)
+    }
+  } else if (h.substr(0, 2) === '#:') {
     loadScenario = 'editor'
+    const m2 = h.match(/:.*:(.*)/)
+    if (m2) {
+      initItems = m2[1]
+    }
   }
 }
 

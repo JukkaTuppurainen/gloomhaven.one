@@ -16,6 +16,7 @@ import {
   monstersMouseup
 }                       from './monsters.events'
 import {
+  createItemsFromLayoutString,
   deactivateMonster,
   deleteAllItems,
   deleteItem,
@@ -44,7 +45,7 @@ export const monsters = {
     delete board.linesToHover
 
     board.scenario._events = board.scenario.events
-    board.scenario.events  = {
+    board.scenario.events = {
       click: monstersClick,
       mousedown: monstersMousedown,
       mousemove: monstersMousemove,
@@ -116,7 +117,8 @@ export const monsters = {
     document.getElementById('h').innerHTML = ''
     document.removeEventListener('keydown', monstersDocumentKeydown)
     render()
-  }
+  },
+  loadItems: itemsString => createItemsFromLayoutString(itemsString)
 }
 
 document.getElementById('tr').addEventListener('change', event => {

@@ -1,6 +1,10 @@
 import {findFocus}      from './focus/monsters.focus'
 import {monsters}       from './monsters'
-import {itemsList}      from './monsters.items'
+import {monsterValues}  from './monsters.controls'
+import {
+  itemsList,
+  itemTypes
+}                       from './monsters.items'
 import {findMovement}   from './movement/monster.movement'
 import bitmap_itemsheet from '../assets/itemSheet.webp'
 import {
@@ -9,10 +13,18 @@ import {
   hexWidth
 }                       from '../board/board'
 import {
-  createDragShadow
+  fromChar,
+  hexSort
+}                       from '../board/board.functions'
+import {
+  createDragShadow,
+  toChar
 }                       from '../editor/editor.functions'
 import {render}         from '../index'
-import {pointToHex}     from '../lib/hexUtils'
+import {
+  pointToHex,
+  toPoint
+}                       from '../lib/hexUtils'
 
 
 export const activateMonster = monster => {
@@ -56,6 +68,8 @@ export const activateMonster = monster => {
       focusInfo[0].addEventListener('mouseout', () => toggleFocusInfo(focusInfo[1], false))
     }
   })
+
+  generateItemsLayoutString()
 }
 
 export const updateActivation = () => {
@@ -187,6 +201,7 @@ export const deactivateMonster = (monster = null) => {
 
   delete board.focusInfo
   render()
+  generateItemsLayoutString()
 }
 
 export const deleteAllItems = () => {
@@ -194,6 +209,7 @@ export const deleteAllItems = () => {
   deactivateMonster()
   board.items = []
   document.getElementById('items').innerHTML = ''
+  generateItemsLayoutString()
 }
 
 export const deleteItem = itemIndex => {
@@ -214,6 +230,165 @@ export const deleteSomeItems = () => {
     )) {
       deleteItem(board.items.findIndex(q => q === item))
     }
+  })
+}
+
+export const generateItemsLayoutString = () => {
+  let layoutString = ':'
+
+  layoutString +=
+    toChar(monsterValues.move + 1) +
+    toChar(monsterValues.range + 1) +
+    toChar(monsterValues.targets + 1) +
+    monsterValues.mt +
+    '-'
+
+  let prevX
+  let prevY
+
+  const itemGroups = []
+  itemTypes.forEach(itemGroup => {
+    let itemsOfGroup = board.items.filter(i => i.type === itemGroup)
+    itemsOfGroup.sort((a, b) => hexSort(a.ch, b.ch))
+    itemGroups.push(itemsOfGroup)
+  })
+
+  itemGroups.forEach((itemGroup, i) => {
+    prevX = prevY = false
+    if (i > 0) {
+      layoutString += '-'
+    }
+
+    itemGroup.forEach(item => {
+      if (!(
+        item.ch.x === prevX || (
+          item.ch.x === prevX + 1 &&
+          item.ch.y <= prevY
+        )
+      )) {
+        layoutString += item.ch.x
+      }
+
+      prevX = item.ch.x
+      prevY = item.ch.y
+      layoutString += toChar(item.ch.y)
+
+      if (item.active) {
+        layoutString += '!'
+      }
+
+      if (item.type === 'player') {
+        layoutString +=
+          item.color.toString(16) +
+          item.initiative.toString().padStart(2, '0')
+      }
+    })
+  })
+
+  board.skipHashChangeHandler = true
+
+  let old = window.location.hash.match(
+    window.location.hash[1] === ':'
+      ? /#:[\w]+/
+      : /^#\d+/
+  )
+
+  window.location.hash = (old ? old[0].substr(1) : '1') + layoutString
+}
+
+const p = (s, c = true) => {
+  if (c) { s = fromChar(s) }
+  return parseInt(s, 10)
+}
+
+export const createItemsFromLayoutString = itemsString => {
+  const firstDash = itemsString.indexOf('-')
+  const monsterValuesString = itemsString.substr(0, firstDash)
+  const itemGroups = itemsString.substr(firstDash + 1).split('-')
+
+  Object.assign(monsterValues, {
+    move: p(monsterValuesString[0]) - 1,
+    range: p(monsterValuesString[1]) - 1,
+    targets: p(monsterValuesString[2]) - 1,
+    mt: p(monsterValuesString[3], false)
+  })
+
+  if (itemGroups.some(itemGroup => itemGroup.length)) {
+    setTimeout(() => {
+      const el = document.querySelector('input[type="radio"][value="Monsters"]')
+      el.checked = true
+      el.dispatchEvent(new Event('change', {bubbles: true}))
+    })
+  }
+
+  let a
+  let c
+  let i
+  let ii
+  let m
+  let n
+  let x
+  let x2
+  let y
+  let y2
+
+  itemGroups.forEach((itemGroupString, itemGroupIndex) => {
+    i = x = y = y2 = 0
+    x2 = false
+
+    while (i < itemGroupString.length) {
+      m = itemGroupString.substr(i).match(/^\d+/)
+      c = n = false
+
+      if (m) {
+        x = parseInt(m[0], 10)
+        x2 = true
+        ii = m[0].length
+      } else {
+        y = parseInt(fromChar(itemGroupString.substr(i, 1)), 10)
+        if (
+          y <= y2 &&
+          x2 === false
+        ) { ++x }
+        x2 =  false
+        y2 = y
+        ii = 1
+
+        const hex = {x, y}
+        const point = toPoint(hex)
+        const item = createItem(point.x, point.y, itemTypes[itemGroupIndex])
+        item.ch = hex
+
+        if (itemGroupString.substr(i + ii, 1) === '!') {
+          a = item
+          ++ii
+        }
+
+        if (itemGroupIndex === 1) {
+          c = parseInt(itemGroupString.substr(i + 1, 1), 16)
+          n = parseInt(itemGroupString.substr(i + 2, 2), 10)
+
+          item.initiative = item.element.children[1].innerText = n
+
+          item.color = c
+          item.element.className = item.element.className.replace(
+            /item-player-\d/,
+            `item-player-${c}`
+          )
+
+          ii += 3
+        }
+
+        document.getElementById('items').appendChild(item.element)
+        board.items.push(item)
+
+        placeItem(item)
+      }
+
+      i += ii
+    }
+
+    if (a) { setTimeout(() => activateMonster(a)) }
   })
 }
 

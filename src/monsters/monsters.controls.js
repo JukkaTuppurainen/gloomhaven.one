@@ -19,6 +19,8 @@ export const monsterValues = {
 }
 
 export const abilityCardClick = event => {
+  event.preventDefault()
+
   let update = true
 
   switch (event.target.id) {
@@ -29,7 +31,9 @@ export const abilityCardClick = event => {
       }
       break
     case 'Aim':
-      ++monsterValues.move
+      if (monsterValues.move < 50) {
+        ++monsterValues.move
+      }
       break
     case 'Aar':
       monsterValues.range = 2
@@ -38,7 +42,9 @@ export const abilityCardClick = event => {
       --monsterValues.range
       break
     case 'Air':
-      ++monsterValues.range
+      if (monsterValues.range < 50) {
+        ++monsterValues.range
+      }
       break
     case 'Aat':
       monsterValues.targets = 2
@@ -47,7 +53,9 @@ export const abilityCardClick = event => {
       --monsterValues.targets
       break
     case 'Ait':
-      ++monsterValues.targets
+      if (monsterValues.targets < 50) {
+        ++monsterValues.targets
+      }
       break
     case 'Amt':
       ++monsterValues.mt

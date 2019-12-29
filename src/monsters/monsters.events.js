@@ -6,6 +6,7 @@ import {
   createPlayerControl,
   deactivateMonster,
   deleteItem,
+  generateItemsLayoutString,
   placeItem,
   startDraggingItem,
   stopDragging,
@@ -171,6 +172,8 @@ export const monstersMouseup = event => {
 
         placeItem(item)
       }
+
+      generateItemsLayoutString()
     }
   }
 }
@@ -185,11 +188,13 @@ const itemShortcuts = new Map([
 
 export const monstersDocumentKeydown = event => {
   if (
+    !event.altKey &&
+    !event.ctrlKey &&
     !mouseDownCoords &&
     !monsters.dragging &&
     monsters.mouseHover.x &&
     monsters.mouseHover.y &&
-    board.scenario.hexes.find(hex => (
+    board.scenario.hexes.some(hex => (
       hex.x === monsters.mouseHover.x && hex.y === monsters.mouseHover.y
     ))
   ) {
@@ -226,14 +231,15 @@ export const monstersDocumentKeydown = event => {
 
           item.ch = closest.closestHex
 
-          const boardItems = document.getElementById('items')
-          boardItems.appendChild(item.element)
+          document.getElementById('items').appendChild(item.element)
           board.items.push(item)
 
           placeItem(item)
           updateActivation()
         }
       }
+
+      generateItemsLayoutString()
     }
   }
 }

@@ -26,7 +26,7 @@ let monsterFunctions
   monsterFunctions = await import(/* webpackMode: 'weak' */ '../monsters/monsters.functions')
 })()
 
-const toChar = n => String.fromCharCode(n + (n < 27 ? 96 : 38))
+export const toChar = n => String.fromCharCode(n + (n < 27 ? 96 : 38))
 
 export const createDragShadow = pieceOrItem => {
   const dragShadowElement = document.createElement('canvas')
