@@ -1,13 +1,13 @@
-import {findFocus}        from '../focus/monsters.focus'
+import {findFocus}      from '../focus/monsters.focus'
 import {
   countTrapsInPath,
   findTargetsInRange
-}                         from '../focus/monsters.focus.functions'
-import {monsterValues}    from '../monsters.controls'
-import {board}            from '../../board/board'
-import {getPath}          from '../../lib/getPath'
-import {isAdjacent}       from '../../lib/hexUtils'
-import {isInSight}        from '../../lib/isInSight'
+}                       from '../focus/monsters.focus.functions'
+import {monsterValues}  from '../monsters.controls'
+import {board}          from '../../board/board'
+import {getPath}        from '../../lib/getPath'
+import {isAdjacent}     from '../../lib/hexUtils'
+import {isInSight}      from '../../lib/isInSight'
 
 
 export const resolveBestPath = (monster, focus, movementTargets) => {
@@ -21,8 +21,16 @@ export const resolveBestPath = (monster, focus, movementTargets) => {
     ? board.focusInfo.focusHexes.filter(h =>
         h.targets.includes(focus.player)
       )
-    // When single targeting, use only last hexes from shortest paths
-    : board.focusInfo.paths.map(path => path[path.length - 1])
+    // When single targeting, use only last hexes from shortest paths targeting the focus
+    : (board.focusInfo.paths || [])
+      .map(path => path[path.length - 1])
+      .filter(hex =>
+        findTargetsInRange(
+          hex,
+          monsterValues.range || 1,
+          [focus.player]
+        ).length
+      )
 
   let pathsToAttackHexes
   let shortestPath
