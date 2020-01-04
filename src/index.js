@@ -124,20 +124,28 @@ document.getElementById('i').addEventListener('click', event => {
 
 document.getElementById('n').addEventListener('click', event => {
   event.preventDefault()
-  if (
-    event.target.id === 'n' ||
-    event.target.id === 'mc'
-  ) {
+  if (['m', 'mc', 'n'].includes(event.target.id)) {
     closeModal()
   }
 })
 
 let modalOpen = false
-let disableOnModalOpen = '#s, #i, #tr>input, #tile-select, .control-button'
+const disableOnModalOpen = 'a, button, input, select'
 
 const openModal = () => {
   document.body.classList.add('modal-open')
-  document.querySelectorAll(disableOnModalOpen).forEach(n => n.setAttribute('tabIndex', -1))
+  ;[...document.querySelectorAll(disableOnModalOpen)]
+    .filter(n => {
+      let parent = n.parentElement
+      while (parent) {
+        if (parent.id === 'm') {
+          return false
+        }
+        parent = parent.parentElement
+      }
+      return true
+    })
+    .forEach(n => n.setAttribute('tabIndex', -1))
   modalOpen = true
 }
 
@@ -153,34 +161,3 @@ window.addEventListener('resize', () => {
   resizeCanvas()
   render()
 })
-
-// document.getElementById('los-mode').addEventListener('change', event => {
-//   board.losMode = event.target.value === '1'
-//   render()
-// })
-
-// const fullLOSTest = () => {
-//   let inSight = 0
-//   let outSight = 0
-//
-//   let start = window.performance.now()
-//
-//   const hexesToTest = board.scenario.hexes
-//
-//   hexesToTest.forEach(hex => {
-//     hexesToTest.forEach(hex2 => {
-//       if (hex.x !== hex2.x || hex.y !== hex2.y) {
-//         if (isInSight(hex, hex2)) {
-//           ++inSight
-//         } else {
-//           ++outSight
-//         }
-//       }
-//     })
-//   })
-//   let end = window.performance.now()
-//
-//   console.log(`Full LOS test: In sight ${inSight} / Out of sight ${outSight}. Test took ${(end - start | 0)}ms.`)
-// }
-//
-// setTimeout(fullLOSTest, 200)
