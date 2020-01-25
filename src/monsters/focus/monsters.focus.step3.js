@@ -42,43 +42,41 @@ export const filterInShortestPaths = (monster, focus, paths, players) => {
     focus.messages.push(message)
   }
 
-  if (paths.length > 1) {
-    const shortestDistance = paths.reduce(((previousValue, currentPathArray) => (
-      !previousValue || currentPathArray.pathLength < previousValue
-        ? currentPathArray.pathLength
-        : previousValue
-    )), false)
+  const shortestDistance = paths.reduce(((previousValue, currentPathArray) => (
+    !previousValue || currentPathArray.pathLength < previousValue
+      ? currentPathArray.pathLength
+      : previousValue
+  )), false)
 
-    const allPathsLength = paths.length
-    const shortestPaths = paths.filter(p => p.pathLength === shortestDistance)
-    paths.length = 0
-    paths.push(...shortestPaths)
+  const allPathsLength = paths.length
+  const shortestPaths = paths.filter(p => p.pathLength === shortestDistance)
+  paths.length = 0
+  paths.push(...shortestPaths)
 
-    if (focus.verbose === 2) {
-      board.focusInfo.paths = paths
-      board.focusInfo.pathStart = monster.ch
-    }
+  if (focus.verbose === 2) {
+    board.focusInfo.paths = paths
+    board.focusInfo.pathStart = monster.ch
+  }
 
-    if (focus.verbose) {
-      if (allPathsLength === paths.length) {
-        focus.messages.push(
-          `<a href="#" id="fip">${
-            allPathsLength === 2
-              ? 'Both'
-              : 'All'
-          } of these paths</a> would take the same amount of movement points.`
-        )
-      } else {
-        focus.messages.push(
-          `<a href="#" id="fip">The shortest ${
-            paths.length === 1
-              ? 'path'
-              : `${paths.length} paths`
-          }</a> would require ${shortestDistance}&nbsp;movement point${
-            shortestDistance > 1 ? 's' : ''
-          }.`
-        )
-      }
+  if (paths.length > 1 && focus.verbose) {
+    if (allPathsLength === paths.length) {
+      focus.messages.push(
+        `<a href="#" id="fip">${
+          allPathsLength === 2
+            ? 'Both'
+            : 'All'
+        } of these paths</a> would take the same amount of movement points.`
+      )
+    } else {
+      focus.messages.push(
+        `<a href="#" id="fip">The shortest ${
+          paths.length === 1
+            ? 'path'
+            : `${paths.length} paths`
+        }</a> would require ${shortestDistance}&nbsp;movement point${
+          shortestDistance > 1 ? 's' : ''
+        }.`
+      )
     }
   }
 }
