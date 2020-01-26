@@ -37,7 +37,6 @@ const heuristic = hex => {
     y: hexPoint.y + hexCenterY
   }
 
-  // return Math.max(Math.abs(hex.x - endHex.x), Math.abs(hex.y - endHex.y)) * 1.2
   return Math.sqrt(
     ((hexCenter.x - endHexCenter.x) ** 2) + ((hexCenter.y - endHexCenter.y) ** 2)
   ) / 100
@@ -80,11 +79,7 @@ const realNeighbors = (hex, filterItemTypes = []) => {
     })
 }
 
-const loopAbort = 200
-
 export const getPath = (startCoords, endCoords, filterItems = [], movementType = 0) => {
-  let loopIteration = 0
-
   initHexes(board.scenario.hexes)
 
   const start = board.scenario.hexes.find(a => a.x === startCoords.x && a.y === startCoords.y)
@@ -98,18 +93,12 @@ export const getPath = (startCoords, endCoords, filterItems = [], movementType =
   endHex = end
 
   let openList = []
-  let closedList = []
+  let closedList = {}
   let i
 
   openList.push(start)
 
-  while (openList.length && loopIteration < loopAbort) {
-    ++loopIteration
-
-    if (loopIteration === loopAbort) {
-      throw Error('getPath reached maximum allowed iterations')
-    }
-
+  while (openList.length) {
     let lowest = 0
 
     for (i = 0; i < openList.length; ++i) {
@@ -141,7 +130,12 @@ export const getPath = (startCoords, endCoords, filterItems = [], movementType =
 
     openList = openList.filter(hex => hex !== currentNode)
 
-    closedList.push(currentNode)
+    let clx1 = closedList[currentNode.x]
+    if (clx1) {
+      clx1.push(currentNode.y)
+    } else {
+      closedList[currentNode.x] = [currentNode.y]
+    }
 
     let neighbors = realNeighbors(currentNode, filterItems)
 
@@ -149,21 +143,27 @@ export const getPath = (startCoords, endCoords, filterItems = [], movementType =
       let neighbor = board.scenario.hexes.find(h =>
         h.x === neighbors[i].x && h.y === neighbors[i].y
       )
+
       neighbor.isDifficult = neighbors[i].isDifficult
       neighbor.isTrap = neighbors[i].isTrap
 
-      if (closedList.find(h => h.x === neighbor.x && h.y === neighbor.y)) {
+      let clx2 = closedList[neighbor.x]
+      if (clx2 && clx2.includes(neighbor.y)) {
         continue
       }
 
-      let gScore = currentNode.g + (() => {
-        if (movementType === 0 && neighbor.isDifficult) { return 2 }
-        if (movementType === 0 && neighbor.isTrap) { return 100 }
-        return 1
-      })()
+      let gScore = currentNode.g
+      if (movementType === 0) {
+        if (neighbor.isDifficult) { gScore += 2 }
+        else if (neighbor.isTrap) { gScore += 100 }
+        else ++gScore
+      } else {
+        gScore += 1
+      }
+
       let gScoreIsBest = false
 
-      if (!openList.find(hex => (
+      if (!openList.some(hex => (
         hex.x === neighbor.x && hex.y === neighbor.y
       ))) {
         gScoreIsBest = true
