@@ -48,7 +48,8 @@ module.exports = env => ({
   plugins: [
     new webpack.DefinePlugin({
       ENV_isAlpha: (env && env['ENV_TARGET']) === 'alpha',
-      ENV_isProduction: false
+      ENV_isProduction: false,
+      ENV_isTest: false
     }),
     new HtmlWebpackPlugin({
       inject: true,

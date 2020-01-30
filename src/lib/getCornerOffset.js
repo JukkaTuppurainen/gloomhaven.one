@@ -1,12 +1,12 @@
 import {
   board,
   cornersCoordinates,
-  hexSize
-} from '../board/board'
+}                 from '../board/board'
+import {hexSize}  from '../board/board.constants'
 import {
   gridGet,
   toPoint
-} from './hexUtils'
+}                 from './hexUtils'
 
 
 export const getCornerOffset = (x, y, c) => {

@@ -1,6 +1,6 @@
 import {board}      from './board'
 import {pointToHex} from '../lib/hexUtils'
-import {render}     from '../index'
+import {render}     from '../renderer/render'
 import {resolveLOS} from '../lib/resolveLOS'
 
 

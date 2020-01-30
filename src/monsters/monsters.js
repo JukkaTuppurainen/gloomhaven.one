@@ -24,8 +24,8 @@ import {
 }                       from './monsters.functions'
 import {board}          from '../board/board'
 import {resizeCanvas}   from '../board/board.scenarioLoad'
-import {render}         from '../index'
 import {resolveLOS}     from '../lib/resolveLOS'
+import {render}         from '../renderer/render'
 
 
 export const monsters = {

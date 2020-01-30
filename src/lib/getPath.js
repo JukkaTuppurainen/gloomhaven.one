@@ -6,10 +6,12 @@ import {
 }                     from './hexUtils'
 import {
   board,
-  cornersCoordinates,
+  cornersCoordinates
+}                     from '../board/board'
+import {
   hexHeight,
   hexWidth
-}                     from '../board/board'
+}                     from '../board/board.constants'
 import {flagFloor}    from '../monsters/monsters.items'
 
 

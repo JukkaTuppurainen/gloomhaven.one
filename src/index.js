@@ -1,10 +1,11 @@
-import {board}        from './board/board'
-import {resizeCanvas} from './board/board.scenarioLoad'
-import                     './components/toggle'
-import                     './lib/testWebp'
-import {renderer}     from './renderer/renderer'
-import {scenarioList} from './scenarios'
-import                     './style.css'
+import {board}            from './board/board'
+import {resizeCanvas}     from './board/board.scenarioLoad'
+import                         './components/toggle'
+import                         './lib/testWebp'
+import {render}           from './renderer/render'
+import {scenarioList}     from './scenarios'
+import                         './style.css'
+import {stopPropagation}  from './lib/dom'
 
 
 let loadScenario = '1'
@@ -27,9 +28,6 @@ if (/* global ENV_isAlpha */ ENV_isAlpha) {
 }
 
 const canvas = document.getElementById('c')
-
-export const render = () => requestAnimationFrame(renderer)
-export const stopPropagation = event => event.stopPropagation()
 
 document.getElementsByTagName('header')[0].addEventListener('mousedown', stopPropagation)
 

@@ -16,7 +16,7 @@ import {
   editorTouchstart
 }                         from './editor.events'
 import {board}            from '../board/board'
-import {stopPropagation}  from '../index'
+import {stopPropagation}  from '../lib/dom'
 
 
 export const editor = {

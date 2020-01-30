@@ -1,7 +1,7 @@
 import {
-  scenarioInit,
-  scenarioLoad
-}                     from './board.scenarioLoad'
+  hexHeight,
+  hexWidth
+}                     from './board.constants'
 import {
   boardClick,
   boardMouseLeave,
@@ -10,13 +10,12 @@ import {
 import {
   generatePiecesFromLayoutString
 }                     from './board.functions'
-import {editor}       from '../editor/editor'
+import {
+  scenarioInit,
+  scenarioLoad
+}                     from './board.scenarioLoad'
 import {scenarioList} from '../scenarios'
 
-
-export const hexSize = 45
-export const hexHeight = Math.sqrt(3) * hexSize
-export const hexWidth = hexSize * 2
 
 export const cornersCoordinates = {
   0: {x: hexWidth,       y: hexHeight / 2},
@@ -54,27 +53,30 @@ export const board = {
       board.unload()
     }
 
-    let scenario
+    let scenarioPromise
+
     if (id === 'editor') {
-      scenario = editor
+      scenarioPromise = import('../editor/editor').then(s => s.editor)
     } else {
-      scenario = {
+      scenarioPromise = Promise.resolve({
         name: scenarioList[id][0],
         layout: scenarioList[id][1]
+      })
+    }
+
+    scenarioPromise.then(scenario => {
+      if (scenario.load) {
+        scenario.load()
       }
-    }
 
-    if (scenario.load) {
-      scenario.load()
-    }
+      scenarioInit()
 
-    scenarioInit()
+      if (scenario.layout) {
+        generatePiecesFromLayoutString(scenario.layout)
+      }
 
-    if (scenario.layout) {
-      generatePiecesFromLayoutString(scenario.layout)
-    }
-
-    scenarioLoad(scenario)
+      scenarioLoad(scenario)
+    })
   },
   losMode: false,
   mouseHex: {

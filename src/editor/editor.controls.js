@@ -13,7 +13,7 @@ import {
   hexSort
 }                     from '../board/board.functions'
 import {pieceList}    from '../board/board.pieces'
-import {render}       from '../index'
+import {render}       from '../renderer/render'
 import {rotateHexes}  from '../lib/hexRotate'
 import {
   getGridPxSize,
@@ -21,10 +21,6 @@ import {
 }                     from '../lib/hexUtils'
 import {resolveLOS}   from '../lib/resolveLOS'
 
-
-setTimeout(() => {
-  window.board = board
-})
 
 const pieceSort = (a, b) => {
   if (!a.isUnique && b.isUnique) {

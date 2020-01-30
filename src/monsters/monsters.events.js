@@ -16,11 +16,11 @@ import {itemsList}        from './monsters.items'
 import {board}            from '../board/board'
 import {findSnap}         from '../board/board.functions'
 import {updateDragShadow} from '../editor/editor.functions'
-import {render}           from '../index'
 import {
   pointToHex,
   toPoint
 }                         from '../lib/hexUtils'
+import {render}           from '../renderer/render'
 
 
 const minMouseMoveDeltaToConsiderClickAsDragging = 20

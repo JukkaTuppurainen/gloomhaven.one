@@ -2,7 +2,7 @@ import {getHexRange} from './getHexRange'
 import {
   hexHeight,
   hexWidth
-}                    from '../board/board'
+}                    from '../board/board.constants'
 
 
 export const addPoint = (corners, point) => Object.entries(corners).map(c => ({

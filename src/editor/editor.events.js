@@ -11,7 +11,7 @@ import {
 import {board}      from '../board/board'
 import {boardClick} from '../board/board.events'
 import {findSnap}   from '../board/board.functions'
-import {render}     from '../index'
+import {render}     from '../renderer/render'
 import {
   pointToHex,
   toPoint
@@ -19,9 +19,13 @@ import {
 
 
 let monsterFunctions
-(async () => {
-  monsterFunctions = await import(/* webpackMode: 'weak' */ '../monsters/monsters.functions')
-})()
+if (/* global ENV_isTest */ !ENV_isTest) {
+  (async () => {
+    try {
+      monsterFunctions = await import(/* webpackMode: 'weak' */ '../monsters/monsters.functions')
+    } catch (nothing) {}
+  })()
+}
 
 let mouseDownCoords = false
 const minMouseMoveDeltaToConsiderClickAsDragging = 10

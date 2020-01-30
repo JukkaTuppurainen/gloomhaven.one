@@ -1,9 +1,9 @@
 import {drawTriangle} from './renderer.functions'
+import {board}        from '../board/board'
 import {
-  board,
   hexHeight,
   hexWidth
-}                     from '../board/board'
+}                     from '../board/board.constants'
 import {toPoint}      from '../lib/hexUtils'
 
 

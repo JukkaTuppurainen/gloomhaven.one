@@ -29,7 +29,8 @@ module.exports = env => {
   const plugins = [
     new webpack.DefinePlugin({
       ENV_isAlpha: isAlpha,
-      ENV_isProduction: true
+      ENV_isProduction: true,
+      ENV_isTest: false
     }),
     new HtmlWebpackPlugin({
       filename: 'index.html',

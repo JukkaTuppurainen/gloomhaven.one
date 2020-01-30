@@ -12,7 +12,7 @@ import {
   rectangle,
   toPoint
 }                               from '../lib/hexUtils'
-import {render}                 from '../index'
+import {render}                 from '../renderer/render'
 
 
 export const clearScenario = () => {

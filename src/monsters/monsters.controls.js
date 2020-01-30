@@ -4,11 +4,11 @@ import {
   startDraggingItem,
   updateActivation
 }                 from './monsters.functions'
+import {board}    from '../board/board'
 import {
-  board,
   hexHeight,
   hexWidth
-}                 from '../board/board'
+}                 from '../board/board.constants'
 
 
 export const monsterValues = {

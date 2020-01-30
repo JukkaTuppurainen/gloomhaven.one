@@ -7,11 +7,11 @@ import {
 }                       from './monsters.items'
 import {findMovement}   from './movement/monster.movement'
 import bitmap_itemsheet from '../assets/itemSheet.webp'
+import {board}          from '../board/board'
 import {
-  board,
   hexHeight,
   hexWidth
-}                       from '../board/board'
+}                       from '../board/board.constants'
 import {
   fromChar,
   hexSort
@@ -20,11 +20,11 @@ import {
   createDragShadow,
   toChar
 }                       from '../editor/editor.functions'
-import {render}         from '../index'
 import {
   pointToHex,
   toPoint
 }                       from '../lib/hexUtils'
+import {render}         from '../renderer/render'
 
 
 export const activateMonster = monster => {

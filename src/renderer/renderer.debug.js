@@ -1,8 +1,6 @@
 // import {drawHex}  from './renderer.functions'
-// import {
-//   board,
-//   hexWidth
-// }                 from '../board/board'
+// import {board}    from '../board/board'
+// import {hexWidth} from '../board/board.constants'
 // import {toPoint}  from '../lib/hexUtils'
 //
 //
