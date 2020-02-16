@@ -158,9 +158,7 @@ export const monstersMouseup = event => {
     )
 
     if (closest.closestPoint) {
-      const scenarioHex = board.scenario.hexes.find(h => (
-        h.x === closest.closestHex.x && h.y === closest.closestHex.y
-      ))
+      const scenarioHex = board.scenario.hexes.get(closest.closestHex)
 
       if (!scenarioHex) {
         deleteItem(monsters.hoverItem)
@@ -194,9 +192,7 @@ export const monstersDocumentKeydown = event => {
     !monsters.dragging &&
     monsters.mouseHover.x &&
     monsters.mouseHover.y &&
-    board.scenario.hexes.some(hex => (
-      hex.x === monsters.mouseHover.x && hex.y === monsters.mouseHover.y
-    ))
+    board.scenario.hexes.has(monsters.mouseHover)
   ) {
     let itemName = itemShortcuts.get(event.key.toLowerCase())
 

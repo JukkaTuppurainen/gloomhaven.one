@@ -231,10 +231,7 @@ export const deleteSomeItems = () => {
   const allItems = [...board.items]
 
   allItems.forEach(item => {
-    if (!board.scenario.hexes.some(hex =>
-      hex.x === item.ch.x &&
-      hex.y === item.ch.y
-    )) {
+    if (!board.scenario.hexes.has(item.ch)) {
       deleteItem(board.items.findIndex(q => q === item))
     }
   })

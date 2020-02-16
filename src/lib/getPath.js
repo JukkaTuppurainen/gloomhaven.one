@@ -1,18 +1,19 @@
-import {findThinWall} from './findThinWall'
+import {coordinateMap}  from './coordinateMap'
+import {findThinWall}   from './findThinWall'
 import {
   addPoint,
   neighborsOf,
   toPoint
-}                     from './hexUtils'
+}                       from './hexUtils'
 import {
   board,
   cornersCoordinates
-}                     from '../board/board'
+}                       from '../board/board'
 import {
   hexHeight,
   hexWidth
-}                     from '../board/board.constants'
-import {flagFloor}    from '../monsters/monsters.items'
+}                       from '../board/board.constants'
+import {flagFloor}      from '../monsters/monsters.items'
 
 
 let endHex
@@ -48,12 +49,10 @@ const realNeighbors = (hex, filterItemTypes = []) => {
   if (!hex.rn) {
     const hexCorners = addPoint(cornersCoordinates, toPoint(hex))
     hex.rn = neighborsOf(hex, board.gridSize)
-      .filter(neighborHex => board.scenario.hexes.some(findHex => (
-        neighborHex.x === findHex.x && neighborHex.y === findHex.y
-      )))
+      .filter(neighborHex => board.scenario.hexes.has(neighborHex))
       .filter(neighborHex => {
         const neighborCorners = addPoint(cornersCoordinates, toPoint(neighborHex))
-        const commonCorners = hexCorners.filter(c1 => neighborCorners.find(c2 => (
+        const commonCorners = hexCorners.filter(c1 => neighborCorners.some(c2 => (
           c1.x === c2.x && c1.y === c2.y
         )))
 
@@ -84,8 +83,8 @@ const realNeighbors = (hex, filterItemTypes = []) => {
 export const getPath = (startCoords, endCoords, filterItems = [], movementType = 0) => {
   initHexes(board.scenario.hexes)
 
-  const start = board.scenario.hexes.find(a => a.x === startCoords.x && a.y === startCoords.y)
-  const end = board.scenario.hexes.find(a => a.x === endCoords.x && a.y === endCoords.y)
+  const start = board.scenario.hexes.get(startCoords)
+  const end = board.scenario.hexes.get(endCoords)
 
   let endPoint = toPoint(end)
   endHexCenter = {
@@ -94,7 +93,7 @@ export const getPath = (startCoords, endCoords, filterItems = [], movementType =
   }
   endHex = end
 
-  let openList = []
+  let openList = new coordinateMap()
   let closedList = {}
   let i
 
@@ -104,12 +103,12 @@ export const getPath = (startCoords, endCoords, filterItems = [], movementType =
     let lowest = 0
 
     for (i = 0; i < openList.length; ++i) {
-      if (openList[i].f < openList[lowest].f) {
+      if (openList.$private$flat[i].f < openList.$private$flat[lowest].f) {
         lowest = i
       }
     }
 
-    let currentNode = openList[lowest]
+    let currentNode = openList.$private$flat[lowest]
 
     if (currentNode.x === end.x && currentNode.y === end.y) {
       let current = currentNode
@@ -130,7 +129,7 @@ export const getPath = (startCoords, endCoords, filterItems = [], movementType =
       return r.reverse()
     }
 
-    openList = openList.filter(hex => hex !== currentNode)
+    openList.splice(lowest)
 
     let clx1 = closedList[currentNode.x]
     if (clx1) {
@@ -142,9 +141,7 @@ export const getPath = (startCoords, endCoords, filterItems = [], movementType =
     let neighbors = realNeighbors(currentNode, filterItems)
 
     for (i = 0; i < neighbors.length; ++i) {
-      let neighbor = board.scenario.hexes.find(h =>
-        h.x === neighbors[i].x && h.y === neighbors[i].y
-      )
+      let neighbor = board.scenario.hexes.get(neighbors[i])
 
       neighbor.isDifficult = neighbors[i].isDifficult
       neighbor.isTrap = neighbors[i].isTrap
@@ -165,9 +162,7 @@ export const getPath = (startCoords, endCoords, filterItems = [], movementType =
 
       let gScoreIsBest = false
 
-      if (!openList.some(hex => (
-        hex.x === neighbor.x && hex.y === neighbor.y
-      ))) {
+      if (!openList.has(neighbor)) {
         gScoreIsBest = true
         neighbor.h = heuristic(neighbor)
         openList.push(neighbor)

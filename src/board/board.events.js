@@ -39,13 +39,10 @@ export const boardMouseLeave = () => {
 
 export const boardClick = event => {
   const clickHex = pointToHex(event.layerX, event.layerY)
-  // if (clickHex) {
-  //   console.log('clickHex:', clickHex)
-  // }
 
   if (
     !clickHex ||
-    !board.scenario.hexes.find(wHex => wHex.x === clickHex.x && wHex.y === clickHex.y)
+    !board.scenario.hexes.has(clickHex)
   ) {
     return
   }

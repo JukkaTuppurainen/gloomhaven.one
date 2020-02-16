@@ -28,7 +28,7 @@ export const getHexRange = (hex, range) => {
             if (
               neighborHex &&
               !distances.find(hex => hex.x === neighborHex.x && hex.y === neighborHex.y) &&
-              board.scenario.hexes.find(hex => hex.x === neighborHex.x && hex.y === neighborHex.y)
+              board.scenario.hexes.get(neighborHex)
             ) {
               const neighborCorners = addPoint(cornersCoordinates, toPoint(neighborHex))
               const commonCorners = hexCorners.filter(c1 => neighborCorners.find(c2 => (

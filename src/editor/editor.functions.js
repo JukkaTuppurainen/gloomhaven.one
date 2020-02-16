@@ -256,10 +256,7 @@ export const updateDragShadow = (x, y, pieceOrItem) => {
   }
 
   if (pieceOrItem.type) {
-    const overBoardHex = board.scenario.hexes.some(hex =>
-      hex.x === closest.closestHex.x &&
-      hex.y === closest.closestHex.y
-    )
+    const overBoardHex = board.scenario.hexes.has(closest.closestHex)
 
     if (!overBoardHex) {
       if (isAlreadyOverBoardHex) {

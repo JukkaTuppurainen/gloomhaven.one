@@ -3,7 +3,7 @@ import {
   cornersCoordinates
 }                               from './board'
 import {getDataFromBoardPieces} from './board.functions'
-import {makeWall}               from '../lib/makeWall'
+import {coordinateMap}          from '../lib/coordinateMap'
 import {
   addPoint,
   getGridPxSize,
@@ -12,6 +12,7 @@ import {
   rectangle,
   toPoint
 }                               from '../lib/hexUtils'
+import {makeWall}               from '../lib/makeWall'
 import {render}                 from '../renderer/render'
 
 
@@ -51,7 +52,10 @@ export const scenarioInit = () => {
 
 export const resizeCanvas = () => {
   if (!board.editor && board.scenario.hexes.length) {
-    const gridSize = getGridSize(board.scenario.hexes)
+    const flatHexes = []
+    board.scenario.hexes.forEach(hex => flatHexes.push(hex))
+
+    const gridSize = getGridSize(flatHexes)
     ++gridSize.height
     ++gridSize.width
 
@@ -69,7 +73,7 @@ export const resizeCanvas = () => {
 export const scenarioLoad = scenario => {
   Object.assign(board.scenario, scenario)
   const dataFromPieces = getDataFromBoardPieces()
-  board.scenario.hexes = dataFromPieces.hexes
+  board.scenario.hexes = new coordinateMap(dataFromPieces.hexes)
 
   // Resize the canvas and grid to match the scenario layout
   resizeCanvas()
@@ -89,7 +93,7 @@ export const scenarioLoad = scenario => {
     neighborsOf(hex, board.gridSize).forEach(neighborHex => {
       if (
         neighborHex !== null &&
-        !board.scenario.hexes.find(h => h.x === neighborHex.x && h.y === neighborHex.y) &&
+        !board.scenario.hexes.has(neighborHex) &&
         !board.scenario.wallHexes.find(h => h.x === neighborHex.x && h.y === neighborHex.y)
       ) {
         board.scenario.wallHexes.push(neighborHex)
@@ -105,9 +109,7 @@ export const scenarioLoad = scenario => {
     neighborsOf(wallHex, board.gridSize).forEach((neighbor, i) => {
       if (
         neighbor !== null &&
-        board.scenario.hexes.find(hex => (
-          hex.x === neighbor.x && hex.y === neighbor.y
-        ))
+        board.scenario.hexes.has(neighbor)
       ) {
         board.scenario.walls.push(makeWall(wallHex, i, (i < 5 ? i + 1 : 0), false, corners))
       }

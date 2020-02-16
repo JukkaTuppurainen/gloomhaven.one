@@ -8,9 +8,7 @@ export const paintMouseHex = ctx => {
     drawHex(board.mouseHex)
 
     const style = board.style
-    const isScenarioHex = board.scenario.hexes.some(hex =>
-      hex.x === board.mouseHex.x && hex.y === board.mouseHex.y
-    )
+    const isScenarioHex = board.scenario.hexes.has(board.mouseHex)
 
     if (isScenarioHex && style.hexHover) {
       ctx.fillStyle = style.hexHover
