@@ -209,7 +209,7 @@ export const resolveBestPath = (monster, focus, movementTargets) => {
         })
       })
 
-      let secondaryFocus = findFocus(monster, 0, secondaryTargets)
+      let secondaryFocus = findFocus(monster, secondaryTargets)
       secondaryFocuses.push(secondaryFocus)
 
       movementTargets = movementTargets.filter(mt => {

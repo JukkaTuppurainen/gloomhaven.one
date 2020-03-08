@@ -64,7 +64,7 @@ export const board = {
       })
     }
 
-    scenarioPromise.then(scenario => {
+    return scenarioPromise.then(scenario => {
       if (scenario.load) {
         scenario.load()
       }
@@ -76,6 +76,8 @@ export const board = {
       }
 
       scenarioLoad(scenario)
+
+      return scenario
     })
   },
   losMode: false,

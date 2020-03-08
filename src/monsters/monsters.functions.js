@@ -30,7 +30,7 @@ import {render}         from '../renderer/render'
 export const activateMonster = monster => {
   monster.active = true
   monster.element.classList.add('item-active')
-  const focus = findFocus(monster, 2)
+  const focus = findFocus(monster, null, 2)
   const movement = focus.player ? findMovement(monster, focus) : false
   render()
 
@@ -94,6 +94,13 @@ export const clearPlayerControl = () => {
   if (itemControls) {
     itemControls.innerHTML = ''
   }
+}
+
+export const createItemToHex = (hex, type) => {
+  const point = toPoint(hex)
+  point.x += hexWidth / 2
+  point.y += hexHeight / 2
+  return createItem(point.x, point.y, type)
 }
 
 export const createItem = (x, y, type) => {

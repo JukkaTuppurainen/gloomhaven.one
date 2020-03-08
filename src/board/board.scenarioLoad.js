@@ -26,8 +26,6 @@ export const clearScenario = () => {
 }
 
 export const scenarioInit = () => {
-  document.getElementById('board').innerHTML = ''
-
   clearScenario()
 
   board.pieces = []
@@ -42,10 +40,13 @@ export const scenarioInit = () => {
   board.grid = rectangle(gridSize)
 
   const {pxSizeX, pxSizeY} = getGridPxSize(board.grid)
-  const canvas = document.getElementById('c')
 
-  canvas.height = pxSizeY
-  canvas.width = pxSizeX
+  if (/* global ENV_isTest */ !ENV_isTest) {
+    document.getElementById('board').innerHTML = ''
+    const canvas = document.getElementById('c')
+    canvas.height = pxSizeY
+    canvas.width = pxSizeX
+  }
 }
 
 export const resizeCanvas = () => {

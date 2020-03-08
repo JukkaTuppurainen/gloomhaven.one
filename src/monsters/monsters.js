@@ -121,15 +121,17 @@ export const monsters = {
   loadItems: itemsString => createItemsFromLayoutString(itemsString)
 }
 
-document.getElementById('tr').addEventListener('change', event => {
-  if (event.target.value === 'Monsters') {
-    monsters.activate()
-  } else if (monsters.on) {
-    monsters.deactivate()
-  }
-})
+if (/* global ENV_isTest */ !ENV_isTest) {
+  document.getElementById('tr').addEventListener('change', event => {
+    if (event.target.value === 'Monsters') {
+      monsters.activate()
+    } else if (monsters.on) {
+      monsters.deactivate()
+    }
+  })
 
-document.getElementById('s').addEventListener('change', () => {
-  deleteAllItems()
-  monsters.deactivate()
-})
+  document.getElementById('s').addEventListener('change', () => {
+    deleteAllItems()
+    monsters.deactivate()
+  })
+}

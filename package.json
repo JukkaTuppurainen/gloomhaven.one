@@ -4,7 +4,7 @@
   "description": "Gloomhaven.one App",
   "main": "src/index.js",
   "scripts": {
-    "test": "jest --config tests/jest.config.js",
+    "test": "jest --config tests/jest.config.js ./tests/src/",
     "build": "node node_modules/webpack/bin/webpack.js --config ./scripts/webpack.config.js",
     "build-alpha": "node node_modules/webpack/bin/webpack.js --config ./scripts/webpack.config.js --env.ENV_TARGET=alpha",
     "dev": "node node_modules/webpack-dev-server/bin/webpack-dev-server.js --config ./scripts/webpack.config.dev.js --env.ENV_TARGET=alpha"

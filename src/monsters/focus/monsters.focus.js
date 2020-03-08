@@ -9,7 +9,7 @@ import {checkInitiatives}           from './monsters.focus.step4'
 import {board}                      from '../../board/board'
 
 
-export const findFocus = (monster, verbose, fromTargets) => {
+export const findFocus = (monster, fromTargets, verbose = 0) => {
   const focus = {
     messages: [],
     player: undefined,
