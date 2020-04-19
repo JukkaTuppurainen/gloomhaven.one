@@ -1,6 +1,6 @@
 {
   "name": "gloomhaven.one",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "description": "Gloomhaven.one App",
   "main": "src/index.js",
   "scripts": {

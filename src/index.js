@@ -1,11 +1,11 @@
 import {board}            from './board/board'
 import {resizeCanvas}     from './board/board.scenarioLoad'
 import                         './components/toggle'
+import {stopPropagation}  from './lib/dom'
 import                         './lib/testWebp'
 import {render}           from './renderer/render'
 import {scenarioList}     from './scenarios'
 import                         './style.css'
-import {stopPropagation}  from './lib/dom'
 
 
 let loadScenario = '1'

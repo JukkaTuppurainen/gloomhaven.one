@@ -125,7 +125,7 @@ export const scenarioList = {
   ],
   32: [
     'Decrepit Wood',
-    '12aA4a15aG2bc1fH2bc9gI1a4bL1bc11b711d37f314b114h18j1'
+    '12aA4a15aG2bc1fH2bc9gI1a4bL1bc11b711d37f38k114b114h1'
   ],
   33: [
     'Savvas Armory',
