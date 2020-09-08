@@ -159,6 +159,50 @@ export const scenarioList = {
     'Ancient Defense Network',
     '12mA4bc3bC1a15lD1a18hD2ae1eK2be8aL1ac10gM1ac9i017i014n019l03e07c0'
   ],
+  41: [
+    'Timeworn Tomb',
+    '9bE1ac8hL1a8mM1a11l011g0'
+  ],
+  42: [
+    'Realm of the Voice',
+    '12eJ1b4eJ2bb8cL2ac15e67e6'
+  ],
+  43: [
+    'Drake Nest',
+    '17jA2b17dA3a10aE1bc5fG2ac10nI2ac9fN1a12n212f28g28m216l216h2'
+  ],
+  44: [
+    'Tribal Assault',
+    '8mB1bb14dB3ae8aB4ae4dL1be10gM1bb11m7b10i310m39d115g1'
+  ],
+  45: [
+    'Rebel Swamp',
+    '12oD1bb2bF1ba13eG1aa7hM1bd12o313j38i3'
+  ],
+  46: [
+    'Nightmare Peak',
+    '8mI2ae4bJ1bc8gK2ab7i213m2'
+  ],
+  47: [
+    'Lair of the Unseeing Eye',
+    '3bJ1ab13cM1ae13e0'
+  ],
+  48: [
+    'Shadow Weald',
+    '8fL1b8aL3ac8d7a8e7a10e711d7a14e713e3'
+  ],
+  49: [
+    'Rebel\'s Stand',
+    '10aG1ac8nL1b8iL3ac8m710m712m714m711h39m311m313m3'
+  ],
+  50: [
+    'Ghost Fortress',
+    '10mB2bc10aB3bc17iC1ac17dC2bc3fI1b9eN1b16f416k412e012m08i0'
+  ],
+  51: [
+    'The Void',
+    '7aD1ac4fD2ab10fM1a9g410e4a7e4b9f0'
+  ],
   52: [
     'Noxious Cellar',
     '2kJ1a10dJ2ac12nK1ae1aK2b6iM1a6i013j05l012n06lx7kx8kx9ix9jx9kx9lx9mx10lx11kx12kx'
@@ -170,5 +214,105 @@ export const scenarioList = {
   54: [
     'Palace of Ice',
     '4aG2a2iN1a5h2'
-  ]
+  ],
+  55: [
+    '',
+    ''
+  ],
+  56: [
+    '',
+    ''
+  ],
+  57: [
+    '',
+    ''
+  ],
+  58: [
+    '',
+    ''
+  ],
+  59: [
+    '',
+    ''
+  ],
+  60: [
+    '',
+    ''
+    ],
+  61: [
+    '',
+    ''
+  ],
+  62: [
+    '',
+    ''
+  ],
+  63: [
+    '',
+    ''
+  ],
+  64: [
+    '',
+    ''
+  ],
+  65: [
+    '',
+    ''
+  ],
+  66: [
+    '',
+    ''
+  ],
+  67: [
+    '',
+    ''
+  ],
+  68: [
+    '',
+    ''
+  ],
+  69: [
+    '',
+    ''
+  ],
+  70: [
+    '',
+    ''
+  ],
+  71: [
+    '',
+    ''
+  ],
+  72: [
+    '',
+    ''
+  ],
+  73: [
+    '',
+    ''
+  ],
+  74: [
+    '',
+    ''
+  ],
+  75: [
+    '',
+    ''
+  ],
+  76: [
+    '',
+    ''
+  ],
+  77: [
+    '',
+    ''
+  ],
+  78: [
+    '',
+    ''
+  ],
+  79: [
+    '',
+    ''
+  ],
 }
