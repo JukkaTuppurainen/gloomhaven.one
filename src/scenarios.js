@@ -214,5 +214,29 @@ export const scenarioList = {
   54: [
     'Palace of Ice',
     '4aG2a2iN1a5h2'
+  ],
+  55: [
+    'Foggy Thicket',
+    ''
+  ],
+  56: [
+    'Bandit\'s Wood',
+    '11eA4ac6hC2a1aL3aa14dM1bc7g310i313f3'
+  ],
+  57: [
+    'Investigation',
+    '16bA1a4gC1ac19gC2b9gF1bc9aI1bc8i010g016g018i3'
+  ],
+  58: [
+    'Bloody Shack',
+    '7dB1ac16hC2a16aD1bb12cG2b15c115i111f1'
+  ],
+  59: [
+    'Forgotten Grove',
+    '16fA4ac10gD1ba14aL3a2gM1bc15h717e39h3'
+  ],
+  60: [
+    'Alchemy Lab',
+    '5aB1ac16fB2ac7hB3ac16lB4ac12gG2b10aI2bc12f514f59c115g113f111j115m1'
   ]
 }
