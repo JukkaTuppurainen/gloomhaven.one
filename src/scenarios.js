@@ -238,5 +238,25 @@ export const scenarioList = {
   60: [
     'Alchemy Lab',
     '5aB1ac16fB2ac7hB3ac16lB4ac12gG2b10aI2bc12f514f59c115g113f111j115m1'
-  ]
+  ],
+  61: [
+    'Fading Lighthouse',
+    '8jA1ae12cA3bb16aC1a8eD1aa5lM1ab10m09i012e016d0'
+  ],
+  62: [
+    'Pit of Souls',
+    '11aB2be7dM1ab11d4b13e0'
+  ],
+  63: [
+    'Magma Pit',
+    '14bD2b8aI2ac1bK1b7c213c2'
+  ],
+  64: [
+    'Underwater Lagoon',
+    '2aD2be6eK1be12aM1bb6e213g2'
+  ],
+  65: [
+    'Sulfur Mine',
+    '15lB1a15aB2a7lB3a7aB4a16eH1a8eH2a2fI2bc15h27h28e216e28l216l2'
+  ],
 }
