@@ -259,4 +259,124 @@ export const scenarioList = {
     'Sulfur Mine',
     '15lB1a15aB2a7lB3a7aB4a16eH1a8eH2a2fI2bc15h27h28e216e28l216l2'
   ],
+  66: [
+    'Clockwork Cove',
+    '18hA1a12qA2aa10eC1ac4nC2bb12iD1ad9mD2ae2aJ1be9f013h017j013m08p013q0'
+  ],
+  67: [
+    'Arcane Library',
+    '14fA2ac10cG1b14aL3ac12kM1ac13h413f415j013c3'
+  ],
+  68: [
+    'Toxic Moor',
+    '14jB1b18aC2ac14bG1a6iM1b17b716i714i715i313k3'
+  ],
+  69: [
+    'Well of the Unfortunate',
+    '14kB1b14dD2ad8aJ1aa6jL3ac9i014d013l3'
+  ],
+  70: [
+    'Chained Isle',
+    '11gA2bd9kA3a12kD2bd9bE1bd1mL1b1hL3a1l73l75l77l714g213j211m26m34m32m38m2'
+  ],
+  71: [
+    'Wingswept Highlands',
+    '12qA2b17cA3a9lA4ac11aB1b4fC2ab20jG2a12jH2b9eL3a8g711d713d713i711m712e314e316g212j312q219m2'
+  ],
+  72: [
+    'Oozing Grove',
+    '8lL1bc8aL3a8fM1bc10e712e712k710k711e311k3'
+  ],
+  73: [
+    'Rockslide Ridge',
+    '9kE1b8aL3a8fM1bc10e712e711e311k2'
+  ],
+  74: [
+    'Merchant Ship',
+    '2eB1ac7cG2b11gI1ac11aI2bc10f110i16g1'
+  ],
+  75: [
+    'Overgrown Graveyard',
+    '2kB1bc3aG1a7eL1bc7jL3ac7i79i711i713i76g36m312j310j38j3'
+  ],
+  76: [
+    'Harrower Hive',
+    ''
+  ],
+  77: [
+    'Vault of Secrets',
+    ''
+  ],
+  78: [
+    'Sacrifice Pit',
+    ''
+  ],
+  79: [
+    'Lost Temple',
+    ''
+  ],
+  80: [
+    'Vigil Keep',
+    ''
+  ],
+  81: [
+    'Temple of the Eclipse',
+    ''
+  ],
+  82: [
+    'Burning Mountain',
+    ''
+  ],
+  83: [
+    'Shadows Within',
+    ''
+  ],
+  84: [
+    'Crystalline Cave',
+    ''
+  ],
+  85: [
+    'Sun Temple',
+    ''
+  ],
+  86: [
+    'Harried Village',
+    ''
+  ],
+  87: [
+    'Corrupted Cove',
+    ''
+  ],
+  88: [
+    'Plane of Water',
+    ''
+  ],
+  89: [
+    'Syndicate Hideout',
+    ''
+  ],
+  90: [
+    'Demonic Rift',
+    ''
+  ],
+  91: [
+    'Wild Melee',
+    ''
+  ],
+  92: [
+    'Back Alley Brawl',
+    ''
+  ],
+  93: [
+    'Sunken Vesse',
+    ''
+  ],
+  94: [
+    'Vermling Nest',
+    ''
+  ],
+  95: [
+    'Payment Due',
+    ''
+  ]
 }
