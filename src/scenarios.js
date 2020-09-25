@@ -301,23 +301,23 @@ export const scenarioList = {
   ],
   76: [
     'Harrower Hive',
-    ''
+    '7kA2bc4kA3ac10aB1bc10lB4bc6eE1b15jG2a12eH2a3c616d620l69q66q613q6'
   ],
   77: [
     'Vault of Secrets',
-    ''
+    '11mB2bc11aB3bc2gM1a10fN1b9i013e013m0'
   ],
   78: [
     'Sacrifice Pit',
-    ''
+    '2gF1ac14aI1b6aM1a13c49f013b0'
   ],
   79: [
     'Lost Temple',
-    ''
+    '6aC2ba11kD2a5oK1ab17iK2b7dM1aa8d4a16m411o4b12k0'
   ],
   80: [
     'Vigil Keep',
-    ''
+    '1cA1ac2mB1ae6iD1bc4aH1b10hJ1ad12cL1a3d011d015g010m36m1'
   ],
   81: [
     'Temple of the Eclipse',
