@@ -321,62 +321,62 @@ export const scenarioList = {
   ],
   81: [
     'Temple of the Eclipse',
-    ''
+    '13jD1ab8jJ1a8aJ2aa14o09i0'
   ],
   82: [
     'Burning Mountain',
-    ''
+    '15fB2bc9bC1a9gD1ae14aI1bc2cK1a11e417e4a8d08i011g014i016g015f013c0'
   ],
   83: [
     'Shadows Within',
-    ''
+    '1bH1b9cI1bc15cM1ac14f08f0'
   ],
   84: [
     'Crystalline Cave',
-    ''
+    '15fA2b4gA3ac8aE1bc7fL2a10f214h214i26h26i2'
   ],
   85: [
     'Sun Temple',
-    ''
+    '1hC1ac2cC2bc16hD1ac13cD2ae6jF1a7bI1b16g4a6e015j012e05j0'
   ],
   86: [
     'Harried Village',
-    ''
+    '9bA4ac12aB1bc2hB2ac15hB3a10mH3a7gM1b11b711l56j114j110m1'
   ],
   87: [
     'Corrupted Cove',
-    ''
+    '4gD2bd10fL2ac10aL3bc16e614e612e610e69i211e213e215e2'
   ],
   88: [
     'Plane of Water',
-    ''
+    '15aD2bb7bG2ae3eN1ab15e27e29f211g213h2'
   ],
   89: [
     'Syndicate Hideout',
-    ''
+    '10gB1a6aB2ac13mB3a2eH3ac7lI2b8e19h18l112o1'
   ],
   90: [
     'Demonic Rift',
-    ''
+    '15cC2aa9cD1bd1bM1b'
   ],
   91: [
     'Wild Melee',
-    ''
+    '9cG1a1cH2b13aM1b12d38g3'
   ],
   92: [
     'Back Alley Brawl',
-    ''
+    '3aF1a10dH3b10d0'
   ],
   93: [
     'Sunken Vesse',
-    ''
+    '18dB3ad4hG1ae11dI1ad6aK2aa13e26h218g1'
   ],
   94: [
     'Vermling Nest',
-    ''
+    '4eC2aa1iD1bd10aH2b7hM1b10h37h34i36k3'
   ],
   95: [
     'Payment Due',
-    ''
+    '3jD1ad8aE1ac9fG1bc13gK2bb10f012j08l0'
   ]
 }
