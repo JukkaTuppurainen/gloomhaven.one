@@ -225,7 +225,7 @@ export const scenarioList = {
   ],
   57: [
     'Investigation',
-    '16bA1a4gC1ac19gC2b9gF1bc9aI1bc8i010g016g018i3'
+    '14bA1a2gC1ac17gC2b7gF1bc5aI1bc6i08g014g016i0'
   ],
   58: [
     'Bloody Shack',
@@ -301,7 +301,7 @@ export const scenarioList = {
   ],
   76: [
     'Harrower Hive',
-    '7kA2bc4kA3ac10aB1bc10lB4bc6eE1b15jG2a12eH2a3c616d620l69q66q613q6'
+    '7kA2bc4kA3ac10aB1bc10lB4bc6eE1b15jG2a12eH2a'
   ],
   77: [
     'Vault of Secrets',
