@@ -249,7 +249,8 @@ button.active {
 }
 
 .door-tile .img-wrap,
-.x-tile .img-wrap {
+.x-tile .img-wrap,
+.z-tile .img-wrap {
   height: 78px;
   overflow: hidden;
   width: 90px;
@@ -257,7 +258,8 @@ button.active {
 
 .corridor-tile img,
 .door-tile img,
-.x-tile img {
+.x-tile img,
+.z-tile img {
   position: absolute;
 }
 
@@ -268,13 +270,37 @@ button.active {
 
 .corridor-tile[data-color="6"] img,
 .door-tile[data-color="2"] img,
-.x-tile img {
+.x-tile img,
+.z-tile img {
   left: -96px;
 }
 
 .corridor-tile[data-color="7"] img,
 .door-tile[data-color="3"] img {
   left: -285px;
+}
+
+button.z-button {
+  background: transparent url('data:image/svg+xml;utf8,<?xml version="1.0" encoding="UTF-8"?><svg width="30" height="80" version="1.1" viewBox="0 0 30 80" xmlns="http://www.w3.org/2000/svg"><g fill-rule="evenodd"><path d="m28 42h-27v37h27v-12l-7.5 2 2-6-6-5 6-2-1-4 6.5 1z" stroke="%23fff"/><path d="m8 45v30h14v-3.9l-4 .93 2-8-7-7 7-3-2-5 4 1v-5" fill="%23fff"/><path d="m28 1.5h-27v37h27z" stroke="%23fff" stroke-width="1px"/><path d="m8 5v30h14v-30" fill="%23fff"/></g></svg>') 0 -40px;
+  border: none;
+  height: 40px;
+  position: absolute;
+  transform: translate(30px, 19px);
+  width: 30px;
+  z-index: 11;
+}
+
+button.z-button.active {
+  background-position: 0 0;
+}
+
+.z-tile img {
+  display: none;
+}
+
+.editor-on .z-tile img,
+.z-tile.active img {
+  display: block;
 }
 
 .img-loading {

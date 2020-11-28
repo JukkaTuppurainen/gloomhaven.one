@@ -243,7 +243,20 @@ export const pieceList = {
     },
     0,
     true,
-    false
+    false,
+    'LOS blocking obstacle'
+  ],
+
+  z: [
+    bitmap_tiles,
+    'aa',
+    {
+      0: {left: 1, top: -1}
+    },
+    0,
+    true,
+    false,
+    'Destructable Wall'
   ],
 
   A1a: [

@@ -75,7 +75,6 @@ export const scenarioLoad = scenario => {
   const dataFromPieces = getDataFromBoardPieces()
   board.scenario.hexes = new coordinateMap(dataFromPieces.hexes)
 
-  // Resize the canvas and grid to match the scenario layout
   resizeCanvas()
 
   // Make thinWalls
@@ -101,11 +100,10 @@ export const scenarioLoad = scenario => {
     })
   })
 
-  // Generate LOS blocking walls...
+  // Generate LOS blocking walls
   board.scenario.wallHexes.forEach(wallHex => {
     const corners = addPoint(cornersCoordinates, toPoint(wallHex))
 
-    // ... around the wall hex
     neighborsOf(wallHex, board.gridSize).forEach((neighbor, i) => {
       if (
         neighbor !== null &&
@@ -114,29 +112,6 @@ export const scenarioLoad = scenario => {
         board.scenario.walls.push(makeWall(wallHex, i, (i < 5 ? i + 1 : 0), false, corners))
       }
     })
-
-    // ... and three throuhg the hex
-    // (these may be disabled without 2nd LOS mode)
-    // board.scenario.walls.push(
-    //   {
-    //     x1: (corners[4].x + corners[5].x) / 2,
-    //     y1: corners[4].y,
-    //     x2: (corners[1].x + corners[2].x) / 2,
-    //     y2: corners[1].y
-    //   },
-    //   {
-    //     x1: (corners[3].x + corners[4].x) / 2,
-    //     y1: (corners[3].y + corners[4].y) / 2,
-    //     x2: (corners[0].x + corners[1].x) / 2,
-    //     y2: (corners[0].y + corners[1].y) / 2,
-    //   },
-    //   {
-    //     x1: (corners[2].x + corners[3].x) / 2,
-    //     y1: (corners[2].y + corners[3].y) / 2,
-    //     x2: (corners[5].x + corners[0].x) / 2,
-    //     y2: (corners[5].y + corners[0].y) / 2,
-    //   }
-    // )
   })
 
   render()

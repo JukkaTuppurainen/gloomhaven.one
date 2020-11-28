@@ -7,6 +7,7 @@ import {rotateHexes}  from '../lib/hexRotate'
 import {
   addPoint,
   getGridPxSize,
+  neighborsOf,
   toPoint
 }                     from '../lib/hexUtils'
 
@@ -64,9 +65,7 @@ export const createPiece = (x, y, pieceKey, angle = 0, color = null) => {
   pieceElement.dataset['id'] = id
   pieceElement.classList.add('map-tile', 'img-loading')
   if (
-    pieceKey === 'corridor' ||
-    pieceKey === 'door' ||
-    pieceKey === 'x'
+    ['corridor', 'door', 'x', 'z'].includes(pieceKey)
   ) {
     if (!color) {
       color = pieceKey === 'corridor' ? 4 : 0
@@ -213,7 +212,10 @@ export const generatePiecesFromLayoutString = layoutString => {
     r = 0
     ++ii
     k = layoutString.substr(i + ii, 1)
-    if (k === 'x') {
+    if (k === 'z') {
+      n = 'z'
+      ++ii
+    } else if (k === 'x') {
       n = 'x'
       ++ii
     } else if (k.match(/\d/)) {
@@ -311,33 +313,35 @@ export const getDataFromBoardPieces = () => {
       })
     }
 
-    piece.pieceHexes.forEach(hex => {
-      x = hex.x + piece.ch.x
-      y = hex.y + piece.ch.y
+    if (piece.name !== 'z' || piece.active) {
+      piece.pieceHexes.forEach(hex => {
+        x = hex.x + piece.ch.x
+        y = hex.y + piece.ch.y
 
-      if (piece.ch.x % 2 === 1 && hex.x % 2 === 1) {
-        y++
-      }
+        if (piece.ch.x % 2 === 1 && hex.x % 2 === 1) {
+          y++
+        }
 
-      if (!hexesFromAllPieces.find(existingHex => (
-        existingHex.x === x && existingHex.y === y
-      ))) {
-        hexesFromAllPieces.push({x, y})
-      }
+        if (!hexesFromAllPieces.some(existingHex => (
+          existingHex.x === x && existingHex.y === y
+        ))) {
+          hexesFromAllPieces.push({x, y})
+        }
 
-      if (hex.mt) {
-        hex.mt.forEach(s => {
+        if (hex.mt) {
+          hex.mt.forEach(s => {
 
-          if (!thinWallsFromAllPieces.find(existingThinWall => (
-            existingThinWall.x === x &&
-            existingThinWall.y === y &&
-            existingThinWall.s === s
-          ))) {
-            thinWallsFromAllPieces.push({x, y, s})
-          }
-        })
-      }
-    })
+            if (!thinWallsFromAllPieces.some(existingThinWall => (
+              existingThinWall.x === x &&
+              existingThinWall.y === y &&
+              existingThinWall.s === s
+            ))) {
+              thinWallsFromAllPieces.push({x, y, s})
+            }
+          })
+        }
+      })
+    }
   })
 
   hexesFromAllPieces = hexesFromAllPieces.filter(hex =>
@@ -347,6 +351,21 @@ export const getDataFromBoardPieces = () => {
     )
   )
   hexesFromAllPieces.sort(hexSort)
+
+  board.pieces.forEach(piece => {
+    if (
+      piece.name === 'z' &&
+      piece.active
+    ) {
+      neighborsOf(piece.ch, board.gridSize).forEach((zn, i) => {
+        antiThinWallsFromAllPieces.push(
+          {x: zn.x, y: zn.y, s: (i + (i < 3 ? 3 : -3))}
+          // Needs "pair" on other side?
+        )
+      })
+    }
+  })
+
   thinWallsFromAllPieces = thinWallsFromAllPieces.filter(tw =>
     !antiThinWallsFromAllPieces.find(atw =>
       tw.x === atw.x &&

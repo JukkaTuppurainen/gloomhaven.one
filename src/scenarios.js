@@ -237,7 +237,7 @@ export const scenarioList = {
   ],
   60: [
     'Alchemy Lab',
-    '5aB1ac16fB2ac7hB3ac16lB4ac12gG2b10aI2bc12f514f59c115g113f111j115m1'
+    '1aB1ac12bB2ac3hB3ac12lB4ac8gG2b6aI2bc8f510f55c111c19f17j111m1'
   ],
   61: [
     'Fading Lighthouse',
@@ -301,7 +301,7 @@ export const scenarioList = {
   ],
   76: [
     'Harrower Hive',
-    '7kA2bc4kA3ac10aB1bc10lB4bc6eE1b15jG2a12eH2a'
+    '5kA2bc2kA3ac8aB1bc8lB4bc4eE1b13jG2a10eH2a8ez9ez10ez9fz9gz9hz9iz12jz14jz12kz10lz12lz12mz12nz12oz4lz4mz4nz4oz7lz7mz7nz7oz'
   ],
   77: [
     'Vault of Secrets',

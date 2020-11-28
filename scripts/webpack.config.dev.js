@@ -6,6 +6,7 @@ module.exports = env => ({
   devServer: {
     contentBase: path.join(__dirname, '..'),
     compress: true,
+    hot: true,
     port: 3000
   },
   devtool: 'inline-source-map',
