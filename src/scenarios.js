@@ -153,7 +153,7 @@ export const scenarioList = {
   ],
   39: [
     'Treacherous Divide',
-    '17cD2bd1dL2ac9cN1a8e68g616e2'
+    '17aD2bd1bL2ac9aN1a8c68e616c2'
   ],
   40: [
     'Ancient Defense Network',
@@ -161,39 +161,39 @@ export const scenarioList = {
   ],
   41: [
     'Timeworn Tomb',
-    '9bE1ac8hL1a8mM1a11l011g0'
+    '2aE1ac1fL1a1kM1a4k04f0'
   ],
   42: [
     'Realm of the Voice',
-    '12eJ1b4eJ2bb8cL2ac15e67e6'
+    '9cJ1b1cJ2bb5aL2ac12d64d6'
   ],
   43: [
     'Drake Nest',
-    '17jA2b17dA3a10aE1bc5fG2ac10nI2ac9fN1a12n212f28g28m216l216h2'
+    '13jA2b13dA3a6aE1bc1fG2ac5nI2ac5fN1a8n28f24g24m212l212h2'
   ],
   44: [
     'Tribal Assault',
-    '8mB1bb14dB3ae8aB4ae4dL1be10gM1bb11m7b10i310m39d115g1'
+    '1fB1bc14aB3a14gB4a6aL1b6fM1b5g75i39e313b113h1'
   ],
   45: [
     'Rebel Swamp',
-    '12oD1bb2bF1ba13eG1aa7hM1bd12o313j38i3'
+    '1aD1ba15bF1bc9gG1ac7aM1b6c314d310g3'
   ],
   46: [
     'Nightmare Peak',
-    '8mI2ae4bJ1bc8gK2ab7i213m2'
+    '1iI2a5aJ1bd7eK2ac7e26l2'
   ],
   47: [
     'Lair of the Unseeing Eye',
-    '3bJ1ab13cM1ae13e0'
+    '1aJ1ac3jM1a6j0'
   ],
   48: [
     'Shadow Weald',
-    '8fL1b8aL3ac8d7a8e7a10e711d7a14e713e3'
+    '1fL1bc1aL3ac1e73e75e77e72f34f36f3'
   ],
   49: [
     'Rebel\'s Stand',
-    '10aG1ac8nL1b8iL3ac8m710m712m714m711h39m311m313m3'
+    '3aG1ac1nL1bc1iL3ac1m73m75m77m74i32n34n36n3'
   ],
   50: [
     'Ghost Fortress',
@@ -357,7 +357,7 @@ export const scenarioList = {
   ],
   90: [
     'Demonic Rift',
-    '15cC2aa9cD1bd1bM1b'
+    '15bC2aa9bD1bd1aM1b14d7'
   ],
   91: [
     'Wild Melee',

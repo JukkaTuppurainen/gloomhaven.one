@@ -115,12 +115,11 @@ export const updateTileSelectOptions = () => {
   tileSelect.value = ''
   Object.keys(pieceList)
     .filter(key =>
-      (
-        typeof pieceList[key][5] == 'undefined' ||
-        pieceList[key][5] === true
-      ) &&
-      board.pieces &&
-      !board.pieces.some(a => a.name.substr(0, 2) === key.substr(0, 2))
+      key === 'corridor' ||
+      key === 'door' || (
+        pieceList[key][5] !== false &&
+        !board.pieces?.some(a => a.name.substr(0, 2) === key.substr(0, 2))
+      )
     )
     .forEach(key => {
       const option = document.createElement('option')
