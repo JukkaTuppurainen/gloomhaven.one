@@ -18,7 +18,7 @@ import {render}                 from '../renderer/render'
 
 export const clearScenario = () => {
   board.scenario = {
-    hexes: [],
+    hexes: new coordinateMap(),
     thinWalls: [],
     wallCorners: new Set(),
     wallHexes: [],
@@ -113,6 +113,37 @@ export const scenarioLoad = scenario => {
       }
     })
   })
+
+  // Filter walls which are not needed for resolving LOS
+  const xSet = new Set()
+  const ySet = new Set()
+
+  board.scenario.walls.forEach(wall => {
+    xSet.add(wall.x1)
+    xSet.add(wall.x2)
+    ySet.add(wall.y1)
+    ySet.add(wall.y2)
+  })
+
+  const xArr = [...xSet]
+  const yArr = [...ySet]
+
+  const srtr = (a, b) => a < b ? -1 : 1
+
+  xArr.sort(srtr)
+  yArr.sort(srtr)
+
+  const minXs = xArr.slice(0, 2)
+  const maxXs = xArr.slice(-2)
+  const minYs = yArr.slice(0, 2)
+  const maxYs = yArr.slice(-2)
+
+  board.scenario.walls = board.scenario.walls.filter(w => !(
+    (minXs.includes(w.x1) && minXs.includes(w.x2)) ||
+    (maxXs.includes(w.x1) && maxXs.includes(w.x2)) ||
+    (minYs.includes(w.y1) && minYs.includes(w.y2)) ||
+    (maxYs.includes(w.y1) && maxYs.includes(w.y2))
+  ))
 
   render()
 }

@@ -26,7 +26,9 @@ export const paintPlayer = ctx => {
     ctx.fillStyle = '#00f8'
     ctx.fill()
 
-    board.linesToHover = isInSight(board.playerHex, board.mouseHex, true)
+    board.linesToHover =
+      board.scenario.hexes.has(board.mouseHex) &&
+      isInSight(board.playerHex, board.mouseHex, true)
   }
 }
 
