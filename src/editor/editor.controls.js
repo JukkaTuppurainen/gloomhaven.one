@@ -118,7 +118,8 @@ export const updateTileSelectOptions = () => {
       key === 'corridor' ||
       key === 'door' || (
         pieceList[key][5] !== false &&
-        !board.pieces?.some(a => a.name.substr(0, 2) === key.substr(0, 2))
+        board.pieces &&
+        !board.pieces.some(a => a.name.substr(0, 2) === key.substr(0, 2))
       )
     )
     .forEach(key => {

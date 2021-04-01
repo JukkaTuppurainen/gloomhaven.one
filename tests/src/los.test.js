@@ -7,17 +7,21 @@ initGlobalMocks()
 
 const scenariosLineOfSightInfo = {
   1: [3788, 3352],
-  2: [4719, 3291],
-  3: [11832, 10518],
-  4: [3657, 5273],
-  5: [5024, 4678],
-  6: [7582, 9974],
-  7: [6172, 11120],
-  8: [3568, 2912],
-  9: [4853, 1789],
-  10: [6361, 5849],
+  2: [4710, 3300],
+  3: [11802, 10548],
+  4: [3646, 5284],
+  5: [5002, 4700],
+  6: [7546, 10010],
+  7: [6156, 11136],
+  8: [3564, 2916],
+  9: [4846, 1796],
+  10: [6352, 5858],
   27: [1190, 0]
 }
+
+const scenariosToTest = Object.keys(scenariosLineOfSightInfo)
+
+let hexLOSdata
 
 const testScenarioFullLOS = () => {
   let inSight = 0
@@ -25,9 +29,13 @@ const testScenarioFullLOS = () => {
   const hexesToTest = board.scenario.hexes
 
   hexesToTest.forEach(hex => {
+    const losData = []
+    hexLOSdata.set(hex, losData)
+
     hexesToTest.forEach(hex2 => {
       if (hex.x !== hex2.x || hex.y !== hex2.y) {
         if (isInSight(hex, hex2)) {
+          losData.push(hex2)
           ++inSight
         } else {
           ++outOfSight
@@ -41,11 +49,9 @@ const testScenarioFullLOS = () => {
   return [inSight, outOfSight]
 }
 
-const scenariosToTest = [1, 2,  3, 4, 5, 6, 7, 8, 9, 10, 27]
-
 describe('Line of Sight test', () => {
   test('Performs full LOS test for list of scenarios', () => {
-    expect.assertions(scenariosToTest.length * 2)
+    expect.assertions(scenariosToTest.length * 3)
 
     let chain = Promise.resolve()
 
@@ -53,10 +59,25 @@ describe('Line of Sight test', () => {
       chain = chain
         .then(() => board.loadScenario(i))
         .then(() => {
+          hexLOSdata = new WeakMap()
+
           const [inSight, outOfSight] = testScenarioFullLOS()
           const [expectedInSight, expectedOutOfSight] = scenariosLineOfSightInfo[i]
+
           expect(inSight).toBe(expectedInSight)
           expect(outOfSight).toBe(expectedOutOfSight)
+
+          let hexesWithOneWayLOS = 0
+
+          board.scenario.hexes.forEach(hex => {
+            hexLOSdata.get(hex).forEach(visibleHex => {
+              if (!hexLOSdata.get(visibleHex).includes(hex)) {
+                ++hexesWithOneWayLOS
+              }
+            })
+          })
+
+          expect(hexesWithOneWayLOS).toBe(0)
         })
     }
 

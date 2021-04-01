@@ -42,12 +42,10 @@ export const scenarioInit = () => {
 
   const {pxSizeX, pxSizeY} = getGridPxSize(board.grid)
 
-  if (/* global ENV_isTest */ !ENV_isTest) {
-    document.getElementById('board').innerHTML = ''
-    const canvas = document.getElementById('c')
-    canvas.height = pxSizeY
-    canvas.width = pxSizeX
-  }
+  document.getElementById('board').innerHTML = ''
+  const canvas = document.getElementById('c')
+  canvas.height = pxSizeY
+  canvas.width = pxSizeX
 }
 
 export const resizeCanvas = () => {
