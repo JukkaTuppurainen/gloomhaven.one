@@ -12,6 +12,10 @@ import {
   rectangle,
   toPoint
 }                               from '../lib/hexUtils'
+import {
+  directionFindFn,
+  makeLongwall
+}                               from '../lib/longWall.js'
 import {makeWall}               from '../lib/makeWall'
 import {render}                 from '../renderer/render'
 
@@ -19,6 +23,7 @@ import {render}                 from '../renderer/render'
 export const clearScenario = () => {
   board.scenario = {
     hexes: new coordinateMap(),
+    longWalls: [],
     thinWalls: [],
     wallCorners: new Set(),
     wallHexes: [],
@@ -110,6 +115,46 @@ export const scenarioLoad = scenario => {
         board.scenario.walls.push(makeWall(wallHex, i, (i < 5 ? i + 1 : 0), false, corners))
       }
     })
+  })
+
+  // Generate LOS blocking longWalls
+  ;['down', 'rightUp', 'rightDown'].forEach(direction => {
+    let grouping = []
+
+    board.scenario.wallHexes.forEach(wallHex => {
+      let hexesInDirection = []
+      let findHex
+
+      while (findHex = board.scenario.wallHexes.find(hex =>
+        directionFindFn[direction](hex, wallHex, hexesInDirection.length + 1)
+      )) {
+        hexesInDirection.push(findHex)
+      }
+
+      if (hexesInDirection.length >= 2) {
+        grouping.push({
+          ...wallHex,
+          d: hexesInDirection
+        })
+      }
+    })
+
+    while (grouping.length) {
+      const hexWithMaxD = grouping.reduce((previousValue, currentValue) => (
+        !previousValue
+          ? currentValue
+          : currentValue.d.length > previousValue.d.length
+            ? currentValue
+            : previousValue
+      ))
+
+      makeLongwall(direction, hexWithMaxD, hexWithMaxD.d.length)
+
+      grouping = grouping.filter(groupedHex => !(
+        groupedHex === hexWithMaxD ||
+        hexWithMaxD.d.some(s => s.x === groupedHex.x && s.y === groupedHex.y)
+      ))
+    }
   })
 
   // Filter walls which are not needed for resolving LOS

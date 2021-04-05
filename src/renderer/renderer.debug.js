@@ -26,6 +26,18 @@
 //   })
 // }
 //
+// export const drawLongWalls = ctx => {
+//   ctx.strokeStyle = '#66f'
+//   ctx.lineWidth = 2
+//   board.scenario.longWalls.forEach(wall => {
+//     ctx.beginPath()
+//     ctx.moveTo(wall.x1, wall.y1)
+//     ctx.lineTo(wall.x2, wall.y2)
+//     ctx.stroke()
+//   })
+//   ctx.lineWidth = 1
+// }
+//
 // export const paintPathingDebug = ctx => {
 //   if (board.paths) {
 //     if ('closedList' in board.paths[0].debug) {

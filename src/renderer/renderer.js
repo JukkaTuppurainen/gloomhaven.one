@@ -15,7 +15,9 @@ import {
 }                   from './renderer.path'
 // import {
 //   paintPathingDebug,
-//   writeHexNumbers
+//   writeHexNumbers,
+//   drawWalls,
+//   drawLongWalls
 // }                   from './renderer.debug'
 import {board}      from '../board/board'
 
@@ -35,6 +37,7 @@ renderFunctions.push(
   // paintPathingDebug,
   // writeHexNumbers,
   // drawWalls,
+  // drawLongWalls,
   drawHoverLines,
   drawFocusPath,
   drawMovePath
