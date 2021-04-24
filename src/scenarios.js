@@ -378,5 +378,73 @@ export const scenarioList = {
   95: [
     'Payment Due',
     '3jD1ad8aE1ac9fG1bc13gK2bb10f012j08l0'
+  ],
+  'solo-2': [
+    'Return to the Black Barrow',
+    '7aG1b1bI1bc5iL1ac6e08i0'
+  ],
+  'solo-3': [
+    'An Unfortunate Intrusion',
+    '9aG1b1aN1bc8b08e08h0'
+  ],
+  'solo-4': [
+    'Corrupted Laboratory',
+    '3aA1bc1jA2ac6aG2b4iI1bc5d17h13m0'
+  ],
+  'solo-5': [
+    'Armory Heist',
+    '11fA2ac11bB2b1aE1ac3fH1b3f012f010j0'
+  ],
+  'solo-6': [
+    'Stone Defense',
+    '9aB4b1aN1a8c2'
+  ],
+  'solo-7': [
+    'Rodent Liberation',
+    '11gD1ac1aE1ac3fH1b3f03f010j0'
+  ],
+  'solo-8': [
+    'Caravan Escort',
+    '1fL1bc1aL3ac1e73e75e77e72f34f36f3'
+  ],
+  'solo-9': [
+    'Unnatural Insults',
+    '6nC2ae2jD1bd10aG1a8iM1bc11h37l38n36n3'
+  ],
+  'solo-11': [
+    'Storage Fees',
+    '1aB1ac6aI1ac12aI2bc11a511c511e15c1'
+  ],
+  'solo-12': [
+    'Plane of Wild Beasts',
+    '1fL1bc1aL3ac1e73e75e77e72f34f36f3'
+  ],
+  'solo-13': [
+    'Harvesting the Night',
+    '2dA2bc7aB4b1kD2ba7jG2a5eL2a8e24f28j26n2'
+  ],
+  'solo-14': [
+    'Plagued Crypt',
+    '8cA1ae9kC1a2kC2bc1aD1ac4fM1ac4f010f04k010k0'
+  ],
+  'solo-15': [
+    'Battle of the Bards',
+    '1cA1b14cB1a4aG2bc8bI1a3d17b17f113d1'
+  ],
+  'solo-16': [
+    'Corrupted Hunt',
+    '1lA4ac9eC2ad5hD1be1aF1b1dG1a9h34j32d32l3'
+  ],
+  'solo-18': [
+    'Aftermath',
+    '1cA1ac8aA3bc4aG1b11bN1bc7a47c43f010d0'
+  ],
+  'solo-19': [
+    'Elemental Secrets',
+    '5lB2bc5aB3bc9gC2bc1eH1bc7e08i07l0'
+  ],
+  'solo-20': [
+    'The Caged Bear',
+    '2aB4b1fD2bb19cE1b7aG2ac11aN1a18e218g210c210g26b26h2'
   ]
 }

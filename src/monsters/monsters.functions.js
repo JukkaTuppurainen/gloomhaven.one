@@ -238,63 +238,65 @@ export const deleteSomeItems = () => {
 }
 
 export const generateItemsLayoutString = () => {
-  let layoutString = ':'
+  let layoutString = ''
 
-  layoutString +=
-    toChar(monsterValues.move + 1) +
-    toChar(monsterValues.range + 1) +
-    toChar(monsterValues.targets + 1) +
-    monsterValues.mt +
-    '-'
+  if (board.items.length) {
+    layoutString = ':' +
+      toChar(monsterValues.move + 1) +
+      toChar(monsterValues.range + 1) +
+      toChar(monsterValues.targets + 1) +
+      monsterValues.mt +
+      '-'
 
-  let prevX
-  let prevY
+    let prevX
+    let prevY
 
-  const itemGroups = []
-  itemTypes.forEach(itemGroup => {
-    let itemsOfGroup = board.items.filter(i => i.type === itemGroup)
-    itemsOfGroup.sort((a, b) => hexSort(a.ch, b.ch))
-    itemGroups.push(itemsOfGroup)
-  })
-
-  itemGroups.forEach((itemGroup, i) => {
-    prevX = prevY = false
-    if (i > 0) {
-      layoutString += '-'
-    }
-
-    itemGroup.forEach(item => {
-      if (!(
-        item.ch.x === prevX || (
-          item.ch.x === prevX + 1 &&
-          item.ch.y <= prevY
-        )
-      )) {
-        layoutString += item.ch.x
-      }
-
-      prevX = item.ch.x
-      prevY = item.ch.y
-      layoutString += toChar(item.ch.y)
-
-      if (item.active) {
-        layoutString += '!'
-      }
-
-      if (item.type === 'player') {
-        layoutString +=
-          item.color.toString(16) +
-          item.initiative.toString().padStart(2, '0')
-      }
+    const itemGroups = []
+    itemTypes.forEach(itemGroup => {
+      let itemsOfGroup = board.items.filter(i => i.type === itemGroup)
+      itemsOfGroup.sort((a, b) => hexSort(a.ch, b.ch))
+      itemGroups.push(itemsOfGroup)
     })
-  })
+
+    itemGroups.forEach((itemGroup, i) => {
+      prevX = prevY = false
+      if (i > 0) {
+        layoutString += '-'
+      }
+
+      itemGroup.forEach(item => {
+        if (!(
+          item.ch.x === prevX || (
+            item.ch.x === prevX + 1 &&
+            item.ch.y <= prevY
+          )
+        )) {
+          layoutString += item.ch.x
+        }
+
+        prevX = item.ch.x
+        prevY = item.ch.y
+        layoutString += toChar(item.ch.y)
+
+        if (item.active) {
+          layoutString += '!'
+        }
+
+        if (item.type === 'player') {
+          layoutString +=
+            item.color.toString(16) +
+            item.initiative.toString().padStart(2, '0')
+        }
+      })
+    })
+  }
 
   board.skipHashChangeHandler = true
 
   let old = window.location.hash.match(
     window.location.hash[1] === ':'
-      ? /#:[\w]+/
-      : /^#\d+/
+      ? /#:[\w]*/
+      : /^#(solo-)?\d+/
   )
 
   window.location.hash = (old ? old[0].substr(1) : '1') + layoutString

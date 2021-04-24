@@ -32,12 +32,20 @@ const canvas = document.getElementById('c')
 document.getElementsByTagName('header')[0].addEventListener('mousedown', stopPropagation)
 
 const scenarioSelectElement = document.getElementById('s')
+const soloScenariosGroup = document.createElement('optgroup')
+soloScenariosGroup.label = 'Solo Scenarios'
 for (let [id] of Object.entries(scenarioList)) {
   const option = document.createElement('option')
   option.value = id
-  option.innerText = id
-  scenarioSelectElement.appendChild(option)
+  if (id.startsWith('solo')) {
+    option.innerText = 'Page ' + id.substr(5)
+    soloScenariosGroup.appendChild(option)
+  } else {
+    option.innerText = id
+    scenarioSelectElement.appendChild(option)
+  }
 }
+scenarioSelectElement.appendChild(soloScenariosGroup)
 
 board.skipHashChangeHandler = false
 
@@ -51,8 +59,9 @@ scenarioSelectElement.addEventListener('change', event => {
 
 window.addEventListener('hashchange', () => {
   if (!board.skipHashChangeHandler) {
-    if (window.location.hash.match(/^#\d+/)) {
-      const id = window.location.hash.substr(1)
+    let m = window.location.hash.match(/^#(solo-)?\d+/)
+    if (m) {
+      const id = m[0].substr(1)
       if (id in scenarioList) {
         scenarioSelectElement.value = id
         board.loadScenario(id)
@@ -68,7 +77,7 @@ window.addEventListener('hashchange', () => {
 
 if (window.location.hash) {
   const h = window.location.hash
-  const m = h.match(/^#\d+/)
+  const m = h.match(/^#(solo-)?\d+/)
 
   if (m) {
     loadScenario = m[0].substr(1)
