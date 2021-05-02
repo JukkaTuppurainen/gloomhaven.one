@@ -1,8 +1,6 @@
 import './toggle.css'
 
 
-/* global ENV_isAlpha */
-
 const options = [{
   color: ENV_isAlpha ? 'orange' : '#ec8989',
   name: 'Play'

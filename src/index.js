@@ -11,14 +11,14 @@ import                         './style.css'
 let loadScenario = '1'
 let initItems
 
-if (/* global ENV_isAlpha */ ENV_isAlpha) {
+if (ENV_isAlpha) {
   import(/* webpackMode: 'eager' */ './monsters/monsters').then(module => {
     if (initItems) {
       module.monsters.loadItems(initItems)
     }
   })
 
-  if (/* global ENV_isProduction */ ENV_isProduction) {
+  if (ENV_isProduction) {
     const alphaNotice = document.createElement('div')
     alphaNotice.id = 'alpha'
     alphaNotice.innerHTML = 'This is an early alpha version. Monster focus and movement information may be incorrect.'
@@ -57,8 +57,13 @@ scenarioSelectElement.addEventListener('change', event => {
   window.location.hash = value === 'editor' ? ':' : value
 })
 
+let prevHash
+
 window.addEventListener('hashchange', () => {
-  if (!board.skipHashChangeHandler) {
+  if (
+    !board.skipHashChangeHandler &&
+    window.location.hash !== prevHash
+  ) {
     let m = window.location.hash.match(/^#(solo-)?\d+/)
     if (m) {
       const id = m[0].substr(1)
@@ -72,6 +77,7 @@ window.addEventListener('hashchange', () => {
       board.loadScenario('editor')
     }
   }
+  prevHash = window.location.hash
   board.skipHashChangeHandler = false
 })
 

@@ -121,7 +121,7 @@ export const monsters = {
   loadItems: itemsString => createItemsFromLayoutString(itemsString)
 }
 
-if (/* global ENV_isTest */ !ENV_isTest) {
+if (!ENV_isTest) {
   document.getElementById('tr').addEventListener('change', event => {
     if (event.target.value === 'Monsters') {
       monsters.activate()

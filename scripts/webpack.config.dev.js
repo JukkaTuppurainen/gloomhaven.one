@@ -35,10 +35,6 @@ module.exports = env => ({
       {
         test: /\.css$/,
         use: ['style-loader', 'css-loader']
-      },
-      {
-        test: /\.ejs$/,
-        loader: 'compile-ejs-loader'
       }
     ]
   },
@@ -54,7 +50,7 @@ module.exports = env => ({
     }),
     new HtmlWebpackPlugin({
       inject: true,
-      template: path.join(__dirname, '..', 'index.ejs'),
+      template: path.join(__dirname, '..', 'template.js'),
       templateParameters: {
         isAlpha: (env && env['ENV_TARGET']) === 'alpha',
         isProduction: false

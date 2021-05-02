@@ -19,7 +19,7 @@ import {
 
 
 let monsterFunctions
-if (/* global ENV_isTest */ !ENV_isTest) {
+if (!ENV_isTest) {
   (async () => {
     try {
       monsterFunctions = await import(/* webpackMode: 'weak' */ '../monsters/monsters.functions')

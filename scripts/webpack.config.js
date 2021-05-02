@@ -35,7 +35,7 @@ module.exports = env => {
     new HtmlWebpackPlugin({
       filename: 'index.html',
       inject: true,
-      template: path.join(__dirname, '..', 'index.ejs'),
+      template: path.join(__dirname, '..', 'template.js'),
       templateParameters: {
         isAlpha,
         isProduction: true
@@ -104,20 +104,10 @@ module.exports = env => {
           test: /\.css$/,
           use: [
             {
-              loader: MiniCssExtractPlugin.loader,
-              options: {
-                hmr: false
-              }
+              loader: MiniCssExtractPlugin.loader
             },
             'css-loader'
           ]
-        },
-        {
-          test: /\.ejs$/,
-          loader: 'compile-ejs-loader',
-          options: {
-            htmlmin: true
-          }
         }
       ]
     },
