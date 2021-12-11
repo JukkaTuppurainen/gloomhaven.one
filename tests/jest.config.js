@@ -10,5 +10,6 @@ module.exports = {
     '/renderer/render$': '<rootDir>/mocks/render.js',
     '/renderer/renderer\\.*': '<rootDir>/mocks/renderer.js'
   },
+  testEnvironment: 'jsdom',
   verbose: true
 }

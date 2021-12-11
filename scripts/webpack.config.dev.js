@@ -4,7 +4,7 @@ const webpack = require('webpack')
 
 module.exports = env => ({
   devServer: {
-    contentBase: path.join(__dirname, '..'),
+    // contentBase: path.join(__dirname, '..'),
     compress: true,
     hot: true,
     port: 3000
