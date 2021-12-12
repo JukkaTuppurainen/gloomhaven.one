@@ -129,7 +129,7 @@ export const scenarioList = {
   ],
   33: [
     'Savvas Armory',
-    '2bA3bd1eA4bd3hC2b8hI1bc14hM1ac4d4a3h07j013j0'
+    '2bA3bd1eA4bd3hC2b8hI1bc14hM1ac3d4a3h07j013j0'
   ],
   34: [
     'Scorched Summit',
