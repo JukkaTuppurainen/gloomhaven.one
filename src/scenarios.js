@@ -293,7 +293,7 @@ export const scenarioList = {
   ],
   74: [
     'Merchant Ship',
-    '2eB1ac7cG2b11gI1ac11aI2bc10f110i16g1'
+    '1dB1ac6cG2b10aI1ac10gI2bc5f19d19h1'
   ],
   75: [
     'Overgrown Graveyard',

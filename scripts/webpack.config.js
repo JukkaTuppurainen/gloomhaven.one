@@ -84,7 +84,7 @@ module.exports = env => {
             {
               loader: 'file-loader',
               options: {
-                name: '[sha512:hash:base64:6].[ext]',
+                name: '[sha512:hash:base62:7].[ext]',
                 outputPath: isAlpha ? '..' : undefined
               }
             }
